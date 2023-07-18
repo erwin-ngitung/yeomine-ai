@@ -145,8 +145,9 @@ def train_model(st, **state):
 
     with tab1:
         try:
-            kind_object = st.selectbox('Please select the kind of object detection do you want', 
-                                       ['General Detection', 'Coal Detection', 'Seam Detection', 'Core Detection', 'Smart-HSE'])
+            kind_object = st.selectbox('Please select the kind of object detection do you want',
+                                       ['General Detection', 'Coal Detection', 'Seam Detection', 'Core Detection',
+                                        'Smart-HSE'])
 
             path_object = {'General Detection': 'general-detect',
                            'Coal Detection': 'front-coal',
@@ -157,7 +158,7 @@ def train_model(st, **state):
             path_file = st.text_input('Please input your path data YAML', 'data/front-coal.yaml')
             list_model = os.listdir(f'weights/petrained-model')
             kind_model = st.selectbox('Please select the petrained model',
-                                       list_model)
+                                      list_model)
             st4, st5 = st.columns(2)
 
             with st4:
@@ -171,20 +172,22 @@ def train_model(st, **state):
                 weight_decay = st.number_input('Number of Weight Decay', format='%f', value=0.05, key='weight_decay')
 
             next_train = st.radio('Are you sure to train model with the parameter above?',
-                                   ['Yes', 'No'], index=1)
+                                  ['Yes', 'No'], index=1)
 
             if next_train == 'Yes':
                 shutil.rmtree(f'results/{path_object[kind_object]}')
 
                 if torch.cuda.is_available():
-                    st.success(f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
+                    st.success(
+                        f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
                     device = 0
                 else:
                     st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
                     device = 'cpu'
 
                 # Load a model
-                model = YOLO(f'weights/petrained-model/{kind_model}')  # load a pretrained model (recommended for training)
+                model = YOLO(
+                    f'weights/petrained-model/{kind_model}')  # load a pretrained model (recommended for training)
                 model.train(data=path_file,
                             device=device,
                             epochs=int(epochs),
@@ -195,7 +198,7 @@ def train_model(st, **state):
                             weight_decay=weight_decay,
                             project='results',
                             name=path_object[kind_object])
-                
+
                 src = f'results/{path_object[kind_object]}/weights/best.pt'
                 dest = f'weights/{path_object[kind_object]}/{path_object[kind_object]}-000.pt'
 
@@ -208,15 +211,15 @@ def train_model(st, **state):
 
     with tab2:
         try:
-            list_visual = ['Confusion Matrix', 
-                           'F1_curve', 
-                           'P_curve', 
-                           'PR_curve', 
-                           'R_curve', 
+            list_visual = ['Confusion Matrix',
+                           'F1_curve',
+                           'P_curve',
+                           'PR_curve',
+                           'R_curve',
                            'Summary']
 
             visual = st.selectbox('Please choose the curve of training model',
-                                list_visual)
+                                  list_visual)
 
             if visual == 'Summary':
                 visual = 'results'
@@ -237,7 +240,7 @@ def train_model(st, **state):
                            'val_batch0_pred']
 
             visual = st.selectbox('Please choose the validation image!',
-                                list_visual)
+                                  list_visual)
 
             st.image(f'results/{path_object[kind_object]}/{visual}.jpg', caption=f'The image of {visual}')
         except:
@@ -264,17 +267,17 @@ def detection(st, **state):
         return
 
     kind_object = st.selectbox('Please select the kind of object detection do you want',
-                                ['General Detection',
-                                 'Coal Detection', 
-                                 'Seam Detection', 
-                                 'Core Detection', 
-                                 'Smart HSE'])
+                               ['General Detection',
+                                'Coal Detection',
+                                'Seam Detection',
+                                'Core Detection',
+                                'Smart HSE'])
 
-    path_object = {'General Detection'  : 'general-detect',
-                   'Coal Detection'     : 'front-coal',
-                   'Seam Detection'     : 'seam-gb',
-                   'Core Detection'     : 'core-logging',
-                   'Smart-HSE'          : 'hse-monitor'}
+    path_object = {'General Detection': 'general-detect',
+                   'Coal Detection': 'front-coal',
+                   'Seam Detection': 'seam-gb',
+                   'Core Detection': 'core-logging',
+                   'Smart-HSE': 'hse-monitor'}
 
     conf = st.slider('Number of Confidence (%)', min_value=0, max_value=100, step=1, value=60)
 
@@ -297,7 +300,7 @@ def detection(st, **state):
         else:
             list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
             option_model = st.selectbox('Please select model do you want!',
-                                        list_weights)
+                                        list_weights, index=2)
             model = YOLO(f'weights/{path_object[kind_object]}/{option_model}')
 
     with st7:
@@ -319,15 +322,23 @@ def detection(st, **state):
     else:
         st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
 
+    show_label = st.checkbox('Show label predictions', value=True, key='show-label')
+    save_annotate = st.checkbox('Save annotate and images', value=False, key='save-annotate')
+    stop_program = st.checkbox("Do you want to stop this program?", value=False, key='stop-program')
+
     # Detection Model
     try:
         count = 0
         placeholder = st.empty()
         colors = cs.generate_label_colors(model.names)
-        data_annotations = pd.DataFrame(columns=['time', 'label', 'score', 'x1', 'y1', 'x2', 'y2'])
+        data_annotations = pd.DataFrame(columns=['label', 'score', 'x1', 'y1', 'x2', 'y2'])
+
+        shutil.rmtree(f'detections/{path_object[kind_object]}/images/')
+        shutil.rmtree(f'detections/{path_object[kind_object]}/videos/')
+        shutil.rmtree(f'detections/{path_object[kind_object]}/annotations/')
 
         while cap.isOpened():
-            if st.checkbox("Do you want to stop this program and save detections?", value=False):
+            if not stop_program:
                 with placeholder.container():
                     ret, img = cap.read()
 
@@ -336,19 +347,28 @@ def detection(st, **state):
                         time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
                         caption = f'The frame image-{count} generated at {time_JKT}'
 
-                        img, parameter = cs.draw_image(model, img, conf/100, colors, time_JKT)
+                        img, parameter = cs.draw_image(model, img, conf / 100, colors, time_JKT)
                         st.image(img, caption=caption)
-                        df = pd.DataFrame(parameter)
-                        st.table(df)
 
-                        data_annotations = pd.concat([data_annotations, df], axis=0, ignore_index=True)
+                        if save_annotate:
+                            path_name = f'detections/{path_object[kind_object]}/images/frame-{count}.png'
+                            cv2.imwrite(path_name, img)
+
+                        df = pd.DataFrame(parameter)
+                        data_annotations = pd.concat([data_annotations, df], ignore_index=True)
+
+                        if show_label:
+                            st.table(df)
+
                         count += 1
                         # time.sleep(1)
                     else:
                         print('Image is not found')
             else:
-                data_annotations.to_excel('')
-
+                if save_annotate:
+                    data_annotations.to_excel(f'detections/{path_object[kind_object]}/annotations/annotate.xlsx',
+                                              engine='openpyxl')
+                break
     except:
         with st.spinner('Wait a moment, the program is being processed'):
             time.sleep(50)
@@ -461,7 +481,8 @@ def account(st, **state):
         replace_json(name, username, old_email, email, new_password)
 
     elif save and current_password != password:
-        st.success('Hi ' + name + ", your profile hasn't been update successfully because your current password doesn't match!")
+        st.success(
+            'Hi ' + name + ", your profile hasn't been update successfully because your current password doesn't match!")
 
     elif save and check_email(email) == 'invalid email':
         st.success('Hi ' + name + ", your profile hasn't been update successfully because your email invalid!")

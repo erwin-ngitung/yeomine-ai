@@ -37,8 +37,7 @@ def draw_image(model, img, conf, colors, time):
 
     results = model.predict(img, conf=0.2, iou=0.7)
     names = model.names
-    parameter = {'time': [],
-                 'label': [],
+    parameter = {'label': [],
                  'score': [],
                  'x1': [],
                  'y1': [],
@@ -57,12 +56,16 @@ def draw_image(model, img, conf, colors, time):
                                 (x2, y2),
                                 color, 2)
             img = cv2.putText(img,
-                              label,
+                              f'LABEL: {label}',
                               (x1, y1 - 10),
-                              cv2.FONT_HERSHEY_SIMPLEX, 0.9,
+                              cv2.FONT_HERSHEY_SIMPLEX, 0.6,
+                              color, 2)
+            img = cv2.putText(img,
+                              f'ID: {i}',
+                              (x1, y1 - 30),
+                              cv2.FONT_HERSHEY_SIMPLEX, 0.6,
                               color, 2)
 
-            parameter['time'].append(str(time))
             parameter['label'].append(label)
             parameter['score'].append(conf)
             parameter['x1'].append(x1)
