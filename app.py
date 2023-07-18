@@ -1,13 +1,13 @@
 import time
 import cv2
 import os
-import pandas as pd
 import numpy as np
+import pandas as pd
 import shutil
+
+import pandas as pd
 from PIL import Image
-from imutils.video import VideoStream
 from utils import check_email, check_account, update_json, replace_json, computer_vision as cs
-from io import StringIO
 
 # Package for Streamlit
 import streamlit as st
@@ -323,21 +323,31 @@ def detection(st, **state):
     try:
         count = 0
         placeholder = st.empty()
+        colors = cs.generate_label_colors(model.names)
+        data_annotations = pd.DataFrame(columns=['time', 'label', 'score', 'x1', 'y1', 'x2', 'y2'])
 
         while cap.isOpened():
-            with placeholder.container():
-                ret, img = cap.read()
+            if st.checkbox("Do you want to stop this program and save detections?", value=False):
+                with placeholder.container():
+                    ret, img = cap.read()
 
-                if ret:
-                    tz_JKT = pytz.timezone('Asia/Jakarta')
-                    time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                    if ret:
+                        tz_JKT = pytz.timezone('Asia/Jakarta')
+                        time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                        caption = f'The frame image-{count} generated at {time_JKT}'
 
-                    img = cs.draw_image(model, img, conf/100)
-                    st.image(img, caption=f'The frame image-{count} generated at {time_JKT}')
-                    count += 1
-                    # time.sleep(1)
-                else:
-                    print('Image is not found')
+                        img, parameter = cs.draw_image(model, img, conf/100, colors, time_JKT)
+                        st.image(img, caption=caption)
+                        df = pd.DataFrame(parameter)
+                        st.table(df)
+
+                        data_annotations = pd.concat([data_annotations, df], axis=0, ignore_index=True)
+                        count += 1
+                        # time.sleep(1)
+                    else:
+                        print('Image is not found')
+            else:
+                data_annotations.to_excel('')
 
     except:
         with st.spinner('Wait a moment, the program is being processed'):

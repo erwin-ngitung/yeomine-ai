@@ -1,8 +1,7 @@
-import pandas as pd
-from torchvision import transforms
 import cv2
-from utils import make_zip
 import torch
+import numpy as np
+
 torch.cuda.empty_cache()
 torch.backends.cudnn.benchmark = False
 
@@ -29,25 +28,46 @@ def filter_data(predictions, conf):
     return labels, boxes, scores
 
 
-def draw_image(model, img, conf):
+def generate_label_colors(name):
+    return np.random.uniform(0, 255, size=(len(name), 3))
+
+
+def draw_image(model, img, conf, colors, time):
     img = cv2.resize(img, (650, 650), interpolation=cv2.INTER_AREA)
 
     results = model.predict(img, conf=0.2, iou=0.7)
     names = model.names
+    parameter = {'time': [],
+                 'label': [],
+                 'score': [],
+                 'x1': [],
+                 'y1': [],
+                 'x2': [],
+                 'y2': []}
 
     for i, confid in enumerate(results[0].boxes.conf.tolist()):
         if confid >= conf:
             data = results[0].boxes.xyxy[i].tolist()
             label = names[int(results[0].boxes.cls[i])]
+            color = colors[int(results[0].boxes.cls[i])]
             x1, y1, x2, y2 = int(data[0]), int(data[1]), int(data[2]), int(data[3])
+
             img = cv2.rectangle(img,
                                 (x1, y1),
                                 (x2, y2),
-                                (255, 255, 100), 2)
+                                color, 2)
             img = cv2.putText(img,
-                             label, 
-                             (x1, y1-10), 
-                             cv2.FONT_HERSHEY_SIMPLEX, 0.9, 
-                             (36,255,12), 2)
-    
-    return img
+                              label,
+                              (x1, y1 - 10),
+                              cv2.FONT_HERSHEY_SIMPLEX, 0.9,
+                              color, 2)
+
+            parameter['time'].append(str(time))
+            parameter['label'].append(label)
+            parameter['score'].append(conf)
+            parameter['x1'].append(x1)
+            parameter['y1'].append(y1)
+            parameter['x2'].append(x2)
+            parameter['y2'].append(y2)
+
+    return img, parameter
