@@ -342,9 +342,16 @@ def detection(st, **state):
     next_detect = st.radio('Are you sure to detect image/video using parameter above?',
                            ['Yes', 'No'], index=1)
 
-    # os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/images')
-    # os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/videos')
-    # os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/annotations')
+    directory1 = f'{PATH}/detections/{path_object[kind_object]}/images'
+    directory2 = f'{PATH}/detections/{path_object[kind_object]}/videos'
+    directory3 = f'{PATH}/detections/{path_object[kind_object]}/annotations'
+    
+    if not os.path.exists(directory1):
+        os.makedirs(directory1)
+    if not os.path.exists(directory2):
+        os.makedirs(directory2)
+    if not os.path.exists(directory3):
+        os.makedirs(directory3)
 
     st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
 
