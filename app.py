@@ -324,7 +324,6 @@ def detection(st, **state):
 
     show_label = st.checkbox('Show label predictions', value=True, key='show-label')
     save_annotate = st.checkbox('Save annotate and images', value=False, key='save-annotate')
-    stop_program = st.checkbox("Do you want to stop this program?", value=False, key='stop-program')
 
     # Detection Model
     try:
@@ -337,9 +336,15 @@ def detection(st, **state):
         shutil.rmtree(f'detections/{path_object[kind_object]}/videos/')
         shutil.rmtree(f'detections/{path_object[kind_object]}/annotations/')
 
+        os.makedirs(f'detections/{path_object[kind_object]}/images/')
+        os.makedirs(f'detections/{path_object[kind_object]}/videos/')
+        os.makedirs(f'detections/{path_object[kind_object]}/annotations/')
+
         while cap.isOpened():
-            if not stop_program:
-                with placeholder.container():
+            with placeholder.container():
+                stop_program = st.checkbox("Do you want to stop this program?", value=False, key=f'stop-program-{count}')
+
+                if not stop_program:
                     ret, img = cap.read()
 
                     if ret:
@@ -364,11 +369,13 @@ def detection(st, **state):
                         # time.sleep(1)
                     else:
                         print('Image is not found')
-            else:
-                if save_annotate:
-                    data_annotations.to_excel(f'detections/{path_object[kind_object]}/annotations/annotate.xlsx',
-                                              engine='openpyxl')
-                break
+
+                else:
+                    if save_annotate:
+                        data_annotations.to_excel(f'detections/{path_object[kind_object]}/annotations/annotate.xlsx',
+                                                  engine='openpyxl')
+                    break
+            
     except:
         with st.spinner('Wait a moment, the program is being processed'):
             time.sleep(50)
