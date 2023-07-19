@@ -356,9 +356,10 @@ def detection(st, **state):
                 time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
                 caption = f'The frame image-{count} generated at {time_JKT}'
 
-                img, parameter = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
+                img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
                 st.image(img, caption=caption)
-                df = pd.DataFrame(parameter)
+                df1 = pd.DataFrame(parameter)
+                df2 = pd.DataFrame(annotate)
 
                 if save_annotate:
                     name_image = f'detections/{path_object[kind_object]}/images/frame-{count}.png'
@@ -366,11 +367,11 @@ def detection(st, **state):
 
                     name_annotate = f'detections/{path_object[kind_object]}/annotations/frame-{count}.txt'
                     with open(name_annotate, 'a') as f:
-                        df_string = df.to_string(header=False, index=False)
+                        df_string = df2.to_string(header=False, index=False)
                         f.write(df_string)
 
                 if show_label:
-                    st.table(df)
+                    st.table(df1)
 
                 count += 1
                 time.sleep(0.5)
@@ -379,7 +380,7 @@ def detection(st, **state):
 
         if stop_program:
             break
-            
+
     st.success("Your program has been successfully stopped")
 
 

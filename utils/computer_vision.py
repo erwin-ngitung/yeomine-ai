@@ -45,13 +45,23 @@ def draw_image(model, device, img, conf, colors, time):
                  'y1': [],
                  'x2': [],
                  'y2': []}
+    annotate = {'id': [],
+                'x1': [],
+                'y1': [],
+                'x2': [],
+                'y2': []}
 
     for i, confid in enumerate(results[0].boxes.conf.tolist()):
         if confid >= conf:
             data = results[0].boxes.xyxy[i].tolist()
-            label = names[int(results[0].boxes.cls[i])]
+            idx = int(results[0].boxes.cls[i])
+            label = names[idx]
             color = colors[int(results[0].boxes.cls[i])]
             x1, y1, x2, y2 = int(data[0]), int(data[1]), int(data[2]), int(data[3])
+            x = (x1 + (x2 - x1) / 2) / x_size
+            y = (y1 + (y2 - y1) / 2) / y_size
+            w = (x2 - x1) / x_size
+            h = (y2 - y1) / y_size
 
             img = cv2.rectangle(img,
                                 (x1, y1),
@@ -70,9 +80,15 @@ def draw_image(model, device, img, conf, colors, time):
 
             parameter['label'].append(label)
             parameter['score'].append(conf)
-            parameter['x1'].append(np.round(float(x1/x_size), decimals=3))
-            parameter['y1'].append(np.round(float(y1/y_size), decimals=3))
-            parameter['x2'].append(np.round(float(x2/x_size), decimals=3))
-            parameter['y2'].append(np.round(float(y2/y_size), decimals=3))
+            parameter['x1'].append(x1)
+            parameter['y1'].append(y1)
+            parameter['x2'].append(x2)
+            parameter['y2'].append(y2)
 
-    return img, parameter
+            annotate['id'].append(idx)
+            annotate['x'].append(np.round(float(x), decimals=3))
+            annotate['y'].append(np.round(float(y), decimals=3))
+            annotate['w'].append(np.round(float(w), decimals=3))
+            annotate['h'].append(np.round(float(h), decimals=3))
+
+    return img, parameter, annotate
