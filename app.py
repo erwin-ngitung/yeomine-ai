@@ -392,7 +392,7 @@ def detection(st, **state):
                     st.success("Your program has been successfully stopped")
                     break
 
-        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
+        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/annotations/'))
 
 
 def validation(st, **state):
