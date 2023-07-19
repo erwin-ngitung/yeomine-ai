@@ -388,6 +388,7 @@ def detection(st, **state):
                         st.error('Image is not found')
                 else:
                     st.success("Your program has been successfully stopped")
+                    break
 
         st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/images'))
 
