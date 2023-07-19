@@ -352,12 +352,6 @@ def detection(st, **state):
         # Detection Model
         while cap.isOpened():
             with placeholder.container():
-                stop_program = st.checkbox("Do you want to stop this program?", value=False,
-                                           key=f'stop-program-{count}')
-
-                if stop_program:
-                    break
-
                 ret, img = cap.read()
 
                 if ret:
@@ -378,7 +372,7 @@ def detection(st, **state):
                         cv2.imwrite(name_image, img)
 
                         name_annotate = f'detections/{path_object[kind_object]}/annotations/{label_name(count, 10000)}.txt'
-                        np.savetxt(name_annotate, df2.values, fmt='%d')
+                        np.savetxt(name_annotate, df2.values, fmt='%.2f')
 
                     count += 1
                     time.sleep(0.5)
