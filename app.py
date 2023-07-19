@@ -27,8 +27,8 @@ warnings.filterwarnings('ignore')
 torch.cuda.empty_cache()
 torch.backends.cudnn.benchmark = False
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
-PATH = '.'
-# PATH = Path(Path(__file__).resolve()).parent
+# PATH = '.'
+PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
 
 app = MultiPage()
@@ -342,60 +342,38 @@ def detection(st, **state):
         placeholder = st.empty()
         colors = cs.generate_label_colors(model.names)
 
-        # try:
-        #     shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/images/')
-        #     shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/videos/')
-        #     shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
-        #
-        #     os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/images/')
-        #     os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/videos/')
-        #     os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
-        #
-        # except:
-        #     pass
-
-        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/images'))
-
         # Detection Model
         while cap.isOpened():
             with placeholder.container():
-                stop_program = st.checkbox('Do you want stop this program?', value=False, key=f'stop-program-{count}')
+                ret, img = cap.read()
 
-                if not stop_program:
-                    ret, img = cap.read()
+                if ret:
+                    tz_JKT = pytz.timezone('Asia/Jakarta')
+                    time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                    caption = f'The frame image-{count} generated at {time_JKT}'
 
-                    if ret:
-                        tz_JKT = pytz.timezone('Asia/Jakarta')
-                        time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-                        caption = f'The frame image-{count} generated at {time_JKT}'
+                    img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
+                    st.image(img, caption=caption)
+                    df1 = pd.DataFrame(parameter)
+                    df2 = pd.DataFrame(annotate)
 
-                        img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
-                        st.image(img, caption=caption)
-                        df1 = pd.DataFrame(parameter)
-                        df2 = pd.DataFrame(annotate)
+                    if show_label:
+                        st.table(df1)
 
-                        if show_label:
-                            st.table(df1)
+                    if save_annotate:
+                        name_image = f'{PATH}/detections/{path_object[kind_object]}/images/' \
+                                     f'{label_name(count, 10000)}.png'
+                        cv2.imwrite(name_image, img)
 
-                        if save_annotate:
-                            name_image = f'{PATH}/detections/{path_object[kind_object]}/images/' \
-                                         f'{label_name(count, 10000)}.png'
-                            cv2.imwrite(name_image, img)
+                        name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/' \
+                                        f'{label_name(count, 10000)}.txt'
+                        np.savetxt(name_annotate, df2.values, fmt='%.2f')
 
-                            name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/' \
-                                            f'{label_name(count, 10000)}.txt'
-                            np.savetxt(name_annotate, df2.values, fmt='%.2f')
+                    count += 1
+                    time.sleep(0.5)
 
-                        count += 1
-                        time.sleep(0.5)
-
-                    else:
-                        st.error('Image is not found')
                 else:
-                    st.success("Your program has been successfully stopped")
-                    break
-
-        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/images'))
+                    st.error('Image is not found')
 
 
 def validation(st, **state):
