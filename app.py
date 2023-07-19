@@ -327,61 +327,56 @@ def detection(st, **state):
     show_label = st.checkbox('Show label predictions', value=True, key='show-label')
     save_annotate = st.checkbox('Save annotate and images', value=False, key='save-annotate')
 
+    count = 0
+    placeholder = st.empty()
+    colors = cs.generate_label_colors(model.names)
+    data_annotations = pd.DataFrame(columns=['label', 'score', 'x1', 'y1', 'x2', 'y2'])
+
+    shutil.rmtree(f'detections/{path_object[kind_object]}/images/')
+    shutil.rmtree(f'detections/{path_object[kind_object]}/videos/')
+    shutil.rmtree(f'detections/{path_object[kind_object]}/annotations/')
+
+    os.makedirs(f'detections/{path_object[kind_object]}/images/')
+    os.makedirs(f'detections/{path_object[kind_object]}/videos/')
+    os.makedirs(f'detections/{path_object[kind_object]}/annotations/')
+
     # Detection Model
-    try:
-        count = 0
-        placeholder = st.empty()
-        colors = cs.generate_label_colors(model.names)
-        data_annotations = pd.DataFrame(columns=['label', 'score', 'x1', 'y1', 'x2', 'y2'])
+    while cap.isOpened():
+        with placeholder.container():
+            stop_program = st.checkbox("Do you want to stop this program?", value=False, key=f'stop-program-{count}')
 
-        shutil.rmtree(f'detections/{path_object[kind_object]}/images/')
-        shutil.rmtree(f'detections/{path_object[kind_object]}/videos/')
-        shutil.rmtree(f'detections/{path_object[kind_object]}/annotations/')
+            if not stop_program:
+                ret, img = cap.read()
 
-        os.makedirs(f'detections/{path_object[kind_object]}/images/')
-        os.makedirs(f'detections/{path_object[kind_object]}/videos/')
-        os.makedirs(f'detections/{path_object[kind_object]}/annotations/')
+                if ret:
+                    tz_JKT = pytz.timezone('Asia/Jakarta')
+                    time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                    caption = f'The frame image-{count} generated at {time_JKT}'
 
-        while cap.isOpened():
-            with placeholder.container():
-                stop_program = st.checkbox("Do you want to stop this program?", value=False, key=f'stop-program-{count}')
+                    img, parameter = cs.draw_image(model, img, conf / 100, colors, time_JKT)
+                    st.image(img, caption=caption)
 
-                if not stop_program:
-                    ret, img = cap.read()
-
-                    if ret:
-                        tz_JKT = pytz.timezone('Asia/Jakarta')
-                        time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-                        caption = f'The frame image-{count} generated at {time_JKT}'
-
-                        img, parameter = cs.draw_image(model, img, conf / 100, colors, time_JKT)
-                        st.image(img, caption=caption)
-
-                        if save_annotate:
-                            path_name = f'detections/{path_object[kind_object]}/images/frame-{count}.png'
-                            cv2.imwrite(path_name, img)
-
-                        df = pd.DataFrame(parameter)
-                        data_annotations = pd.concat([data_annotations, df], ignore_index=True)
-
-                        if show_label:
-                            st.table(df)
-
-                        count += 1
-                        # time.sleep(1)
-                    else:
-                        print('Image is not found')
-
-                else:
                     if save_annotate:
-                        data_annotations.to_excel(f'detections/{path_object[kind_object]}/annotations/annotate.xlsx',
-                                                  engine='openpyxl')
-                    break
-        st.success("Your program has been successfully stopped")
+                        path_name = f'detections/{path_object[kind_object]}/images/frame-{count}.png'
+                        cv2.imwrite(path_name, img)
 
-    except:
-        with st.spinner('Wait a moment, the program is being processed'):
-            time.sleep(50)
+                    df = pd.DataFrame(parameter)
+                    data_annotations = pd.concat([data_annotations, df], ignore_index=True)
+
+                    if show_label:
+                        st.table(df)
+
+                    count += 1
+                    # time.sleep(1)
+                else:
+                    print('Image is not found')
+
+            else:
+                if save_annotate:
+                    data_annotations.to_excel(f'detections/{path_object[kind_object]}/annotations/annotate.xlsx',
+                                              engine='openpyxl')
+                break
+    st.success("Your program has been successfully stopped")
 
 
 def report(st, **state):
