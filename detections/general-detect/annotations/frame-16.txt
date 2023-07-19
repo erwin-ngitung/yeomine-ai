@@ -1,3 +1,0 @@
-Empty DataFrame
-Columns: [id, x, y, w, h]
-Index: []

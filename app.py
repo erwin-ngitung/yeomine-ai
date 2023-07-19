@@ -7,7 +7,7 @@ import shutil
 
 import pandas as pd
 from PIL import Image
-from utils import check_email, check_account, update_json, replace_json, computer_vision as cs
+from utils import label_name, check_email, check_account, update_json, replace_json, computer_vision as cs
 
 # Package for Streamlit
 import streamlit as st
@@ -63,7 +63,7 @@ def sign_up(st, **state):
                         'username': username,
                         'email': email,
                         'password': password,
-                        'login': 'True',
+                        'login': True,
                         'edit': True})
 
         update_json(name, username, email, password)
@@ -109,8 +109,7 @@ def login(st, **state):
                             'username': username,
                             'email': email,
                             'password': password,
-                            'login': 'True',
-                            'path_file': 'source/front-coal'})
+                            'login': True})
 
         elif submit and status == 'wrong password':
             st.error('Login failed because your password is wrong!')
@@ -125,7 +124,7 @@ def login(st, **state):
         st.error('Please login with your registered email!')
 
 
-def train_model(st, **state):
+def training(st, **state):
     # Title
     image = Image.open('images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
@@ -139,7 +138,7 @@ def train_model(st, **state):
 
     restriction = state['login']
 
-    if 'login' not in state or restriction == 'False':
+    if 'login' not in state or not restriction:
         st.warning('Please login with your registered email!')
         return
 
@@ -262,11 +261,16 @@ def detection(st, **state):
     st.markdown('<h3 style=\'text-align:center;\'>Detection Model</h3>', unsafe_allow_html=True)
 
     restriction = state['login']
-    path_file = state['path_file']
 
-    if 'login' not in state or restriction == 'False':
+    if 'login' not in state or not restriction:
         st.warning('Please login with your registered email!')
         return
+
+    path_object = {'General Detection': 'general-detect',
+                   'Coal Detection': 'front-coal',
+                   'Seam Detection': 'seam-gb',
+                   'Core Detection': 'core-logging',
+                   'Smart-HSE': 'hse-monitor'}
 
     kind_object = st.selectbox('Please select the kind of object detection do you want',
                                ['General Detection',
@@ -274,12 +278,6 @@ def detection(st, **state):
                                 'Seam Detection',
                                 'Core Detection',
                                 'Smart HSE'])
-
-    path_object = {'General Detection': 'general-detect',
-                   'Coal Detection': 'front-coal',
-                   'Seam Detection': 'seam-gb',
-                   'Core Detection': 'core-logging',
-                   'Smart-HSE': 'hse-monitor'}
 
     conf = st.slider('Number of Confidence (%)', min_value=0, max_value=100, step=1, value=60)
 
@@ -326,63 +324,157 @@ def detection(st, **state):
         st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
         device = 'cpu'
 
-    show_label = st.checkbox('Show label predictions', value=True, key='show-label')
-    save_annotate = st.checkbox('Save annotate and images', value=False, key='save-annotate')
+    next_detect = st.radio('Are you sure to detect image/video using parameter above?',
+                           ['Yes', 'No'], index=1)
 
-    count = 0
-    placeholder = st.empty()
-    colors = cs.generate_label_colors(model.names)
+    if next_detect == 'Yes':
+        st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' stroke=\'black\' '
+                    'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
 
-    try:
-        shutil.rmtree(f'detections/{path_object[kind_object]}/images/')
-        shutil.rmtree(f'detections/{path_object[kind_object]}/videos/')
-        shutil.rmtree(f'detections/{path_object[kind_object]}/annotations/')
+        show_label = st.checkbox('Show label predictions', value=True, key='show-label')
+        save_annotate = st.checkbox('Save annotate and images', value=False, key='save-annotate')
 
-        os.makedirs(f'detections/{path_object[kind_object]}/images/')
-        os.makedirs(f'detections/{path_object[kind_object]}/videos/')
-        os.makedirs(f'detections/{path_object[kind_object]}/annotations/')
-    except:
-        pass
+        count = 0
+        placeholder = st.empty()
+        colors = cs.generate_label_colors(model.names)
 
-    # Detection Model
-    while cap.isOpened():
-        with placeholder.container():
-            stop_program = st.checkbox("Do you want to stop this program?", value=False, key=f'stop-program-{count}')
+        try:
+            shutil.rmtree(f'detections/{path_object[kind_object]}/images/')
+            shutil.rmtree(f'detections/{path_object[kind_object]}/videos/')
+            shutil.rmtree(f'detections/{path_object[kind_object]}/annotations/')
 
-            if stop_program:
-                break
+            os.makedirs(f'detections/{path_object[kind_object]}/images/')
+            os.makedirs(f'detections/{path_object[kind_object]}/videos/')
+            os.makedirs(f'detections/{path_object[kind_object]}/annotations/')
+        except:
+            pass
 
-            ret, img = cap.read()
+        # Detection Model
+        while cap.isOpened():
+            with placeholder.container():
+                stop_program = st.checkbox("Do you want to stop this program?", value=False,
+                                           key=f'stop-program-{count}')
 
-            if ret:
-                tz_JKT = pytz.timezone('Asia/Jakarta')
-                time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-                caption = f'The frame image-{count} generated at {time_JKT}'
+                if stop_program:
+                    break
 
-                img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
-                st.image(img, caption=caption)
-                df1 = pd.DataFrame(parameter)
-                df2 = pd.DataFrame(annotate)
+                ret, img = cap.read()
 
-                if show_label:
-                    st.table(df1)
+                if ret:
+                    tz_JKT = pytz.timezone('Asia/Jakarta')
+                    time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                    caption = f'The frame image-{count} generated at {time_JKT}'
 
-                if save_annotate:
-                    name_image = f'detections/{path_object[kind_object]}/images/frame-{count}.png'
-                    cv2.imwrite(name_image, img)
+                    img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
+                    st.image(img, caption=caption)
+                    df1 = pd.DataFrame(parameter)
+                    df2 = pd.DataFrame(annotate)
 
-                    name_annotate = f'detections/{path_object[kind_object]}/annotations/frame-{count}.txt'
-                    with open(name_annotate, 'a') as f:
-                        df_string = df2.to_string(header=False, index=False)
-                        f.write(df_string)
+                    if show_label:
+                        st.table(df1)
 
-                count += 1
-                time.sleep(0.5)
+                    if save_annotate:
+                        name_image = f'detections/{path_object[kind_object]}/images/{label_name(count, 10000)}.png'
+                        cv2.imwrite(name_image, img)
 
-            else:
-                st.error('Image is not found')
+                        name_annotate = f'detections/{path_object[kind_object]}/annotations/{label_name(count, 10000)}.txt'
+                        with open(name_annotate, 'a') as f:
+                            df_string = df2.to_string(header=False, index=False)
+                            f.write(df_string)
 
-    st.success("Your program has been successfully stopped")
+                    count += 1
+                    time.sleep(0.5)
+
+                else:
+                    st.error('Image is not found')
+
+        st.success("Your program has been successfully stopped")
+
+
+def validation(st, **state):
+    # Title
+    image = Image.open('images/logo_yeomine.png')
+    st1, st2, st3 = st.columns(3)
+
+    with st2:
+        st.image(image)
+
+    st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' stroke=\'black\' '
+                'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
+    st.markdown('<h3 style=\'text-align:center;\'>Validation Result</h3>', unsafe_allow_html=True)
+
+    restriction = state['login']
+
+    if 'login' not in state or not restriction:
+        st.warning('Please login with your registered email!')
+        return
+
+    path_object = {'General Detection': 'general-detect',
+                   'Coal Detection': 'front-coal',
+                   'Seam Detection': 'seam-gb',
+                   'Core Detection': 'core-logging',
+                   'Smart-HSE': 'hse-monitor'}
+
+    tab1, tab2 = st.tabs(['Validation Checker', 'Download File'])
+
+    with tab1:
+        kind_object = st.selectbox('Please select the kind of object detection do you want',
+                                   ['General Detection',
+                                    'Coal Detection',
+                                    'Seam Detection',
+                                    'Core Detection',
+                                    'Smart HSE'])
+
+        def next_photo(path_files, func):
+            path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
+
+            if func == 'next':
+                st.session_state.counter += 1
+                if st.session_state.counter >= len(path_images):
+                    st.session_state.counter = 0
+            elif func == 'back':
+                st.session_state.counter -= 1
+                if st.session_state.counter >= len(path_images):
+                    st.session_state.counter = 0
+
+        def delete_photo(path_files, func):
+            path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
+            photo = path_images[st.session_state.counter]
+            text = f'detections/{path_object[kind_object]}/annotations/' + photo.split("\\")[-1].split(".")[0] + '.txt'
+
+            os.remove(photo)
+            os.remove(text)
+
+            next_photo(path_files, func)
+
+        path_files = f'detections/{path_object[kind_object]}/images'
+
+        st1, st2, st3 = st.columns(3)
+
+        with st1:
+            st1.button("Next Image ⏭️", on_click=next_photo, args=([path_files, 'next']))
+        with st2:
+            st2.button("Delete Image ⏭️", on_click=delete_photo, args=([path_files, 'next']))
+        with st3:
+            st3.button("Back Image ⏭️", on_click=delete_photo, args=([path_files, 'back']))
+
+        if 'counter' not in st.session_state:
+            st.session_state.counter = 0
+            path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
+            photo = path_images[st.session_state.counter]
+            caption = photo.split("/")[-1]
+
+            st.image(photo, caption=f'image-{caption}')
+
+        else:
+            path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
+            photo = path_images[st.session_state.counter]
+            caption = photo.split('\\')[-1]
+
+            st.image(photo, caption=f'image-{caption}')
+
+    with tab2:
+        st.write('Coming Soon')
 
 
 def report(st, **state):
@@ -399,7 +491,7 @@ def report(st, **state):
 
     restriction = state['login']
 
-    if 'login' not in state or restriction == 'False':
+    if 'login' not in state or not restriction:
         st.warning('Please login with your registered email!')
         return
 
@@ -449,7 +541,7 @@ def account(st, **state):
     restriction = state['login']
     password = state['password']
 
-    if ('login' not in state or restriction == 'False') or ('password' not in state):
+    if ('login' not in state or not restriction) or ('password' not in state):
         st.warning('Please login with your registered email!')
         return
 
@@ -504,7 +596,7 @@ def account(st, **state):
 
 def logout(st, **state):
     st.success('Your account has been log out from this app')
-    MultiPage.save({'login': 'False'})
+    MultiPage.save({'login': False})
 
 
 app.st = st
@@ -517,8 +609,9 @@ app.hide_navigation = True
 
 app.add_app('Sign Up', sign_up)
 app.add_app('Login', login)
-app.add_app('Model Training', train_model)
+app.add_app('Training', training)
 app.add_app('Detection', detection)
+app.add_app('Validation', validation)
 app.add_app('Report', report)
 app.add_app('Account Setting', account)
 app.add_app('Logout', logout)

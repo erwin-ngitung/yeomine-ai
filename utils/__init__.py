@@ -9,6 +9,15 @@ import subprocess
 warnings.filterwarnings("ignore")
 
 
+def label_name(num, maks):
+    len_text = len(str(maks))
+    len_num = len(str(num))
+    name = "0" * (len_text - len_num)
+    name += str(num)
+
+    return name
+
+
 def make_zip(weight_name):
     # Creating the ZIP file 
     archived = shutil.make_archive(f'weights/{weight_name}.pth', 'zip', f'weights/{weight_name}.zip')
