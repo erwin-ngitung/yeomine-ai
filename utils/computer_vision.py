@@ -46,10 +46,10 @@ def draw_image(model, device, img, conf, colors, time):
                  'x2': [],
                  'y2': []}
     annotate = {'id': [],
-                'x1': [],
-                'y1': [],
-                'x2': [],
-                'y2': []}
+                'x': [],
+                'y': [],
+                'w': [],
+                'h': []}
 
     for i, confid in enumerate(results[0].boxes.conf.tolist()):
         if confid >= conf:
