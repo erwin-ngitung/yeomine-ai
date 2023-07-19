@@ -354,7 +354,7 @@ def detection(st, **state):
         # except:
         #     pass
 
-        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
+        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/images'))
 
         # Detection Model
         while cap.isOpened():
@@ -395,7 +395,7 @@ def detection(st, **state):
                     st.success("Your program has been successfully stopped")
                     break
 
-        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
+        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/images'))
 
 
 def validation(st, **state):
