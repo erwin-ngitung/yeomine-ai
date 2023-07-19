@@ -23,6 +23,7 @@ xlsxwriter
 imutils
 geopy
 pytz
+py-cpuinfo
 pytesseract
 
 # Streamlit -------------------------------------

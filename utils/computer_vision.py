@@ -32,10 +32,10 @@ def generate_label_colors(name):
     return np.random.uniform(0, 255, size=(len(name), 3))
 
 
-def draw_image(model, img, conf, colors, time):
+def draw_image(model, device, img, conf, colors, time):
     img = cv2.resize(img, (650, 650), interpolation=cv2.INTER_AREA)
 
-    results = model.predict(img, conf=0.2, iou=0.7)
+    results = model.predict(img, device=device, conf=0.2, iou=0.7)
     names = model.names
     parameter = {'label': [],
                  'score': [],

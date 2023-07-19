@@ -116,10 +116,8 @@ def video_frame_callback(frame: av.VideoFrame) -> av.VideoFrame:
 
 webrtc_ctx = webrtc_streamer(
     key="object-detection",
-    mode=WebRtcMode.SENDRECV,
     video_frame_callback=video_frame_callback,
-    media_stream_constraints={"video": True, "audio": False},
-    async_processing=True,
+    media_stream_constraints={"video": True, "audio": False}
 )
 
 if st.checkbox("Show the detected labels", value=True):

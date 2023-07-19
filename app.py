@@ -321,8 +321,10 @@ def detection(st, **state):
 
     if torch.cuda.is_available():
         st.success(f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
+        device = 0
     else:
         st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
+        device = 'cpu'
 
     show_label = st.checkbox('Show label predictions', value=True, key='show-label')
     save_annotate = st.checkbox('Save annotate and images', value=False, key='save-annotate')
@@ -356,7 +358,7 @@ def detection(st, **state):
                     time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
                     caption = f'The frame image-{count} generated at {time_JKT}'
 
-                    img, parameter = cs.draw_image(model, img, conf / 100, colors, time_JKT)
+                    img, parameter = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
                     st.image(img, caption=caption)
 
                     if save_annotate:
