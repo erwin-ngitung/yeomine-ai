@@ -349,6 +349,9 @@ def detection(st, **state):
         with placeholder.container():
             stop_program = st.checkbox("Do you want to stop this program?", value=False, key=f'stop-program-{count}')
 
+            if stop_program:
+                break
+
             ret, img = cap.read()
 
             if ret:
@@ -360,6 +363,9 @@ def detection(st, **state):
                 st.image(img, caption=caption)
                 df1 = pd.DataFrame(parameter)
                 df2 = pd.DataFrame(annotate)
+                
+                if show_label:
+                    st.table(df1)
 
                 if save_annotate:
                     name_image = f'detections/{path_object[kind_object]}/images/frame-{count}.png'
@@ -370,16 +376,11 @@ def detection(st, **state):
                         df_string = df2.to_string(header=False, index=False)
                         f.write(df_string)
 
-                if show_label:
-                    st.table(df1)
-
                 count += 1
                 time.sleep(0.5)
-            else:
-                print('Image is not found')
 
-        if stop_program:
-            break
+            else:
+                st.error('Image is not found')
 
     st.success("Your program has been successfully stopped")
 
