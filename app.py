@@ -19,13 +19,16 @@ import pytesseract
 # Package for Machine Learning
 import torch
 from ultralytics import YOLO
-
+from pathlib import Path
+import logging
 import warnings
 
 warnings.filterwarnings('ignore')
 torch.cuda.empty_cache()
 torch.backends.cudnn.benchmark = False
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
+PATH = Path(Path(__file__).resolve()).parent
+logger = logging.getLogger(__name__)
 
 app = MultiPage()
 
@@ -34,7 +37,7 @@ def sign_up(st, **state):
     placeholder = st.empty()
 
     with placeholder.form('Sign Up'):
-        image = Image.open('images/logo_yeomine.png')
+        image = Image.open(f'{PATH}/images/logo_yeomine.png')
         st1, st2, st3 = st.columns(3)
 
         with st2:
@@ -85,7 +88,7 @@ def login(st, **state):
     try:
         # Insert a form in the container
         with placeholder.form('login'):
-            image = Image.open('images/logo_yeomine.png')
+            image = Image.open(f'{PATH}/images/logo_yeomine.png')
             st1, st2, st3 = st.columns(3)
 
             with st2:
@@ -126,7 +129,7 @@ def login(st, **state):
 
 def training(st, **state):
     # Title
-    image = Image.open('images/logo_yeomine.png')
+    image = Image.open(f'{PATH}/images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
 
     with st2:
@@ -157,7 +160,7 @@ def training(st, **state):
                            'Smart-HSE': 'hse-monitor'}
 
             path_file = st.text_input('Please input your path data YAML', 'data/front-coal.yaml')
-            list_model = os.listdir(f'weights/petrained-model')
+            list_model = os.listdir(f'{PATH}/weights/petrained-model')
             kind_model = st.selectbox('Please select the petrained model',
                                       list_model)
             st4, st5 = st.columns(2)
@@ -176,7 +179,7 @@ def training(st, **state):
                                   ['Yes', 'No'], index=1)
 
             if next_train == 'Yes':
-                shutil.rmtree(f'results/{path_object[kind_object]}')
+                shutil.rmtree(f'{PATH}/results/{path_object[kind_object]}')
 
                 if torch.cuda.is_available():
                     st.success(
@@ -188,7 +191,7 @@ def training(st, **state):
 
                 # Load a model
                 model = YOLO(
-                    f'weights/petrained-model/{kind_model}')  # load a pretrained model (recommended for training)
+                    f'{PATH}/weights/petrained-model/{kind_model}')  # load a pretrained model (recommended for training)
                 model.train(data=path_file,
                             device=device,
                             epochs=int(epochs),
@@ -200,8 +203,8 @@ def training(st, **state):
                             project='results',
                             name=path_object[kind_object])
 
-                src = f'results/{path_object[kind_object]}/weights/best.pt'
-                dest = f'weights/{path_object[kind_object]}/{path_object[kind_object]}-000.pt'
+                src = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
+                dest = f'{PATH}/weights/{path_object[kind_object]}/{path_object[kind_object]}-000.pt'
 
                 shutil.copyfile(src, dest)
 
@@ -227,7 +230,7 @@ def training(st, **state):
             elif visual == 'Confusion Matrix':
                 visual = 'confusion_matrix_normalized'
 
-            st.image(f'results/{path_object[kind_object]}/{visual}.png', caption=f'The image of {visual}')
+            st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.png', caption=f'The image of {visual}')
         except:
             pass
 
@@ -243,14 +246,14 @@ def training(st, **state):
             visual = st.selectbox('Please choose the validation image!',
                                   list_visual)
 
-            st.image(f'results/{path_object[kind_object]}/{visual}.jpg', caption=f'The image of {visual}')
+            st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.jpg', caption=f'The image of {visual}')
         except:
             pass
 
 
 def detection(st, **state):
     # Title
-    image = Image.open('images/logo_yeomine.png')
+    image = Image.open(f'{PATH}/images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
 
     with st2:
@@ -294,14 +297,14 @@ def detection(st, **state):
 
     with st6:
         if custom == 'Yes':
-            option_model = f'results/{path_object[kind_object]}/weights/best.pt'
+            option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
             model = YOLO(option_model)
             st.success('The model have successfully loaded!')
         else:
             list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
             option_model = st.selectbox('Please select model do you want!',
                                         list_weights)
-            model = YOLO(f'weights/{path_object[kind_object]}/{option_model}')
+            model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
 
     with st7:
         if type_camera == 'Yes':
@@ -314,7 +317,7 @@ def detection(st, **state):
             list_files = [file for file in os.listdir(f'datasets/{path_object[kind_object]}/predict')]
             sample_video = st.selectbox('Please select sample video do you want',
                                         list_files)
-            source = f'datasets/{path_object[kind_object]}/predict/{sample_video}'
+            source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
             cap = cv2.VideoCapture(source)
 
     if torch.cuda.is_available():
@@ -339,13 +342,13 @@ def detection(st, **state):
         colors = cs.generate_label_colors(model.names)
 
         try:
-            shutil.rmtree(f'detections/{path_object[kind_object]}/images/')
-            shutil.rmtree(f'detections/{path_object[kind_object]}/videos/')
-            shutil.rmtree(f'detections/{path_object[kind_object]}/annotations/')
+            shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/images/')
+            shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/videos/')
+            shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
 
-            os.makedirs(f'detections/{path_object[kind_object]}/images/')
-            os.makedirs(f'detections/{path_object[kind_object]}/videos/')
-            os.makedirs(f'detections/{path_object[kind_object]}/annotations/')
+            os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/images/')
+            os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/videos/')
+            os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
         except:
             pass
 
@@ -368,10 +371,10 @@ def detection(st, **state):
                         st.table(df1)
 
                     if save_annotate:
-                        name_image = f'detections/{path_object[kind_object]}/images/{label_name(count, 10000)}.png'
+                        name_image = f'{PATH}/detections/{path_object[kind_object]}/images/{label_name(count, 10000)}.png'
                         cv2.imwrite(name_image, img)
 
-                        name_annotate = f'detections/{path_object[kind_object]}/annotations/{label_name(count, 10000)}.txt'
+                        name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/{label_name(count, 10000)}.txt'
                         np.savetxt(name_annotate, df2.values, fmt='%.2f')
 
                     count += 1
@@ -385,7 +388,7 @@ def detection(st, **state):
 
 def validation(st, **state):
     # Title
-    image = Image.open('images/logo_yeomine.png')
+    image = Image.open(f'{PATH}/images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
 
     with st2:
@@ -432,14 +435,14 @@ def validation(st, **state):
         def delete_photo(path_files, func):
             path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
             photo = path_images[st.session_state.counter]
-            text = f'detections/{path_object[kind_object]}/annotations/' + photo.split("\\")[-1].split(".")[0] + '.txt'
+            text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + photo.split("\\")[-1].split(".")[0] + '.txt'
 
             os.remove(photo)
             os.remove(text)
 
             next_photo(path_files, func)
 
-        path_files = f'detections/{path_object[kind_object]}/images'
+        path_files = f'{PATH}/detections/{path_object[kind_object]}/images'
 
         st1, st2, st3 = st.columns(3)
 
@@ -471,7 +474,7 @@ def validation(st, **state):
 
 def report(st, **state):
     # Title
-    image = Image.open('images/logo_yeomine.png')
+    image = Image.open(f'{PATH}/images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
 
     with st2:
@@ -520,7 +523,7 @@ def report(st, **state):
 
 def account(st, **state):
     # Title
-    image = Image.open('images/logo_yeomine.png')
+    image = Image.open(f'{PATH}/images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
 
     with st2:
@@ -587,6 +590,9 @@ def account(st, **state):
 
 
 def logout(st, **state):
+    # Title
+    image = Image.open(f'{PATH}/images/logo_yeomine.png')
+    
     st.success('Your account has been log out from this app')
     MultiPage.save({'login': False})
 
