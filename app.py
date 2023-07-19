@@ -27,7 +27,8 @@ warnings.filterwarnings('ignore')
 torch.cuda.empty_cache()
 torch.backends.cudnn.benchmark = False
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
-PATH = Path(Path(__file__).resolve()).parent
+PATH = '.'
+# PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
 
 app = MultiPage()
@@ -355,35 +356,39 @@ def detection(st, **state):
         # Detection Model
         while cap.isOpened():
             with placeholder.container():
-                ret, img = cap.read()
+                stop_program = st.checkbox('Do you want to stop this program?', value=False, key=f'stop-program-{count}')
 
-                if ret:
-                    tz_JKT = pytz.timezone('Asia/Jakarta')
-                    time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-                    caption = f'The frame image-{count} generated at {time_JKT}'
+                if not stop_program:
+                    ret, img = cap.read()
 
-                    img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
-                    st.image(img, caption=caption)
-                    df1 = pd.DataFrame(parameter)
-                    df2 = pd.DataFrame(annotate)
+                    if ret:
+                        tz_JKT = pytz.timezone('Asia/Jakarta')
+                        time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                        caption = f'The frame image-{count} generated at {time_JKT}'
 
-                    if show_label:
-                        st.table(df1)
+                        img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
+                        st.image(img, caption=caption)
+                        df1 = pd.DataFrame(parameter)
+                        df2 = pd.DataFrame(annotate)
 
-                    if save_annotate:
-                        name_image = f'{PATH}/detections/{path_object[kind_object]}/images/{label_name(count, 10000)}.png'
-                        cv2.imwrite(name_image, img)
+                        if show_label:
+                            st.table(df1)
 
-                        name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/{label_name(count, 10000)}.txt'
-                        np.savetxt(name_annotate, df2.values, fmt='%.2f')
+                        if save_annotate:
+                            name_image = f'{PATH}/detections/{path_object[kind_object]}/images/{label_name(count, 10000)}.png'
+                            cv2.imwrite(name_image, img)
 
-                    count += 1
-                    time.sleep(0.5)
+                            name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/{label_name(count, 10000)}.txt'
+                            np.savetxt(name_annotate, df2.values, fmt='%.2f')
 
+                        count += 1
+                        time.sleep(0.5)
+
+                    else:
+                        st.error('Image is not found')
                 else:
-                    st.error('Image is not found')
-
-        st.success("Your program has been successfully stopped")
+                    st.success("Your program has been successfully stopped")
+                    st.stop()
 
 
 def validation(st, **state):
@@ -421,7 +426,7 @@ def validation(st, **state):
                                     'Smart HSE'])
 
         def next_photo(path_files, func):
-            path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
+            path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
             path_images.sort()
 
             if func == 'next':
@@ -430,14 +435,15 @@ def validation(st, **state):
                     st.session_state.counter = 0
             elif func == 'back':
                 st.session_state.counter -= 1
-                if st.session_state.counter >= len(path_images):
+                if st.session_state.counter >= len(path_images) or st.session_state.counter < 0:
                     st.session_state.counter = 0
 
         def delete_photo(path_files, func):
-            path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
+            path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
             path_images.sort()
             photo = path_images[st.session_state.counter]
-            text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + photo.split("/")[-1].split(".")[0] + '.txt'
+            text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
+                   photo.split("/")[-1].split(".")[0] + '.txt'
 
             os.remove(photo)
             os.remove(text)
@@ -449,7 +455,7 @@ def validation(st, **state):
         st1, st2, st3 = st.columns(3)
 
         with st1:
-            st1.button("Back Image ⏭️", on_click=delete_photo, args=([path_files, 'back']))
+            st1.button("Back Image ⏭️", on_click=next_photo, args=([path_files, 'back']))
         with st2:
             st2.button("Delete Image ⏭️", on_click=delete_photo, args=([path_files, 'next']))
         with st3:
@@ -457,7 +463,7 @@ def validation(st, **state):
 
         if 'counter' not in st.session_state:
             st.session_state.counter = 0
-            path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
+            path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
             path_images.sort()
             photo = path_images[st.session_state.counter]
             caption = photo.split("/")[-1]
@@ -465,7 +471,7 @@ def validation(st, **state):
             st.image(photo, caption=f'image-{caption}')
 
         else:
-            path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
+            path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
             path_images.sort()
             photo = path_images[st.session_state.counter]
             caption = photo.split('/')[-1]
