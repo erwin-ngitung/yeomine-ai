@@ -363,7 +363,7 @@ def detection(st, **state):
                 st.image(img, caption=caption)
                 df1 = pd.DataFrame(parameter)
                 df2 = pd.DataFrame(annotate)
-                
+
                 if show_label:
                     st.table(df1)
 
