@@ -422,6 +422,7 @@ def validation(st, **state):
 
         def next_photo(path_files, func):
             path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
+            path_images.sort()
 
             if func == 'next':
                 st.session_state.counter += 1
@@ -434,6 +435,7 @@ def validation(st, **state):
 
         def delete_photo(path_files, func):
             path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
+            path_images.sort()
             photo = path_images[st.session_state.counter]
             text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + photo.split("/")[-1].split(".")[0] + '.txt'
 
@@ -456,6 +458,7 @@ def validation(st, **state):
         if 'counter' not in st.session_state:
             st.session_state.counter = 0
             path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
+            path_images.sort()
             photo = path_images[st.session_state.counter]
             caption = photo.split("/")[-1]
 
@@ -463,6 +466,7 @@ def validation(st, **state):
 
         else:
             path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
+            path_images.sort()
             photo = path_images[st.session_state.counter]
             caption = photo.split('/')[-1]
 
