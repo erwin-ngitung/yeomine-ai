@@ -351,10 +351,11 @@ def detection(st, **state):
             os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/videos/')
             os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
 
-            st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
         except:
             pass
 
+        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
+        
         # Detection Model
         while cap.isOpened():
             with placeholder.container():
