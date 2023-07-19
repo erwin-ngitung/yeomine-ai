@@ -2,9 +2,8 @@ import re
 import warnings
 import json
 import numpy as np
-import shutil 
-import os.path
-import subprocess
+import shutil
+import os
 
 warnings.filterwarnings("ignore")
 
@@ -16,6 +15,31 @@ def label_name(num, maks):
     name += str(num)
 
     return name
+
+
+def make_folder(path_file):
+    directory1 = f'{path_file}/images'
+
+    if not os.path.exists(directory1):
+        os.makedirs(directory1)
+    else:
+        shutil.rmtree(directory1)
+        os.makedirs(directory1)
+
+    directory2 = f'{path_file}/videos'
+
+    if not os.path.exists(directory2):
+        os.makedirs(directory2)
+    else:
+        shutil.rmtree(directory2)
+        os.makedirs(directory2)
+
+    directory3 = f'{path_file}/annotations'
+    if not os.path.exists(directory3):
+        os.makedirs(directory3)
+    else:
+        shutil.rmtree(directory3)
+        os.makedirs(directory3)
 
 
 def make_zip(weight_name):

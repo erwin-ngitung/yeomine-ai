@@ -7,7 +7,7 @@ import shutil
 
 import pandas as pd
 from PIL import Image
-from utils import label_name, check_email, check_account, update_json, replace_json, computer_vision as cs
+from utils import make_folder, label_name, check_email, check_account, update_json, replace_json, computer_vision as cs
 
 # Package for Streamlit
 import streamlit as st
@@ -26,8 +26,8 @@ import warnings
 warnings.filterwarnings('ignore')
 torch.cuda.empty_cache()
 torch.backends.cudnn.benchmark = False
+
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
-# PATH = '.'
 PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
 
@@ -342,34 +342,16 @@ def detection(st, **state):
     next_detect = st.radio('Are you sure to detect image/video using parameter above?',
                            ['Yes', 'No'], index=1)
 
-    directory1 = f'{PATH}/detections/{path_object[kind_object]}/images'
-
-    if not os.path.exists(directory1):
-        os.makedirs(directory1)
-    else:
-        shutil.rmtree(directory1)
-        os.makedirs(directory2)
-
-    directory2 = f'{PATH}/detections/{path_object[kind_object]}/videos'
-
-    if not os.path.exists(directory2):
-        os.makedirs(directory2)
-    else:
-        shutil.rmtree(directory2)
-        os.makedirs(directory2)
-
-    directory3 = f'{PATH}/detections/{path_object[kind_object]}/annotations'
-    if not os.path.exists(directory3):
-        os.makedirs(directory3)
-    else:
-        shutil.rmtree(directory3)
-        os.makedirs(directory2)
-
     st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
 
     if next_detect == 'Yes':
         st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' stroke=\'black\' '
                     'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
+
+        path_detections = f'{PATH}/detections/{path_object[kind_object]}'
+        make_folder(path_detections)
+
+        st.write(os.listdir(f'{path_detections}/images'))
 
         show_label = st.checkbox('Show label predictions',
                                  value=True,
