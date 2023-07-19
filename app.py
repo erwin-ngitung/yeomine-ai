@@ -375,7 +375,8 @@ def detection(st, **state):
                         data_annotations.to_excel(f'detections/{path_object[kind_object]}/annotations/annotate.xlsx',
                                                   engine='openpyxl')
                     break
-            
+        st.success("Your program has been successfully stopped")
+        
     except:
         with st.spinner('Wait a moment, the program is being processed'):
             time.sleep(50)
