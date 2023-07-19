@@ -342,6 +342,8 @@ def detection(st, **state):
         placeholder = st.empty()
         colors = cs.generate_label_colors(model.names)
 
+        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
+        
         try:
             shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/images/')
             shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/videos/')
@@ -354,8 +356,6 @@ def detection(st, **state):
         except:
             pass
 
-        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
-        
         # Detection Model
         while cap.isOpened():
             with placeholder.container():
