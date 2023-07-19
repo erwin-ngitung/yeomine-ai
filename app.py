@@ -332,13 +332,16 @@ def detection(st, **state):
     colors = cs.generate_label_colors(model.names)
     data_annotations = pd.DataFrame(columns=['label', 'score', 'x1', 'y1', 'x2', 'y2'])
 
-    shutil.rmtree(f'detections/{path_object[kind_object]}/images/')
-    shutil.rmtree(f'detections/{path_object[kind_object]}/videos/')
-    shutil.rmtree(f'detections/{path_object[kind_object]}/annotations/')
+    try:
+        shutil.rmtree(f'detections/{path_object[kind_object]}/images/')
+        shutil.rmtree(f'detections/{path_object[kind_object]}/videos/')
+        shutil.rmtree(f'detections/{path_object[kind_object]}/annotations/')
 
-    os.makedirs(f'detections/{path_object[kind_object]}/images/')
-    os.makedirs(f'detections/{path_object[kind_object]}/videos/')
-    os.makedirs(f'detections/{path_object[kind_object]}/annotations/')
+        os.makedirs(f'detections/{path_object[kind_object]}/images/')
+        os.makedirs(f'detections/{path_object[kind_object]}/videos/')
+        os.makedirs(f'detections/{path_object[kind_object]}/annotations/')
+    except:
+        pass
 
     # Detection Model
     while cap.isOpened():
