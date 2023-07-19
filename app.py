@@ -91,7 +91,7 @@ def login(st, **state):
             with st2:
                 st.image(image)
 
-            st.markdown('#### Login Sensei Data Website')
+            st.markdown('#### Login Yeomine-AI Website')
             email = st.text_input('Email')
             password = st.text_input('Password', type='password')
             submit = st.form_submit_button('Login')
