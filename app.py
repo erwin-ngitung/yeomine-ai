@@ -283,7 +283,18 @@ def detection(st, **state):
                                 'Core Detection',
                                 'Smart HSE'])
 
-    conf = st.slider('Number of Confidence (%)', min_value=0, max_value=100, step=1, value=60)
+    conf = st.slider('Number of Confidence (%)',
+                     min_value=0,
+                     max_value=100,
+                     step=1,
+                     value=60,
+                     key='confidence')
+    stop_program = st.slider('Number of Image',
+                             min_value=0,
+                             max_value=1000,
+                             step=1,
+                             value=20,
+                             key='stop-program')
 
     st4, st5 = st.columns(2)
 
@@ -335,15 +346,18 @@ def detection(st, **state):
         st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' stroke=\'black\' '
                     'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
 
-        show_label = st.checkbox('Show label predictions', value=True, key='show-label')
-        save_annotate = st.checkbox('Save annotate and images', value=False, key='save-annotate')
-
+        show_label = st.checkbox('Show label predictions',
+                                 value=True,
+                                 key='show-label')
+        save_annotate = st.checkbox('Save annotate and images',
+                                    value=False,
+                                    key='save-annotate')
         count = 0
         placeholder = st.empty()
         colors = cs.generate_label_colors(model.names)
 
         # Detection Model
-        while cap.isOpened():
+        while count < stop_program:
             with placeholder.container():
                 ret, img = cap.read()
 
@@ -374,6 +388,8 @@ def detection(st, **state):
 
                 else:
                     st.error('Image is not found')
+
+        st.success('Your all images have successfully saved')
 
 
 def validation(st, **state):
