@@ -356,8 +356,6 @@ def detection(st, **state):
                                     value=False,
                                     key='save-annotate')
 
-        st.write(os.listdir(f'{path_detections}/'))
-        
         count = 0
         placeholder = st.empty()
         colors = cs.generate_label_colors(model.names)
@@ -396,6 +394,7 @@ def detection(st, **state):
                     st.error('Image is not found')
 
         st.success('Your all images have successfully saved')
+        st.write(os.listdir(f'{path_detections}/'))
 
 
 def validation(st, **state):
