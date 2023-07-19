@@ -14,6 +14,7 @@ import streamlit as st
 from streamlit_multipage import MultiPage
 from datetime import datetime
 import pytz
+import pytesseract
 
 # Package for Machine Learning
 import torch
@@ -24,6 +25,7 @@ import warnings
 warnings.filterwarnings('ignore')
 torch.cuda.empty_cache()
 torch.backends.cudnn.benchmark = False
+pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 
 app = MultiPage()
 
