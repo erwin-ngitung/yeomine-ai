@@ -349,14 +349,15 @@ def detection(st, **state):
         path_detections = f'{PATH}/detections/{path_object[kind_object]}'
         make_folder(path_detections)
 
-        st.write(os.listdir(f'{path_detections}/'))
-
         show_label = st.checkbox('Show label predictions',
                                  value=True,
                                  key='show-label')
         save_annotate = st.checkbox('Save annotate and images',
                                     value=False,
                                     key='save-annotate')
+
+        st.write(os.listdir(f'{path_detections}/'))
+        
         count = 0
         placeholder = st.empty()
         colors = cs.generate_label_colors(model.names)
