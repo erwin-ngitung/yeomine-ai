@@ -394,7 +394,6 @@ def detection(st, **state):
                     st.error('Image is not found')
 
         st.success('Your all images have successfully saved')
-        st.write(os.listdir(f'{path_detections}/'))
 
 
 def validation(st, **state):
@@ -472,20 +471,18 @@ def validation(st, **state):
 
             if 'counter' not in st.session_state:
                 st.session_state.counter = 0
-                path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
-                path_images.sort()
+
+            path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
+            path_images.sort()
+
+            try:
                 photo = path_images[st.session_state.counter]
-                caption = photo.split("/")[-1]
-
-                st.image(photo, caption=f'image-{caption}')
-
-            else:
-                path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
-                path_images.sort()
+            except:
+                st.session_state.counter = 0
                 photo = path_images[st.session_state.counter]
-                caption = photo.split('/')[-1]
+                
+            st.image(photo, caption=f'image-{photo.split("/")[-1]}')
 
-                st.image(photo, caption=f'image-{caption}')
         except:
             st.error('Please go to the detection menu first!')
 
