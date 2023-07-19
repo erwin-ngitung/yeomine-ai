@@ -399,7 +399,7 @@ def detection(st, **state):
                                     'Coal Detection',
                                     'Seam Detection',
                                     'Core Detection',
-                                    'Smart HSE'])
+                                    'Smart HSE'], key='kind-object-2')
 
         def next_photo(path_files, func):
             path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
@@ -428,7 +428,7 @@ def detection(st, **state):
 
         path_files = f'{PATH}/detections/{path_object[kind_object]}/images'
 
-        st1, st2, st3 = st.columns(3)
+        st1, st2, st3 = st.columns(3, key='validation-checker-2')
 
         with st1:
             st1.button("Back Image ⏭️", on_click=delete_photo, args=([path_files, 'back']))
