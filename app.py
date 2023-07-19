@@ -302,7 +302,7 @@ def detection(st, **state):
         else:
             list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
             option_model = st.selectbox('Please select model do you want!',
-                                        list_weights, index=2)
+                                        list_weights)
             model = YOLO(f'weights/{path_object[kind_object]}/{option_model}')
 
     with st7:
