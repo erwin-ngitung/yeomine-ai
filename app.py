@@ -449,11 +449,11 @@ def validation(st, **state):
         st1, st2, st3 = st.columns(3)
 
         with st1:
-            st1.button("Next Image ⏭️", on_click=next_photo, args=([path_files, 'next']))
+            st1.button("Back Image ⏭️", on_click=delete_photo, args=([path_files, 'back']))
         with st2:
             st2.button("Delete Image ⏭️", on_click=delete_photo, args=([path_files, 'next']))
         with st3:
-            st3.button("Back Image ⏭️", on_click=delete_photo, args=([path_files, 'back']))
+            st3.button("Next Image ⏭️", on_click=next_photo, args=([path_files, 'next']))
 
         if 'counter' not in st.session_state:
             st.session_state.counter = 0
