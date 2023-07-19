@@ -343,15 +343,24 @@ def detection(st, **state):
                            ['Yes', 'No'], index=1)
 
     directory1 = f'{PATH}/detections/{path_object[kind_object]}/images'
-    directory2 = f'{PATH}/detections/{path_object[kind_object]}/videos'
-    directory3 = f'{PATH}/detections/{path_object[kind_object]}/annotations'
-    
+
     if not os.path.exists(directory1):
         os.makedirs(directory1)
+    else:
+        shutil.rmtree(directory1)
+
+    directory2 = f'{PATH}/detections/{path_object[kind_object]}/videos'
+
     if not os.path.exists(directory2):
         os.makedirs(directory2)
+    else:
+        shutil.rmtree(directory2)
+
+    directory3 = f'{PATH}/detections/{path_object[kind_object]}/annotations'
     if not os.path.exists(directory3):
         os.makedirs(directory3)
+    else:
+        shutil.rmtree(directory3)
 
     st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
 
