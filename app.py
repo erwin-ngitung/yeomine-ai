@@ -375,9 +375,12 @@ def detection(st, **state):
                             st.table(df1)
 
                         if save_annotate:
+                            # name_image = f'{PATH}/detections/{path_object[kind_object]}/images/' \
+                            #              f'{label_name(count, 10000)}.png'
+                            # cv2.imwrite(name_image, img)
                             name_image = f'{PATH}/detections/{path_object[kind_object]}/images/' \
-                                         f'{label_name(count, 10000)}.png'
-                            cv2.imwrite(name_image, img)
+                                         f'{label_name(count, 10000)}.txt'
+                            np.savetxt(name_image, img, fmt='%.2f')
 
                             name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/' \
                                             f'{label_name(count, 10000)}.txt'
@@ -392,7 +395,7 @@ def detection(st, **state):
                     st.success("Your program has been successfully stopped")
                     break
 
-        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/annotations/'))
+        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
 
 
 def validation(st, **state):
