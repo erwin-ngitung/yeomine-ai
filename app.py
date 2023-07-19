@@ -389,6 +389,7 @@ def detection(st, **state):
                     break
 
         st.success("Your program has been successfully stopped")
+        st.write(len(f'{PATH}/detections/{path_object[kind_object]}/images'))
 
 
 def validation(st, **state):
