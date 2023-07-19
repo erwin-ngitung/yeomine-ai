@@ -342,8 +342,6 @@ def detection(st, **state):
     next_detect = st.radio('Are you sure to detect image/video using parameter above?',
                            ['Yes', 'No'], index=1)
 
-    st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
-
     if next_detect == 'Yes':
         st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' stroke=\'black\' '
                     'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
@@ -351,7 +349,7 @@ def detection(st, **state):
         path_detections = f'{PATH}/detections/{path_object[kind_object]}'
         make_folder(path_detections)
 
-        st.write(os.listdir(f'{path_detections}/images'))
+        st.write(os.listdir(f'{path_detections}/'))
 
         show_label = st.checkbox('Show label predictions',
                                  value=True,
