@@ -342,6 +342,10 @@ def detection(st, **state):
     next_detect = st.radio('Are you sure to detect image/video using parameter above?',
                            ['Yes', 'No'], index=1)
 
+    os.makedirs(f'{PATH}/datasets/{path_object[kind_object]}/images')
+    os.makedirs(f'{PATH}/datasets/{path_object[kind_object]}/videos')
+    os.makedirs(f'{PATH}/datasets/{path_object[kind_object]}/annotations')
+
     if next_detect == 'Yes':
         st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' stroke=\'black\' '
                     'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
