@@ -332,7 +332,6 @@ def detection(st, **state):
     count = 0
     placeholder = st.empty()
     colors = cs.generate_label_colors(model.names)
-    data_annotations = pd.DataFrame(columns=['label', 'score', 'x1', 'y1', 'x2', 'y2'])
 
     try:
         shutil.rmtree(f'detections/{path_object[kind_object]}/images/')
@@ -350,37 +349,37 @@ def detection(st, **state):
         with placeholder.container():
             stop_program = st.checkbox("Do you want to stop this program?", value=False, key=f'stop-program-{count}')
 
-            if not stop_program:
-                ret, img = cap.read()
+            ret, img = cap.read()
 
-                if ret:
-                    tz_JKT = pytz.timezone('Asia/Jakarta')
-                    time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-                    caption = f'The frame image-{count} generated at {time_JKT}'
+            if ret:
+                tz_JKT = pytz.timezone('Asia/Jakarta')
+                time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                caption = f'The frame image-{count} generated at {time_JKT}'
 
-                    img, parameter = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
-                    st.image(img, caption=caption)
+                img, parameter = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
+                st.image(img, caption=caption)
+                df = pd.DataFrame(parameter)
 
-                    if save_annotate:
-                        path_name = f'detections/{path_object[kind_object]}/images/frame-{count}.png'
-                        cv2.imwrite(path_name, img)
-
-                    df = pd.DataFrame(parameter)
-                    data_annotations = pd.concat([data_annotations, df], ignore_index=True)
-
-                    if show_label:
-                        st.table(df)
-
-                    count += 1
-                    time.sleep(0.5)
-                else:
-                    print('Image is not found')
-
-            else:
                 if save_annotate:
-                    data_annotations.to_excel(f'detections/{path_object[kind_object]}/annotations/annotate.xlsx',
-                                              engine='openpyxl')
-                break
+                    name_image = f'detections/{path_object[kind_object]}/images/frame-{count}.png'
+                    cv2.imwrite(name_image, img)
+
+                    name_annotate = f'detections/{path_object[kind_object]}/annotations/frame-{count}.txt'
+                    with open(name_annotate, 'a') as f:
+                        df_string = df.to_string(header=False, index=False)
+                        f.write(df_string)
+
+                if show_label:
+                    st.table(df)
+
+                count += 1
+                time.sleep(0.5)
+            else:
+                print('Image is not found')
+
+        if stop_program:
+            break
+            
     st.success("Your program has been successfully stopped")
 
 

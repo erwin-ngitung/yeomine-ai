@@ -33,7 +33,9 @@ def generate_label_colors(name):
 
 
 def draw_image(model, device, img, conf, colors, time):
-    img = cv2.resize(img, (650, 650), interpolation=cv2.INTER_AREA)
+    x_size = 650
+    y_size = 640
+    img = cv2.resize(img, (x_size, y_size), interpolation=cv2.INTER_AREA)
 
     results = model.predict(img, device=device, conf=0.2, iou=0.7)
     names = model.names
@@ -68,9 +70,9 @@ def draw_image(model, device, img, conf, colors, time):
 
             parameter['label'].append(label)
             parameter['score'].append(conf)
-            parameter['x1'].append(x1)
-            parameter['y1'].append(y1)
-            parameter['x2'].append(x2)
-            parameter['y2'].append(y2)
+            parameter['x1'].append(np.round(float(x1/x_size), decimals=3))
+            parameter['y1'].append(np.round(float(y1/y_size), decimals=3))
+            parameter['x2'].append(np.round(float(x2/x_size), decimals=3))
+            parameter['y2'].append(np.round(float(y2/y_size), decimals=3))
 
     return img, parameter
