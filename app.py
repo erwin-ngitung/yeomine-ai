@@ -420,8 +420,10 @@ def validation(st, **state):
                     st.session_state.counter = 0
             elif func == 'back':
                 st.session_state.counter -= 1
-                if st.session_state.counter >= len(path_images) or st.session_state.counter < 0:
+                if st.session_state.counter >= len(path_images):
                     st.session_state.counter = 0
+                elif st.session_state.counter < 0:
+                    st.session_state.counter = len(path_images)
 
         def delete_photo(path_files, func):
             path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
