@@ -378,9 +378,7 @@ def detection(st, **state):
                         cv2.imwrite(name_image, img)
 
                         name_annotate = f'detections/{path_object[kind_object]}/annotations/{label_name(count, 10000)}.txt'
-                        with open(name_annotate, 'a') as f:
-                            df_string = df2.to_string(header=False, index=False)
-                            f.write(df_string)
+                        np.savetxt(name_annotate, df2.values, fmt='%d')
 
                     count += 1
                     time.sleep(0.5)
