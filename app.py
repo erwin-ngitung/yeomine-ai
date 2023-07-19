@@ -376,7 +376,7 @@ def detection(st, **state):
                                                   engine='openpyxl')
                     break
         st.success("Your program has been successfully stopped")
-        
+
     except:
         with st.spinner('Wait a moment, the program is being processed'):
             time.sleep(50)
