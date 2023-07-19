@@ -389,7 +389,7 @@ def detection(st, **state):
                     break
 
         st.success("Your program has been successfully stopped")
-        st.write(len(f'{PATH}/detections/{path_object[kind_object]}/images'))
+        st.write('There are ' + str(len(f'{PATH}/detections/{path_object[kind_object]}/images')) + 'have created!')
 
 
 def validation(st, **state):
