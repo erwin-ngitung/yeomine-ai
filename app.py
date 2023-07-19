@@ -342,19 +342,19 @@ def detection(st, **state):
         placeholder = st.empty()
         colors = cs.generate_label_colors(model.names)
 
-        try:
-            shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/images/')
-            shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/videos/')
-            shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
+        # try:
+        #     shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/images/')
+        #     shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/videos/')
+        #     shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
+        #
+        #     os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/images/')
+        #     os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/videos/')
+        #     os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
+        #
+        # except:
+        #     pass
 
-            os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/images/')
-            os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/videos/')
-            os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
-
-        except:
-            pass
-
-        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/annotations'))
+        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
 
         # Detection Model
         while cap.isOpened():
@@ -378,12 +378,9 @@ def detection(st, **state):
                             st.table(df1)
 
                         if save_annotate:
-                            # name_image = f'{PATH}/detections/{path_object[kind_object]}/images/' \
-                            #              f'{label_name(count, 10000)}.png'
-                            # cv2.imwrite(name_image, img)
                             name_image = f'{PATH}/detections/{path_object[kind_object]}/images/' \
-                                         f'{label_name(count, 10000)}.txt'
-                            np.savetxt(name_image, img, fmt='%.2f')
+                                         f'{label_name(count, 10000)}.png'
+                            cv2.imwrite(name_image, img)
 
                             name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/' \
                                             f'{label_name(count, 10000)}.txt'
