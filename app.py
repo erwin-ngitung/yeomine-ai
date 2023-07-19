@@ -435,7 +435,7 @@ def validation(st, **state):
         def delete_photo(path_files, func):
             path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
             photo = path_images[st.session_state.counter]
-            text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + photo.split("\\")[-1].split(".")[0] + '.txt'
+            text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + photo.split("/")[-1].split(".")[0] + '.txt'
 
             os.remove(photo)
             os.remove(text)
@@ -464,7 +464,7 @@ def validation(st, **state):
         else:
             path_images = [os.path.join(path_files, img_file) for img_file in os.listdir(path_files)]
             photo = path_images[st.session_state.counter]
-            caption = photo.split('\\')[-1]
+            caption = photo.split('/')[-1]
 
             st.image(photo, caption=f'image-{caption}')
 
@@ -592,7 +592,7 @@ def account(st, **state):
 def logout(st, **state):
     # Title
     image = Image.open(f'{PATH}/images/logo_yeomine.png')
-    
+
     st.success('Your account has been log out from this app')
     MultiPage.save({'login': False})
 
