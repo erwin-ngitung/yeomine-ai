@@ -342,19 +342,19 @@ def detection(st, **state):
         placeholder = st.empty()
         colors = cs.generate_label_colors(model.names)
 
-        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/images/'))
-
         try:
             shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/images/')
             shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/videos/')
             shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
 
-            os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/images/')
             os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/videos/')
             os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
+            os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/images/')
 
         except:
             pass
+
+        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
 
         # Detection Model
         while cap.isOpened():
