@@ -346,7 +346,7 @@ def detection(st, **state):
     os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/videos')
     os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/annotations')
 
-    st.write(f'{PATH}/detections/{path_object[kind_object]}')
+    st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
 
     if next_detect == 'Yes':
         st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' stroke=\'black\' '
