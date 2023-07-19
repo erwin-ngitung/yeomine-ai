@@ -355,34 +355,39 @@ def detection(st, **state):
         # Detection Model
         while cap.isOpened():
             with placeholder.container():
-                ret, img = cap.read()
+                stop_program = st.checkbox('Do you want to stop this program?', value=False)
 
-                if ret:
-                    tz_JKT = pytz.timezone('Asia/Jakarta')
-                    time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-                    caption = f'The frame image-{count} generated at {time_JKT}'
+                if not stop_program:
+                    ret, img = cap.read()
 
-                    img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
-                    st.image(img, caption=caption)
-                    df1 = pd.DataFrame(parameter)
-                    df2 = pd.DataFrame(annotate)
+                    if ret:
+                        tz_JKT = pytz.timezone('Asia/Jakarta')
+                        time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                        caption = f'The frame image-{count} generated at {time_JKT}'
 
-                    if show_label:
-                        st.table(df1)
+                        img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
+                        st.image(img, caption=caption)
+                        df1 = pd.DataFrame(parameter)
+                        df2 = pd.DataFrame(annotate)
 
-                    if save_annotate:
-                        name_image = f'{PATH}/detections/{path_object[kind_object]}/images/{label_name(count, 10000)}.png'
-                        cv2.imwrite(name_image, img)
+                        if show_label:
+                            st.table(df1)
 
-                        name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/{label_name(count, 10000)}.txt'
-                        np.savetxt(name_annotate, df2.values, fmt='%.2f')
+                        if save_annotate:
+                            name_image = f'{PATH}/detections/{path_object[kind_object]}/images/{label_name(count, 10000)}.png'
+                            cv2.imwrite(name_image, img)
 
-                    count += 1
-                    time.sleep(0.5)
+                            name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/{label_name(count, 10000)}.txt'
+                            np.savetxt(name_annotate, df2.values, fmt='%.2f')
 
+                        count += 1
+                        time.sleep(0.5)
+
+                    else:
+                        st.error('Image is not found')
                 else:
-                    st.error('Image is not found')
-
+                    break
+                    
         st.success("Your program has been successfully stopped")
 
 
