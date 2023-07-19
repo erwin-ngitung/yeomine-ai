@@ -372,7 +372,7 @@ def detection(st, **state):
                         st.table(df)
 
                     count += 1
-                    time.sleep(1)
+                    # time.sleep(1)
                 else:
                     print('Image is not found')
 
