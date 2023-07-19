@@ -465,7 +465,7 @@ def validation(st, **state):
             with st1:
                 st1.button("Back Image ⏭️", on_click=next_photo, args=([path_files, 'back']))
             with st2:
-                st2.button("Delete Image ⏭️", on_click=delete_photo, args=([path_files, 'next']))
+                st2.button("Delete Image ⏭️", on_click=delete_photo, args=([path_files, 'delete']))
             with st3:
                 st3.button("Next Image ⏭️", on_click=next_photo, args=([path_files, 'next']))
 
@@ -480,7 +480,7 @@ def validation(st, **state):
             except:
                 st.session_state.counter = 0
                 photo = path_images[st.session_state.counter]
-                
+
             st.image(photo, caption=f'image-{photo.split("/")[-1]}')
 
         except:
