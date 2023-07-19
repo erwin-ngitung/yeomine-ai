@@ -428,7 +428,7 @@ def detection(st, **state):
 
         path_files = f'{PATH}/detections/{path_object[kind_object]}/images'
 
-        st1, st2, st3 = st.columns(3, key='validation-checker-2')
+        st1, st2, st3 = st.columns(3)
 
         with st1:
             st1.button("Back Image ⏭️", on_click=delete_photo, args=([path_files, 'back']))
