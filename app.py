@@ -410,60 +410,63 @@ def validation(st, **state):
                                     'Core Detection',
                                     'Smart HSE'])
 
-        def next_photo(path_files, func):
-            path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
-            path_images.sort()
+        try:
+            def next_photo(path_files, func):
+                path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
+                path_images.sort()
 
-            if func == 'next':
-                st.session_state.counter += 1
-                if st.session_state.counter >= len(path_images):
-                    st.session_state.counter = 0
-            elif func == 'back':
-                st.session_state.counter -= 1
-                if st.session_state.counter >= len(path_images):
-                    st.session_state.counter = 0
-                elif st.session_state.counter < 0:
-                    st.session_state.counter = len(path_images) - 1
+                if func == 'next':
+                    st.session_state.counter += 1
+                    if st.session_state.counter >= len(path_images):
+                        st.session_state.counter = 0
+                elif func == 'back':
+                    st.session_state.counter -= 1
+                    if st.session_state.counter >= len(path_images):
+                        st.session_state.counter = 0
+                    elif st.session_state.counter < 0:
+                        st.session_state.counter = len(path_images) - 1
 
-        def delete_photo(path_files, func):
-            path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
-            path_images.sort()
-            photo = path_images[st.session_state.counter]
-            text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
-                   photo.split("/")[-1].split(".")[0] + '.txt'
+            def delete_photo(path_files, func):
+                path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
+                path_images.sort()
+                photo = path_images[st.session_state.counter]
+                text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
+                       photo.split("/")[-1].split(".")[0] + '.txt'
 
-            os.remove(photo)
-            os.remove(text)
+                os.remove(photo)
+                os.remove(text)
 
-            next_photo(path_files, func)
+                next_photo(path_files, func)
 
-        path_files = f'{PATH}/detections/{path_object[kind_object]}/images'
+            path_files = f'{PATH}/detections/{path_object[kind_object]}/images'
 
-        st1, st2, st3 = st.columns(3)
+            st1, st2, st3 = st.columns(3)
 
-        with st1:
-            st1.button("Back Image ⏭️", on_click=next_photo, args=([path_files, 'back']))
-        with st2:
-            st2.button("Delete Image ⏭️", on_click=delete_photo, args=([path_files, 'next']))
-        with st3:
-            st3.button("Next Image ⏭️", on_click=next_photo, args=([path_files, 'next']))
+            with st1:
+                st1.button("Back Image ⏭️", on_click=next_photo, args=([path_files, 'back']))
+            with st2:
+                st2.button("Delete Image ⏭️", on_click=delete_photo, args=([path_files, 'next']))
+            with st3:
+                st3.button("Next Image ⏭️", on_click=next_photo, args=([path_files, 'next']))
 
-        if 'counter' not in st.session_state:
-            st.session_state.counter = 0
-            path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
-            path_images.sort()
-            photo = path_images[st.session_state.counter]
-            caption = photo.split("/")[-1]
+            if 'counter' not in st.session_state:
+                st.session_state.counter = 0
+                path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
+                path_images.sort()
+                photo = path_images[st.session_state.counter]
+                caption = photo.split("/")[-1]
 
-            st.image(photo, caption=f'image-{caption}')
+                st.image(photo, caption=f'image-{caption}')
 
-        else:
-            path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
-            path_images.sort()
-            photo = path_images[st.session_state.counter]
-            caption = photo.split('/')[-1]
+            else:
+                path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
+                path_images.sort()
+                photo = path_images[st.session_state.counter]
+                caption = photo.split('/')[-1]
 
-            st.image(photo, caption=f'image-{caption}')
+                st.image(photo, caption=f'image-{caption}')
+        except:
+            st.error('Please go to the detection menu first!')
 
     with tab2:
         st.write('Coming Soon')
