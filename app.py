@@ -347,14 +347,14 @@ def detection(st, **state):
             shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/videos/')
             shutil.rmtree(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
 
+            os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/images/')
             os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/videos/')
             os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/annotations/')
-            os.makedirs(f'{PATH}/detections/{path_object[kind_object]}/images/')
 
         except:
             pass
 
-        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/'))
+        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/annotations'))
 
         # Detection Model
         while cap.isOpened():
