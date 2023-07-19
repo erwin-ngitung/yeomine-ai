@@ -356,7 +356,7 @@ def detection(st, **state):
         # Detection Model
         while cap.isOpened():
             with placeholder.container():
-                stop_program = st.checkbox('Do you want to stop this program?', value=False, key=f'stop-program-{count}')
+                stop_program = st.checkbox('Do you want stop this program?', value=False, key=f'stop-program-{count}')
 
                 if not stop_program:
                     ret, img = cap.read()
@@ -388,7 +388,8 @@ def detection(st, **state):
                         st.error('Image is not found')
                 else:
                     st.success("Your program has been successfully stopped")
-                    st.stop()
+
+        st.write(os.listdir(f'{PATH}/detections/{path_object[kind_object]}/images'))
 
 
 def validation(st, **state):
