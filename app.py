@@ -624,7 +624,7 @@ def detection(st, **state):
                                                file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
                                                mime="text/plain")
 
-                if btn == 'All files':
+                elif btn == 'All files':
                     st.success(f'Now, you can download the all images with annotation '
                                f'in the button bellow.')
                     path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
@@ -771,7 +771,7 @@ def validation(st, **state):
                                        file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
                                        mime="text/plain")
 
-        if btn == 'All files':
+        elif btn == 'All files':
             st.success(f'Now, you can download the all images with annotation '
                        f'in the button bellow.')
             path_folder = f'{PATH}/detections/{path_object[kind_object]}'
@@ -787,7 +787,7 @@ def validation(st, **state):
                                    )
 
         st.success('Now, you can download image with annotation in the button bellow')
-        
+
     except:
         st.error('Please go to the menu Detection first!')
 
