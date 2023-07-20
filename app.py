@@ -555,20 +555,10 @@ def detection(st, **state):
             st10, st11 = st.columns(2)
 
             with st10:
-                st10.button("Back Image ⏭️",
-                            on_click=next_photo,
-                            args=([image_files, 'back']),
-                            key='back-photo-detection-1')
-
                 st10.write("Original Image")
                 st10.image(cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA),
                            caption=caption)
             with st11:
-                st11.button('Next Image ⏭️',
-                            on_click=next_photo,
-                            args=([image_files, 'next']),
-                            key='next-photo-detection-1')
-
                 st11.write("Detection Image")
                 photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
                                                                   time_JKT, x_size, y_size)
@@ -576,17 +566,12 @@ def detection(st, **state):
                            caption=caption)
 
             st12, st13, st14 = st.columns(3)
-
+            
             with st12:
-                path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
-                num_img = len(os.listdir(path_images))
-                image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
-
-                with open(image_name, 'rb') as file:
-                    st14.download_button(label='Download Image ⏭️',
-                                         data=file,
-                                         file_name=f'Image-{label_name(num_img - 1, 10000)}.png',
-                                         mime="image/png")
+                st12.button("Back Image ⏭️",
+                            on_click=next_photo,
+                            args=([image_files, 'back']),
+                            key='back-photo-detection-1')
 
             with st13:
                 st13.button('Save Image ⏭️',
@@ -595,7 +580,26 @@ def detection(st, **state):
                             key='save-photo-detection-1')
 
             with st14:
-                st14.download_button(label='Download Annotations ⏭️',
+                st14.button('Next Image ⏭️',
+                            on_click=next_photo,
+                            args=([image_files, 'next']),
+                            key='next-photo-detection-1')
+
+            st15, st16 = st.columns(2)
+
+            with st15:
+                path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
+                num_img = len(os.listdir(path_images))
+                image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
+
+                with open(image_name, 'rb') as file:
+                    st15.download_button(label='Download Image ⏭️',
+                                         data=file,
+                                         file_name=f'Image-{label_name(num_img - 1, 10000)}.png',
+                                         mime="image/png")
+
+            with st16:
+                st16.download_button(label='Download Annotations ⏭️',
                                      data=pd.DataFrame(annotate).to_csv().encode('utf-8'),
                                      file_name=f'Image-{label_name(st.session_state.counter, 10000)}.csv',
                                      mime="image/csv")
