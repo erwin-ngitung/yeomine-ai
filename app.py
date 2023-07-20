@@ -549,7 +549,8 @@ def detection(st, **state):
 
             with st13:
                 st.write("Original Image")
-                st.image(photo, caption=caption)
+                st.image(cv2.resize(photo, (650, 650), interpolation=cv2.INTER_AREA),
+                         caption=caption)
             with st14:
                 st.write("Detection Image")
                 photo_convert = np.array(photo.convert('RGB'))
