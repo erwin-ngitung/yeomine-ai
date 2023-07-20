@@ -544,6 +544,7 @@ def detection(st, **state):
             tz_JKT = pytz.timezone('Asia/Jakarta')
             time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
             caption = f'The frame image-{st.session_state.counter} generated at {time_JKT}'
+            photo_convert = np.array(photo.convert('RGB'))
 
             st13, st14 = st.columns(2)
 
@@ -553,7 +554,6 @@ def detection(st, **state):
                          caption=caption)
             with st14:
                 st.write("Detection Image")
-                photo_convert = np.array(photo.convert('RGB'))
                 photo, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors, time_JKT)
                 st.image(photo, caption=caption)
 
