@@ -411,8 +411,13 @@ def detection(st, **state):
                         time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
                         caption = f'The frame image-{count} generated at {time_JKT}'
 
-                        img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
+                        x_size = 650
+                        y_size = 640
+                        img = cv2.resize(img, (x_size, y_size), interpolation=cv2.INTER_AREA)
+                        img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT,
+                                                                 x_size, y_size)
                         st.image(img, caption=caption)
+
                         df1 = pd.DataFrame(parameter)
                         df2 = pd.DataFrame(annotate)
 
@@ -545,16 +550,19 @@ def detection(st, **state):
             time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
             caption = f'The frame image-{st.session_state.counter} generated at {time_JKT}'
             photo_convert = np.array(photo.convert('RGB'))
-
+            x_size = 300
+            y_size = 300
+            
             st13, st14 = st.columns(2)
 
             with st13:
                 st.write("Original Image")
-                st.image(cv2.resize(photo, (650, 650), interpolation=cv2.INTER_AREA),
+                st.image(cv2.resize(photo, (x_size, y_size), interpolation=cv2.INTER_AREA),
                          caption=caption)
             with st14:
                 st.write("Detection Image")
-                photo, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors, time_JKT)
+                photo, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors, time_JKT,
+                                                           x_size, y_size)
                 st.image(photo, caption=caption)
 
     with tab3:
