@@ -572,6 +572,11 @@ def detection(st, **state):
                             on_click=next_photo,
                             args=([image_files, 'back']),
                             key='back-photo-detection-1')
+            with st14:
+                btn = st14.button('Save Image ⏭️',
+                                  on_click=save_photo,
+                                  args=([image_files, 'save', photo_detect, annotate]),
+                                  key='save-photo-detection-1')
 
             with st15:
                 st15.button('Next Image ⏭️',
@@ -579,10 +584,8 @@ def detection(st, **state):
                             args=([image_files, 'next']),
                             key='next-photo-detection-1')
 
-            st.button('Save Image ⏭️',
-                      on_click=save_photo,
-                      args=([image_files, 'save', photo_detect, annotate]),
-                      key='save-photo-detection-1')
+            if btn:
+                st.success('You can download image with annotation')
 
             path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
             num_img = len(os.listdir(path_images))
