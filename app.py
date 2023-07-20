@@ -585,7 +585,7 @@ def detection(st, **state):
                                 key='next-photo-detection-1')
 
                 if btn:
-                    st.success('Now, you can download image with annotation')
+                    st.success('Now, you can download image with annotation in the button bellow')
 
                     st17, st18, st19, st20, st21 = st.columns(5)
 
@@ -595,7 +595,7 @@ def detection(st, **state):
                         image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
 
                         with open(image_name, 'rb') as file:
-                            st.download_button(label='Download image',
+                            st.download_button(label='Image (.png)',
                                                data=file,
                                                file_name=f'{label_name(num_img - 1, 10000)}.png',
                                                mime="image/png")
@@ -606,7 +606,7 @@ def detection(st, **state):
                         annotate_name = f'{path_annotate}/{label_name(num_annotate- 1, 10000)}.txt'
 
                         with open(annotate_name, 'rb') as file:
-                            st.download_button(label='Download annotation',
+                            st.download_button(label='Annotation (.txt)',
                                                data=file,
                                                file_name=f'{label_name(num_annotate - 1, 10000)}.txt',
                                                mime="text/plain")
@@ -641,84 +641,98 @@ def validation(st, **state):
                    'Core Detection': 'core-logging',
                    'Smart-HSE': 'hse-monitor'}
 
-    tab1, tab2 = st.tabs(['Validation Checker', 'Download File'])
+    kind_object = st.selectbox('Please select the kind of object detection do you want',
+                               ['General Detection',
+                                'Coal Detection',
+                                'Seam Detection',
+                                'Core Detection',
+                                'Smart HSE'],
+                               key='kind-object-validation-1')
 
-    with tab1:
-        kind_object = st.selectbox('Please select the kind of object detection do you want',
-                                   ['General Detection',
-                                    'Coal Detection',
-                                    'Seam Detection',
-                                    'Core Detection',
-                                    'Smart HSE'],
-                                   key='kind-object-validation-1')
-
-        try:
-            def next_photo(path_files, func):
-                path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
-                path_images.sort()
-
-                if func == 'next':
-                    st.session_state.counter += 1
-                    if st.session_state.counter >= len(path_images):
-                        st.session_state.counter = 0
-                elif func == 'back':
-                    st.session_state.counter -= 1
-                    if st.session_state.counter >= len(path_images):
-                        st.session_state.counter = 0
-                    elif st.session_state.counter < 0:
-                        st.session_state.counter = len(path_images) - 1
-
-            def delete_photo(path_files, func):
-                path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
-                path_images.sort()
-                photo = path_images[st.session_state.counter]
-                text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
-                       photo.split("/")[-1].split(".")[0] + '.txt'
-
-                os.remove(photo)
-                os.remove(text)
-
-                next_photo(path_files, func)
-
-            path_files = f'{PATH}/detections/{path_object[kind_object]}/images'
-
-            st1, st2, st3 = st.columns(3)
-
-            with st1:
-                st1.button("Back Image ⏭️",
-                           on_click=next_photo,
-                           args=([path_files, 'back']),
-                           key='back-photo-validation-1')
-            with st2:
-                st2.button("Delete Image ⏭️",
-                           on_click=delete_photo,
-                           args=([path_files, 'delete']),
-                           key='delete-photo-validation-1')
-            with st3:
-                st3.button("Next Image ⏭️",
-                           on_click=next_photo,
-                           args=([path_files, 'next']),
-                           key='next-photo-validation-1')
-
-            if 'counter' not in st.session_state:
-                st.session_state.counter = 0
-
+    try:
+        def next_photo(path_files, func):
             path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
             path_images.sort()
 
-            try:
-                photo = path_images[st.session_state.counter]
-            except:
-                st.session_state.counter = 0
-                photo = path_images[st.session_state.counter]
+            if func == 'next':
+                st.session_state.counter += 1
+                if st.session_state.counter >= len(path_images):
+                    st.session_state.counter = 0
+            elif func == 'back':
+                st.session_state.counter -= 1
+                if st.session_state.counter >= len(path_images):
+                    st.session_state.counter = 0
+                elif st.session_state.counter < 0:
+                    st.session_state.counter = len(path_images) - 1
 
-            st.image(photo, caption=f'image-{photo.split("/")[-1]}')
+        def delete_photo(path_files, func):
+            path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
+            path_images.sort()
+            photo = path_images[st.session_state.counter]
+            text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
+                   photo.split("/")[-1].split(".")[0] + '.txt'
 
+            os.remove(photo)
+            os.remove(text)
+
+            next_photo(path_files, func)
+
+        path_files = f'{PATH}/detections/{path_object[kind_object]}/images'
+
+        if 'counter' not in st.session_state:
+            st.session_state.counter = 0
+
+        path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
+        path_images.sort()
+
+        try:
+            photo = path_images[st.session_state.counter]
         except:
-            st.error('Please go to the detection menu first!')
+            st.session_state.counter = 0
+            photo = path_images[st.session_state.counter]
 
-    with tab2:
-        st.write('Coming Soon')
+        st.image(photo, caption=f'image-{photo.split("/")[-1]}')
+
+        st1, st2, st3, st4, st5 = st.columns(5)
+
+        with st2:
+            st1.button("Back Image ⏭️",
+                       on_click=next_photo,
+                       args=([path_files, 'back']),
+                       key='back-photo-validation-1')
+        with st3:
+            st2.button("Delete Image ⏭️",
+                       on_click=delete_photo,
+                       args=([path_files, 'delete']),
+                       key='delete-photo-validation-1')
+        with st4:
+            st3.button("Next Image ⏭️",
+                       on_click=next_photo,
+                       args=([path_files, 'next']),
+                       key='next-photo-validation-1')
+
+        st.success('Now, you can download image with annotation in the button bellow')
+
+        st6, st7, st8, st9, st10 = st.columns(5)
+
+        with st7:
+            with open(photo, 'rb') as file:
+                st.download_button(label='Image (.png)',
+                                   data=file,
+                                   file_name=f'{photo.split("/")[-1]}',
+                                   mime="image/png")
+
+        with st9:
+            annotate_path = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
+                            photo.split("/")[-1].split(".")[0] + '.txt'
+            with open(annotate_path, 'rb') as file:
+                st.download_button(label='Annotation (.txt)',
+                                   data=file,
+                                   file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
+                                   mime="text/plain")
+    except:
+        st.error('Please go to the menu Detection first!')
+
 
 
 def report(st, **state):
