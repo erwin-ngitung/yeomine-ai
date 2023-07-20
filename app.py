@@ -435,7 +435,6 @@ def detection(st, **state):
                             with open(name_annotate, 'a') as f:
                                 df_string = df2.to_string(header=False, index=False)
                                 f.write(df_string)
-                            # np.savetxt(name_annotate, df2.values, fmt='%.2f')
 
                         count += 1
                         time.sleep(0.5)
@@ -520,14 +519,12 @@ def detection(st, **state):
                 with open(annotate_name, 'a') as f:
                     df1_string = df.to_string(header=False, index=False)
                     f.write(df1_string)
-                # np.savetxt(annotate_name, df.values, fmt='%.2f')
             except:
                 df = pd.DataFrame([0, 0, 0, 0],
                                   columns=['id', 'x', 'y', 'w', 'h'])
                 with open(annotate_name, 'a') as f:
                     df2_string = df.to_string(header=False, index=False)
                     f.write(df2_string)
-                # np.savetxt(annotate_name, df.values, fmt='%.2f')
 
             next_photo(path_images, func)
 
@@ -548,99 +545,102 @@ def detection(st, **state):
             tz_JKT = pytz.timezone('Asia/Jakarta')
             time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
 
-            # try:
-            x_size, y_size = 650, 650
-
             try:
-                photo = image_files[st.session_state.counter]
+                x_size, y_size = 650, 650
+
+                try:
+                    photo = image_files[st.session_state.counter]
+                except:
+                    st.session_state.counter = 0
+                    photo = image_files[st.session_state.counter]
+
+                caption = f'The frame image-{st.session_state.counter} generated at {time_JKT}'
+                photo_convert = np.array(photo.convert('RGB'))
+
+                st10, st11 = st.columns(2)
+
+                with st10:
+                    st10.write("Original Image")
+                    st10.image(cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA),
+                               caption=caption)
+                with st11:
+                    st11.write("Detection Image")
+                    photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
+                                                                      time_JKT, x_size, y_size)
+                    st11.image(cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA),
+                               caption=caption)
+
+                st12, st13, st14, st15, st16 = st.columns(5)
+
+                with st13:
+                    st13.button("Back ⏭️",
+                                on_click=next_photo,
+                                use_container_width=True,
+                                args=([image_files, 'back']),
+                                key='back-photo-detection-1')
+                with st14:
+                    st14.button('Save ⏭️',
+                                on_click=save_photo,
+                                use_container_width=True,
+                                args=([image_files, 'save', photo_detect, annotate]),
+                                key='save-photo-detection-1')
+
+                with st15:
+                    st15.button('Next ⏭️',
+                                on_click=next_photo,
+                                use_container_width=True,
+                                args=([image_files, 'next']),
+                                key='next-photo-detection-1')
+
+                btn = st.radio('Do you want to download image in single or all files?',
+                               ['Single files', 'All files', 'Not yet'],
+                               index=2,
+                               key='download-button-1')
+
+                if btn == 'Single files':
+                    st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
+                               f'in the button bellow.')
+                    st17, st18, st19, st20, st21 = st.columns(5)
+
+                    with st18:
+                        path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
+                        image_name = f'{path_images}/{label_name(st.session_state.counter, 10000)}.png'
+
+                        with open(image_name, 'rb') as file:
+                            st.download_button(label='Image (.png)',
+                                               data=file,
+                                               use_container_width=True,
+                                               file_name=f'{label_name(st.session_state.counter, 10000)}.png',
+                                               mime="image/png")
+
+                    with st20:
+                        path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
+                        annotate_name = f'{path_annotate}/{label_name(st.session_state.counter, 10000)}.txt'
+
+                        with open(annotate_name, 'rb') as file:
+                            st.download_button(label='Text (.txt)',
+                                               data=file,
+                                               use_container_width=True,
+                                               file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
+                                               mime="text/plain")
+
+                if btn == 'All files':
+                    st.success(f'Now, you can download the all images with annotation '
+                               f'in the button bellow.')
+                    path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
+                    name = path_object[kind_object]
+                    make_zip(path_folder, name)
+
+                    with open(f'{path_folder}/{name}.zip', "rb") as fp:
+                        st.download_button(label="Download ZIP",
+                                           data=fp,
+                                           use_container_width=True,
+                                           file_name=f'detection_{name}.zip',
+                                           mime="application/zip"
+                                           )
+
             except:
-                st.session_state.counter = 0
-                photo = image_files[st.session_state.counter]
-
-            caption = f'The frame image-{st.session_state.counter} generated at {time_JKT}'
-            photo_convert = np.array(photo.convert('RGB'))
-
-            st10, st11 = st.columns(2)
-
-            with st10:
-                st10.write("Original Image")
-                st10.image(cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA),
-                           caption=caption)
-            with st11:
-                st11.write("Detection Image")
-                photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
-                                                                  time_JKT, x_size, y_size)
-                st11.image(cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA),
-                           caption=caption)
-
-            st12, st13, st14, st15, st16 = st.columns(5)
-
-            with st13:
-                st13.button("Back ⏭️",
-                            on_click=next_photo,
-                            args=([image_files, 'back']),
-                            key='back-photo-detection-1')
-            with st14:
-                st14.button('Save ⏭️',
-                            on_click=save_photo,
-                            args=([image_files, 'save', photo_detect, annotate]),
-                            key='save-photo-detection-1')
-
-            with st15:
-                st15.button('Next ⏭️',
-                            on_click=next_photo,
-                            args=([image_files, 'next']),
-                            key='next-photo-detection-1')
-
-            btn = st.radio('Do you want to download image in single or all files?',
-                           ['Single files', 'All files', 'Not yet'],
-                           index=2,
-                           key='download-button-1')
-
-            if btn == 'Single files':
-                st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
-                           f'in the button bellow.')
-                st17, st18, st19, st20, st21 = st.columns(5)
-
-                with st18:
-                    path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
-                    image_name = f'{path_images}/{label_name(st.session_state.counter, 10000)}.png'
-
-                    with open(image_name, 'rb') as file:
-                        st.download_button(label='Image (.png)',
-                                           data=file,
-                                           use_container_width=True,
-                                           file_name=f'{label_name(st.session_state.counter, 10000)}.png',
-                                           mime="image/png")
-
-                with st20:
-                    path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
-                    annotate_name = f'{path_annotate}/{label_name(st.session_state.counter, 10000)}.txt'
-
-                    with open(annotate_name, 'rb') as file:
-                        st.download_button(label='Text (.txt)',
-                                           data=file,
-                                           use_container_width=True,
-                                           file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
-                                           mime="text/plain")
-
-            if btn == 'All files':
-                st.success(f'Now, you can download the all images with annotation '
-                           f'in the button bellow.')
-                path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
-                name = path_object[kind_object]
-                make_zip(path_folder, name)
-
-                with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                    st.download_button(label="Download ZIP",
-                                       data=fp,
-                                       use_container_width=True,
-                                       file_name=f'images_{name}.zip',
-                                       mime="application/zip"
-                                       )
-
-            # except:
-            #     st.error('Please upload your images or video first!')
+                st.error('Please upload your images or video first!')
     with tab3:
         st.write('Coming Soon!')
 
@@ -726,41 +726,70 @@ def validation(st, **state):
         with st2:
             st2.button("Back ⏭️",
                        on_click=next_photo,
+                       use_container_width=True,
                        args=([path_files, 'back']),
                        key='back-photo-validation-1')
         with st3:
             st3.button("Delete ⏭️",
                        on_click=delete_photo,
+                       use_container_width=True,
                        args=([path_files, 'delete']),
                        key='delete-photo-validation-1')
         with st4:
             st4.button("Next ⏭️",
                        on_click=next_photo,
+                       use_container_width=True,
                        args=([path_files, 'next']),
                        key='next-photo-validation-1')
 
+        btn = st.radio('Do you want to download image in single or all files?',
+                       ['Single files', 'All files', 'Not yet'],
+                       index=2,
+                       key='download-button-2')
+
+        if btn == 'Single files':
+            st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
+                       f'in the button bellow.')
+            st6, st7, st8, st9, st10 = st.columns(5)
+
+            with st7:
+                with open(photo, 'rb') as file:
+                    st.download_button(label='Image (.png)',
+                                       data=file,
+                                       use_container_width=True,
+                                       file_name=f'{photo.split("/")[-1]}',
+                                       mime="image/png")
+
+            with st9:
+                annotate_path = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
+                                photo.split("/")[-1].split(".")[0] + '.txt'
+
+                with open(annotate_path, 'rb') as file:
+                    st.download_button(label='Text (.txt)',
+                                       data=file,
+                                       use_container_width=True,
+                                       file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
+                                       mime="text/plain")
+
+        if btn == 'All files':
+            st.success(f'Now, you can download the all images with annotation '
+                       f'in the button bellow.')
+            path_folder = f'{PATH}/detections/{path_object[kind_object]}'
+            name = path_object[kind_object]
+            make_zip(path_folder, name)
+
+            with open(f'{path_folder}/{name}.zip', "rb") as fp:
+                st.download_button(label="Download ZIP",
+                                   data=fp,
+                                   use_container_width=True,
+                                   file_name=f'detection_{name}.zip',
+                                   mime="application/zip"
+                                   )
+
         st.success('Now, you can download image with annotation in the button bellow')
-
-        st6, st7, st8, st9, st10 = st.columns(5)
-
-        with st7:
-            with open(photo, 'rb') as file:
-                st.download_button(label='Image (.png)',
-                                   data=file,
-                                   file_name=f'{photo.split("/")[-1]}',
-                                   mime="image/png")
-
-        with st9:
-            annotate_path = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
-                            photo.split("/")[-1].split(".")[0] + '.txt'
-            with open(annotate_path, 'rb') as file:
-                st.download_button(label='Text (.txt)',
-                                   data=file,
-                                   file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
-                                   mime="text/plain")
+        
     except:
         st.error('Please go to the menu Detection first!')
-
 
 
 def report(st, **state):
