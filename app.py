@@ -486,8 +486,6 @@ def detection(st, **state):
         colors = cs.generate_label_colors(model.names)
 
         def next_photo(path_images, func):
-            path_images.sort()
-
             if func == 'next':
                 st.session_state.counter += 1
                 if st.session_state.counter >= len(path_images):
@@ -500,7 +498,6 @@ def detection(st, **state):
                     st.session_state.counter = len(path_images) - 1
 
         def delete_photo(path_images, func):
-            path_images.sort()
             photo = path_images[st.session_state.counter]
             text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
                    photo.split("/")[-1].split(".")[0] + '.txt'
@@ -537,8 +534,6 @@ def detection(st, **state):
 
             if 'counter' not in st.session_state:
                 st.session_state.counter = 0
-
-            image_files.sort()
 
             try:
                 photo = image_files[st.session_state.counter]
