@@ -586,30 +586,33 @@ def detection(st, **state):
                 if btn:
                     st.success(f'Now, you can download the image-{st.session_state.counter} with annotation '
                                f'in the button bellow.')
+                else:
+                    st.success(f'Now, you cannot download the image-{st.session_state.counter} with annotation. '
+                               f'Please click the save button first.')
 
-                    st17, st18, st19, st20, st21 = st.columns(5)
+                st17, st18, st19, st20, st21 = st.columns(5)
 
-                    with st18:
-                        path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
-                        num_img = len(os.listdir(path_images))
-                        image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
+                with st18:
+                    path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
+                    num_img = len(os.listdir(path_images))
+                    image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
 
-                        with open(image_name, 'rb') as file:
-                            st.download_button(label='Image (.png)',
-                                               data=file,
-                                               file_name=f'{label_name(num_img - 1, 10000)}.png',
-                                               mime="image/png")
+                    with open(image_name, 'rb') as file:
+                        st.download_button(label='Image (.png)',
+                                           data=file,
+                                           file_name=f'{label_name(num_img - 1, 10000)}.png',
+                                           mime="image/png")
 
-                    with st20:
-                        path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
-                        num_annotate = len(os.listdir(path_annotate))
-                        annotate_name = f'{path_annotate}/{label_name(num_annotate- 1, 10000)}.txt'
+                with st20:
+                    path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
+                    num_annotate = len(os.listdir(path_annotate))
+                    annotate_name = f'{path_annotate}/{label_name(num_annotate- 1, 10000)}.txt'
 
-                        with open(annotate_name, 'rb') as file:
-                            st.download_button(label='Text (.txt)',
-                                               data=file,
-                                               file_name=f'{label_name(num_annotate - 1, 10000)}.txt',
-                                               mime="text/plain")
+                    with open(annotate_name, 'rb') as file:
+                        st.download_button(label='Text (.txt)',
+                                           data=file,
+                                           file_name=f'{label_name(num_annotate - 1, 10000)}.txt',
+                                           mime="text/plain")
 
             except:
                 st.error('Please upload your images or video first!')
