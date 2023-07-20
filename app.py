@@ -578,10 +578,15 @@ def detection(st, **state):
             st12, st13, st14 = st.columns(3)
 
             with st12:
-                st14.download_button(label='Download Image ⏭️',
-                                     data=photo_detect,
-                                     file_name=f'Image-{label_name(st.session_state.counter, 10000)}.png',
-                                     mime="image/png")
+                path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
+                num_img = len(os.listdir(path_images))
+                image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
+
+                with open(image_name, 'rb') as file:
+                    st14.download_button(label='Download Image ⏭️',
+                                         data=file,
+                                         file_name=f'Image-{label_name(num_img - 1, 10000)}.png',
+                                         mime="image/png")
 
             with st13:
                 st13.button('Save Image ⏭️',
