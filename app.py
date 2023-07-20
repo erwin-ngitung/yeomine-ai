@@ -512,7 +512,7 @@ def detection(st, **state):
             image_name = f'{directory}/images/{label_name(num_img, 10000)}.png'
             cv2.imwrite(image_name, img_file)
 
-            annotate_name = f'{directory}/annotations/{label_name(nums, 10000)}.txt'
+            annotate_name = f'{directory}/annotations/{label_name(num_img, 10000)}.txt'
             try:
                 df = pd.DataFrame(annotate_file)
                 np.savetxt(annotate_name, df.values, fmt='%.2f')
@@ -566,7 +566,7 @@ def detection(st, **state):
                            caption=caption)
 
             st12, st13, st14 = st.columns(3)
-            
+
             with st12:
                 st12.button("Back Image ⏭️",
                             on_click=next_photo,
@@ -595,14 +595,19 @@ def detection(st, **state):
                 with open(image_name, 'rb') as file:
                     st15.download_button(label='Download Image ⏭️',
                                          data=file,
-                                         file_name=f'Image-{label_name(num_img - 1, 10000)}.png',
+                                         file_name=f'{label_name(num_img - 1, 10000)}.png',
                                          mime="image/png")
 
             with st16:
-                st16.download_button(label='Download Annotations ⏭️',
-                                     data=pd.DataFrame(annotate).to_csv().encode('utf-8'),
-                                     file_name=f'Image-{label_name(st.session_state.counter, 10000)}.csv',
-                                     mime="image/csv")
+                path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotate'
+                num_annotate = len(os.listdir(path_annotate))
+                annotate_name = f'{path_annotate}/{label_name(num_annotate- 1, 10000)}.png'
+
+                with open(annotate_name, 'rb') as file:
+                    st16.download_button(label='Download Annotations ⏭️',
+                                         data=file,
+                                         file_name=f'{label_name(num_annotate - 1, 10000)}.txt',
+                                         mime="text/plain")
 
             st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'))
             st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'))
