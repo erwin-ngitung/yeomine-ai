@@ -584,7 +584,8 @@ def detection(st, **state):
                                 key='next-photo-detection-1')
 
                 if btn:
-                    st.success('Now, you can download image with annotation in the button bellow')
+                    st.success(f'Now, you can download the image-{st.session_state.counter} with annotation '
+                               f'in the button bellow.')
 
                     st17, st18, st19, st20, st21 = st.columns(5)
 
