@@ -785,9 +785,6 @@ def validation(st, **state):
                                    file_name=f'detection_{name}.zip',
                                    mime="application/zip"
                                    )
-
-        st.success('Now, you can download image with annotation in the button bellow')
-
     except:
         st.error('Please go to the menu Detection first!')
 
