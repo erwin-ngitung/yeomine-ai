@@ -575,7 +575,7 @@ def detection(st, **state):
                             args=([image_files, 'next']),
                             key='next-photo-detection-1')
 
-            st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'))
+            st.write(annotate)
             # except:
             #     st.error('Please upload your images or video first!')
     with tab3:
