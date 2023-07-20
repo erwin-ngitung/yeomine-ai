@@ -69,7 +69,7 @@ def draw_image(model, device, img, conf, colors, time, x_size, y_size):
                               cv2.FONT_HERSHEY_SIMPLEX, 0.6,
                               color, 2)
             img = cv2.putText(img,
-                              f'ID: {i}',
+                              f'ID: {idx}',
                               (x1, y1 - 30),
                               cv2.FONT_HERSHEY_SIMPLEX, 0.6,
                               color, 2)

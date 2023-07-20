@@ -565,49 +565,44 @@ def detection(st, **state):
                 st11.image(cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA),
                            caption=caption)
 
-            st12, st13, st14 = st.columns(3)
+            st12, st13, st14, st15, st16 = st.columns(5)
 
-            with st12:
-                st12.button("Back Image ⏭️",
+            with st13:
+                st13.button("Back Image ⏭️",
                             on_click=next_photo,
                             args=([image_files, 'back']),
                             key='back-photo-detection-1')
 
-            with st13:
-                st13.button('Save Image ⏭️',
-                            on_click=save_photo,
-                            args=([image_files, 'save', photo_detect, annotate]),
-                            key='save-photo-detection-1')
-
-            with st14:
-                st14.button('Next Image ⏭️',
+            with st15:
+                st15.button('Next Image ⏭️',
                             on_click=next_photo,
                             args=([image_files, 'next']),
                             key='next-photo-detection-1')
 
-            st15, st16 = st.columns(2)
+            st.button('Save Image ⏭️',
+                      on_click=save_photo,
+                      args=([image_files, 'save', photo_detect, annotate]),
+                      key='save-photo-detection-1')
 
-            with st15:
-                path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
-                num_img = len(os.listdir(path_images))
-                image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
+            path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
+            num_img = len(os.listdir(path_images))
+            image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
 
-                with open(image_name, 'rb') as file:
-                    st15.download_button(label='Download Image ⏭️',
-                                         data=file,
-                                         file_name=f'{label_name(num_img - 1, 10000)}.png',
-                                         mime="image/png")
+            with open(image_name, 'rb') as file:
+                st.download_button(label='Download image as png file⏭️',
+                                   data=file,
+                                   file_name=f'{label_name(num_img - 1, 10000)}.png',
+                                   mime="image/png")
 
-            with st16:
-                path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
-                num_annotate = len(os.listdir(path_annotate))
-                annotate_name = f'{path_annotate}/{label_name(num_annotate- 1, 10000)}.txt'
+            path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
+            num_annotate = len(os.listdir(path_annotate))
+            annotate_name = f'{path_annotate}/{label_name(num_annotate- 1, 10000)}.txt'
 
-                with open(annotate_name, 'rb') as file:
-                    st16.download_button(label='Download Annotations ⏭️',
-                                         data=file,
-                                         file_name=f'{label_name(num_annotate - 1, 10000)}.txt',
-                                         mime="text/plain")
+            with open(annotate_name, 'rb') as file:
+                st.download_button(label='Download annotation as txt file ⏭️',
+                                   data=file,
+                                   file_name=f'{label_name(num_annotate - 1, 10000)}.txt',
+                                   mime="text/plain")
 
             st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'))
             st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'))
