@@ -191,7 +191,7 @@ def training(st, **state):
 
                 # Load a model
                 model = YOLO(
-                    f'{PATH}/weights/petrained-model/{kind_model}') 
+                    f'{PATH}/weights/petrained-model/{kind_model}')
                 model.train(data=path_file,
                             device=device,
                             epochs=int(epochs),
@@ -283,7 +283,8 @@ def detection(st, **state):
                                     'Coal Detection',
                                     'Seam Detection',
                                     'Core Detection',
-                                    'Smart HSE'])
+                                    'Smart HSE'],
+                                   key='kind-object-')
 
         conf = st.slider('Number of Confidence (%)',
                          min_value=0,
@@ -404,7 +405,8 @@ def detection(st, **state):
                                     'Coal Detection',
                                     'Seam Detection',
                                     'Core Detection',
-                                    'Smart HSE'])
+                                    'Smart HSE'],
+                                   key='kind-object-2')
 
         conf = st.slider('Number of Confidence (%)',
                          min_value=0,
