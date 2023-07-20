@@ -558,7 +558,7 @@ def detection(st, **state):
 
                 with st12:
                     st12.button("Back Image ⏭️",
-                                on_click=back_photo,
+                                on_click=next_photo,
                                 args=([image_files, 'back']),
                                 key='back-photo-detection-1')
 
