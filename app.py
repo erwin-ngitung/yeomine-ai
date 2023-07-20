@@ -595,6 +595,7 @@ def detection(st, **state):
                         with open(image_name, 'rb') as file:
                             st.download_button(label='Image (.png)',
                                                data=file,
+                                               on_click=True,
                                                file_name=f'{label_name(st.session_state.counter, 10000)}.png',
                                                mime="image/png")
 
@@ -605,6 +606,7 @@ def detection(st, **state):
                         with open(annotate_name, 'rb') as file:
                             st.download_button(label='Text (.txt)',
                                                data=file,
+                                               on_click=True,
                                                file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
                                                mime="text/plain")
 
