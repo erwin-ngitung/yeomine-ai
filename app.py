@@ -503,7 +503,7 @@ def detection(st, **state):
                 elif st.session_state.counter < 0:
                     st.session_state.counter = len(path_images) - 1
 
-        def save_photo(path_images, func):
+        def save_photo(path_images, func, img, annotate):
             directory = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
             make_folder_only(directory)
 
@@ -558,14 +558,14 @@ def detection(st, **state):
 
                 with st12:
                     st12.button("Back Image ⏭️",
-                                on_click=next_photo,
+                                on_click=back_photo,
                                 args=([image_files, 'back']),
                                 key='back-photo-detection-1')
 
                 with st13:
                     st13.button("Save Image ⏭️",
                                 on_click=save_photo,
-                                args=([image_files, 'save', photo_detect]),
+                                args=([image_files, 'save', photo_detect, annotate]),
                                 key='save-photo-detection-1')
 
                 with st14:
