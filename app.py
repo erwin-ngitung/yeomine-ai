@@ -284,29 +284,33 @@ def detection(st, **state):
                                     'Seam Detection',
                                     'Core Detection',
                                     'Smart HSE'],
-                                   key='kind-object-')
+                                   key='kind-object-1')
 
         conf = st.slider('Number of Confidence (%)',
                          min_value=0,
                          max_value=100,
                          step=1,
                          value=60,
-                         key='confidence')
+                         key='confidence-1')
         stop_program = st.slider('Number of Image',
                                  min_value=0,
                                  max_value=500,
                                  step=1,
                                  value=20,
-                                 key='stop-program')
+                                 key='stop-program-1')
 
         st4, st5 = st.columns(2)
 
         with st4:
             custom = st.radio('Do you want to use custom model that has trained?',
-                              ['Yes', 'No'], index=1)
+                              ['Yes', 'No'],
+                              index=1,
+                              key='custom-1')
         with st5:
             type_camera = st.radio('Do you want to use Integrated Webcam?',
-                                   ['Yes', 'No'], index=1)
+                                   ['Yes', 'No'],
+                                   index=1,
+                                   key='camera-1')
 
         st6, st7 = st.columns(2)
 
@@ -413,18 +417,20 @@ def detection(st, **state):
                          max_value=100,
                          step=1,
                          value=60,
-                         key='confidence')
+                         key='confidence-2')
 
         st8, st9 = st.columns(2)
 
         with st8:
             custom = st.radio('Do you want to use custom model that has trained?',
                               ['Yes', 'No'],
-                              index=1)
+                              index=1,
+                              key='custom-2')
         with st9:
             extension_file = st.radio('What is the kind of file that you want to upload?',
                                       ['Image', 'Video'],
-                                      index=0)
+                                      index=0,
+                                      key='extension-file-1')
 
         if custom == 'Yes':
             option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
@@ -480,11 +486,17 @@ def detection(st, **state):
             st10, st11, st12 = st.columns(3)
 
             with st10:
-                st10.button("Back Image ⏭️", on_click=next_photo, args=([image_files, 'back']))
+                st10.button("Back Image ⏭️",
+                            on_click=next_photo,
+                            args=([image_files, 'back']))
             with st11:
-                st11.button("Delete Image ⏭️", on_click=delete_photo, args=([image_files, 'delete']))
+                st11.button("Delete Image ⏭️",
+                            on_click=delete_photo,
+                            args=([image_files, 'delete']))
             with st12:
-                st12.button("Next Image ⏭️", on_click=next_photo, args=([image_files, 'next']))
+                st12.button("Next Image ⏭️",
+                            on_click=next_photo,
+                            args=([image_files, 'next']))
 
             if 'counter' not in st.session_state:
                 st.session_state.counter = 0
