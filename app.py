@@ -595,7 +595,7 @@ def detection(st, **state):
                         image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
 
                         with open(image_name, 'rb') as file:
-                            st.download_button(label='Image (.png)',
+                            st.download_button(label='Picture (.png)',
                                                data=file,
                                                file_name=f'{label_name(num_img - 1, 10000)}.png',
                                                mime="image/png")
@@ -717,7 +717,7 @@ def validation(st, **state):
 
         with st7:
             with open(photo, 'rb') as file:
-                st.download_button(label='Image (.png)',
+                st.download_button(label='Picture (.png)',
                                    data=file,
                                    file_name=f'{photo.split("/")[-1]}',
                                    mime="image/png")
