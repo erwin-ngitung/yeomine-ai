@@ -595,7 +595,7 @@ def detection(st, **state):
                         image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
 
                         with open(image_name, 'rb') as file:
-                            st.download_button(label='Picture (.png)',
+                            st.download_button(label='Image (.png)',
                                                data=file,
                                                file_name=f'{label_name(num_img - 1, 10000)}.png',
                                                mime="image/png")
@@ -606,7 +606,7 @@ def detection(st, **state):
                         annotate_name = f'{path_annotate}/{label_name(num_annotate- 1, 10000)}.txt'
 
                         with open(annotate_name, 'rb') as file:
-                            st.download_button(label='Annotation (.txt)',
+                            st.download_button(label='Text (.txt)',
                                                data=file,
                                                file_name=f'{label_name(num_annotate - 1, 10000)}.txt',
                                                mime="text/plain")
@@ -696,17 +696,17 @@ def validation(st, **state):
         st1, st2, st3, st4, st5 = st.columns(5)
 
         with st2:
-            st1.button("Back Image ⏭️",
+            st2.button("Back Image ⏭️",
                        on_click=next_photo,
                        args=([path_files, 'back']),
                        key='back-photo-validation-1')
         with st3:
-            st2.button("Delete Image ⏭️",
+            st3.button("Delete Image ⏭️",
                        on_click=delete_photo,
                        args=([path_files, 'delete']),
                        key='delete-photo-validation-1')
         with st4:
-            st3.button("Next Image ⏭️",
+            st4.button("Next Image ⏭️",
                        on_click=next_photo,
                        args=([path_files, 'next']),
                        key='next-photo-validation-1')
@@ -717,7 +717,7 @@ def validation(st, **state):
 
         with st7:
             with open(photo, 'rb') as file:
-                st.download_button(label='Picture (.png)',
+                st.download_button(label='Image (.png)',
                                    data=file,
                                    file_name=f'{photo.split("/")[-1]}',
                                    mime="image/png")
@@ -726,7 +726,7 @@ def validation(st, **state):
             annotate_path = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
                             photo.split("/")[-1].split(".")[0] + '.txt'
             with open(annotate_path, 'rb') as file:
-                st.download_button(label='Annotation (.txt)',
+                st.download_button(label='Text (.txt)',
                                    data=file,
                                    file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
                                    mime="text/plain")
