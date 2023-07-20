@@ -552,6 +552,7 @@ def detection(st, **state):
                 st.image(photo, caption=caption)
             with st14:
                 st.write("Detection Image")
+                photo = np.array(photo.convert('RGB'))
                 photo, parameter, annotate = cs.draw_image(model, device, photo, conf / 100, colors, time_JKT)
                 st.image(photo, caption=caption)
 
