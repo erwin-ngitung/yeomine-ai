@@ -585,27 +585,31 @@ def detection(st, **state):
                             key='next-photo-detection-1')
 
             if btn:
-                st.success('You can download image with annotation')
+                st.success('Now, you can download image with annotation')
 
-            path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
-            num_img = len(os.listdir(path_images))
-            image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
+                st17, st18, st19, st20, st21 = st.columns(5)
 
-            with open(image_name, 'rb') as file:
-                st.download_button(label='Download image as png file⏭️',
-                                   data=file,
-                                   file_name=f'{label_name(num_img - 1, 10000)}.png',
-                                   mime="image/png")
+                with st18:
+                    path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
+                    num_img = len(os.listdir(path_images))
+                    image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
 
-            path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
-            num_annotate = len(os.listdir(path_annotate))
-            annotate_name = f'{path_annotate}/{label_name(num_annotate- 1, 10000)}.txt'
+                    with open(image_name, 'rb') as file:
+                        st.download_button(label='Download image as png file⏭️',
+                                           data=file,
+                                           file_name=f'{label_name(num_img - 1, 10000)}.png',
+                                           mime="image/png")
 
-            with open(annotate_name, 'rb') as file:
-                st.download_button(label='Download annotation as txt file ⏭️',
-                                   data=file,
-                                   file_name=f'{label_name(num_annotate - 1, 10000)}.txt',
-                                   mime="text/plain")
+                with st20:
+                    path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
+                    num_annotate = len(os.listdir(path_annotate))
+                    annotate_name = f'{path_annotate}/{label_name(num_annotate- 1, 10000)}.txt'
+
+                    with open(annotate_name, 'rb') as file:
+                        st.download_button(label='Download annotation as txt file ⏭️',
+                                           data=file,
+                                           file_name=f'{label_name(num_annotate - 1, 10000)}.txt',
+                                           mime="text/plain")
 
             st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'))
             st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'))
