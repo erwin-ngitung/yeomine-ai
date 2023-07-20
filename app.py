@@ -150,8 +150,12 @@ def training(st, **state):
     with tab1:
         try:
             kind_object = st.selectbox('Please select the kind of object detection do you want',
-                                       ['General Detection', 'Coal Detection', 'Seam Detection', 'Core Detection',
-                                        'Smart-HSE'])
+                                       ['General Detection',
+                                        'Coal Detection',
+                                        'Seam Detection',
+                                        'Core Detection',
+                                        'Smart-HSE'],
+                                       key='kind-object-training-1')
 
             path_object = {'General Detection': 'general-detect',
                            'Coal Detection': 'front-coal',
@@ -162,21 +166,42 @@ def training(st, **state):
             path_file = st.text_input('Please input your path data YAML', 'data/front-coal.yaml')
             list_model = os.listdir(f'{PATH}/weights/petrained-model')
             kind_model = st.selectbox('Please select the petrained model',
-                                      list_model)
+                                      list_model,
+                                      key='kind-model-training-1')
             st4, st5 = st.columns(2)
 
             with st4:
-                epochs = st.number_input('Number of Epochs', format='%i', value=10, key='epochs')
-                imgsz = st.number_input('Number of Image Size', format='%i', value=640, key='imgsz')
-                batch = st.number_input('Number of Batch Size', format='%i', value=10, key='batch')
+                epochs = st.number_input('Number of Epochs',
+                                         format='%i',
+                                         value=10,
+                                         key='epochs-training-1')
+                imgsz = st.number_input('Number of Image Size',
+                                        format='%i',
+                                        value=640,
+                                        key='imgsz-training-1')
+                batch = st.number_input('Number of Batch Size',
+                                        format='%i',
+                                        value=10,
+                                        key='batch-training-1')
 
             with st5:
-                lr_rate = st.number_input('Number of Learning Rate', format='%f', value=0.05, key='lr_rate')
-                momentum = st.number_input('Number of Size Rate', format='%f', value=0.05, key='momentum')
-                weight_decay = st.number_input('Number of Weight Decay', format='%f', value=0.05, key='weight_decay')
+                lr_rate = st.number_input('Number of Learning Rate',
+                                          format='%f',
+                                          value=0.05,
+                                          key='lr-rate-training-1')
+                momentum = st.number_input('Number of Size Rate',
+                                           format='%f',
+                                           value=0.05,
+                                           key='momentum-training-1')
+                weight_decay = st.number_input('Number of Weight Decay',
+                                               format='%f',
+                                               value=0.05,
+                                               key='weight-decay-training-1')
 
             next_train = st.radio('Are you sure to train model with the parameter above?',
-                                  ['Yes', 'No'], index=1)
+                                  ['Yes', 'No'],
+                                  index=1,
+                                  key='next-train-training-1')
 
             if next_train == 'Yes':
                 shutil.rmtree(f'{PATH}/results/{path_object[kind_object]}')
@@ -223,14 +248,16 @@ def training(st, **state):
                            'Summary']
 
             visual = st.selectbox('Please choose the curve of training model',
-                                  list_visual)
+                                  list_visual,
+                                  key='visual-training-1')
 
             if visual == 'Summary':
                 visual = 'results'
             elif visual == 'Confusion Matrix':
                 visual = 'confusion_matrix_normalized'
 
-            st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.png', caption=f'The image of {visual}')
+            st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.png',
+                     caption=f'The image of {visual}')
         except:
             pass
 
@@ -244,9 +271,11 @@ def training(st, **state):
                            'val_batch0_pred']
 
             visual = st.selectbox('Please choose the validation image!',
-                                  list_visual)
+                                  list_visual,
+                                  key='visual-training-2')
 
-            st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.jpg', caption=f'The image of {visual}')
+            st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.jpg',
+                     caption=f'The image of {visual}')
         except:
             pass
 
@@ -284,20 +313,20 @@ def detection(st, **state):
                                     'Seam Detection',
                                     'Core Detection',
                                     'Smart HSE'],
-                                   key='kind-object-1')
+                                   key='kind-object-detection-1')
 
         conf = st.slider('Number of Confidence (%)',
                          min_value=0,
                          max_value=100,
                          step=1,
                          value=60,
-                         key='confidence-1')
+                         key='confidence-detection-1')
         stop_program = st.slider('Number of Image',
                                  min_value=0,
                                  max_value=500,
                                  step=1,
                                  value=20,
-                                 key='stop-program-1')
+                                 key='stop-program-detection-1')
 
         st4, st5 = st.columns(2)
 
@@ -305,12 +334,12 @@ def detection(st, **state):
             custom = st.radio('Do you want to use custom model that has trained?',
                               ['Yes', 'No'],
                               index=1,
-                              key='custom-1')
+                              key='custom-detection-1')
         with st5:
             type_camera = st.radio('Do you want to use Integrated Webcam?',
                                    ['Yes', 'No'],
                                    index=1,
-                                   key='camera-1')
+                                   key='camera-detection-1')
 
         st6, st7 = st.columns(2)
 
@@ -322,7 +351,8 @@ def detection(st, **state):
             else:
                 list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
                 option_model = st.selectbox('Please select model do you want!',
-                                            list_weights)
+                                            list_weights,
+                                            key='option-model-detection-1')
                 model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
 
         with st7:
@@ -335,7 +365,8 @@ def detection(st, **state):
             else:
                 list_files = [file for file in os.listdir(f'datasets/{path_object[kind_object]}/predict')]
                 sample_video = st.selectbox('Please select sample video do you want',
-                                            list_files)
+                                            list_files,
+                                            key='sample-video-detection-1')
                 source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
                 cap = cv2.VideoCapture(source)
 
@@ -347,7 +378,9 @@ def detection(st, **state):
             device = 'cpu'
 
         next_detect = st.radio('Are you sure to detect image/video using parameter above?',
-                               ['Yes', 'No'], index=1)
+                               ['Yes', 'No'],
+                               index=1,
+                               key='next-detect-detection-1')
 
         if next_detect == 'Yes':
             st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' '
@@ -359,10 +392,10 @@ def detection(st, **state):
 
             show_label = st.checkbox('Show label predictions',
                                      value=True,
-                                     key='show-label')
+                                     key='show-label-detection-1')
             save_annotate = st.checkbox('Save annotate and images',
                                         value=False,
-                                        key='save-annotate')
+                                        key='save-annotate-detection-1')
 
             count = 0
             placeholder = st.empty()
@@ -410,14 +443,14 @@ def detection(st, **state):
                                     'Seam Detection',
                                     'Core Detection',
                                     'Smart HSE'],
-                                   key='kind-object-2')
+                                   key='kind-object-detection-2')
 
         conf = st.slider('Number of Confidence (%)',
                          min_value=0,
                          max_value=100,
                          step=1,
                          value=60,
-                         key='confidence-2')
+                         key='confidence-detection-2')
 
         st8, st9 = st.columns(2)
 
@@ -425,12 +458,12 @@ def detection(st, **state):
             custom = st.radio('Do you want to use custom model that has trained?',
                               ['Yes', 'No'],
                               index=1,
-                              key='custom-2')
+                              key='custom-detection-2')
         with st9:
             extension_file = st.radio('What is the kind of file that you want to upload?',
                                       ['Image', 'Video'],
                                       index=0,
-                                      key='extension-file-1')
+                                      key='extension-file-detection-1')
 
         if custom == 'Yes':
             option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
@@ -439,7 +472,8 @@ def detection(st, **state):
         else:
             list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
             option_model = st.selectbox('Please select model do you want!',
-                                        list_weights)
+                                        list_weights,
+                                        key='select-model-detection-2')
             model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
 
         if torch.cuda.is_available():
@@ -488,15 +522,18 @@ def detection(st, **state):
             with st10:
                 st10.button("Back Image ⏭️",
                             on_click=next_photo,
-                            args=([image_files, 'back']))
+                            args=([image_files, 'back']),
+                            key='back-photo-detection-1')
             with st11:
                 st11.button("Delete Image ⏭️",
                             on_click=delete_photo,
-                            args=([image_files, 'delete']))
+                            args=([image_files, 'delete']),
+                            key='delete-photo-detection-1')
             with st12:
                 st12.button("Next Image ⏭️",
                             on_click=next_photo,
-                            args=([image_files, 'next']))
+                            args=([image_files, 'next']),
+                            key='next-photo-detection-1')
 
             if 'counter' not in st.session_state:
                 st.session_state.counter = 0
@@ -559,7 +596,8 @@ def validation(st, **state):
                                     'Coal Detection',
                                     'Seam Detection',
                                     'Core Detection',
-                                    'Smart HSE'])
+                                    'Smart HSE'],
+                                   key='kind-object-validation-1')
 
         try:
             def next_photo(path_files, func):
@@ -594,11 +632,20 @@ def validation(st, **state):
             st1, st2, st3 = st.columns(3)
 
             with st1:
-                st1.button("Back Image ⏭️", on_click=next_photo, args=([path_files, 'back']))
+                st1.button("Back Image ⏭️",
+                           on_click=next_photo,
+                           args=([path_files, 'back']),
+                           key='back-photo-validation-1')
             with st2:
-                st2.button("Delete Image ⏭️", on_click=delete_photo, args=([path_files, 'delete']))
+                st2.button("Delete Image ⏭️",
+                           on_click=delete_photo,
+                           args=([path_files, 'delete']),
+                           key='delete-photo-validation-1')
             with st3:
-                st3.button("Next Image ⏭️", on_click=next_photo, args=([path_files, 'next']))
+                st3.button("Next Image ⏭️",
+                           on_click=next_photo,
+                           args=([path_files, 'next']),
+                           key='next-photo-validation-1')
 
             if 'counter' not in st.session_state:
                 st.session_state.counter = 0
