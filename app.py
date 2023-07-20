@@ -507,12 +507,11 @@ def detection(st, **state):
             directory = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
             make_folder_only(directory)
 
-            num_img = len(os.listdir(f'{directory}/images'))
-
-            image_name = f'{directory}/images/{label_name(num_img, 10000)}.png'
+            image_name = f'{directory}/images/{label_name(st.session_state.counter, 10000)}.png'
             cv2.imwrite(image_name, img_file)
 
-            annotate_name = f'{directory}/annotations/{label_name(num_img, 10000)}.txt'
+            annotate_name = f'{directory}/annotations/{label_name(st.session_state.counter, 10000)}.txt'
+
             try:
                 df = pd.DataFrame(annotate_file)
                 np.savetxt(annotate_name, df.values, fmt='%.2f')
