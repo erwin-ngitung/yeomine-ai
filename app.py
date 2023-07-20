@@ -542,13 +542,13 @@ def detection(st, **state):
                             key='delete-photo-detection-1')
 
             with st12:
-                st11.button("Save Image ⏭️",
+                st12.button("Save Image ⏭️",
                             on_click=save_photo,
                             args=([image_files, 'save']),
                             key='save-photo-detection-1')
 
             with st13:
-                st12.button("Next Image ⏭️",
+                st13.button("Next Image ⏭️",
                             on_click=next_photo,
                             args=([image_files, 'next']),
                             key='next-photo-detection-1')
