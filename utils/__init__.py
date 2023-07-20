@@ -42,6 +42,22 @@ def make_folder(path_file):
         os.makedirs(directory3)
 
 
+def make_folder_only(path_file):
+    directory1 = f'{path_file}/images'
+
+    if not os.path.exists(directory1):
+        os.makedirs(directory1)
+
+    directory2 = f'{path_file}/videos'
+
+    if not os.path.exists(directory2):
+        os.makedirs(directory2)
+
+    directory3 = f'{path_file}/annotations'
+    if not os.path.exists(directory3):
+        os.makedirs(directory3)
+
+
 def make_zip(weight_name):
     # Creating the ZIP file 
     archived = shutil.make_archive(f'weights/{weight_name}.pth', 'zip', f'weights/{weight_name}.zip')

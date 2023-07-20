@@ -6,7 +6,8 @@ import numpy as np
 import shutil
 import pandas as pd
 from PIL import Image
-from utils import make_folder, label_name, check_email, check_account, update_json, replace_json, computer_vision as cs
+from utils import make_folder, make_folder_only, label_name, \
+    check_email, check_account, update_json, replace_json, computer_vision as cs
 
 # Package for Streamlit
 import streamlit as st
@@ -204,7 +205,7 @@ def training(st, **state):
                                   key='next-train-training-1')
 
             if next_train == 'Yes':
-                shutil.rmtree(f'{PATH}/results/{path_object[kind_object]}')
+                # shutil.rmtree(f'{PATH}/results/{path_object[kind_object]}')
 
                 if torch.cuda.is_available():
                     st.success(
@@ -503,12 +504,20 @@ def detection(st, **state):
                     st.session_state.counter = len(path_images) - 1
 
         def delete_photo(path_images, func):
-            photo = path_images[st.session_state.counter]
-            text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
-                   photo.split("/")[-1].split(".")[0] + '.txt'
+            del path_images[st.session_state.counter]
+            next_photo(path_images, func)
 
-            os.remove(photo)
-            os.remove(text)
+        def save_photo(path_images, func):
+            directory = f'{PATH}/datasets/custom-data/{path_object[kind_object]}'
+            make_folder_only(directory)
+
+            nums = len(os.listdir(f'{directory}/images'))
+
+            image_name = f'{directory}/images/{label_name(nums, 10000)}.png'
+            cv2.imwrite(image_name, img)
+
+            annotate_name = f'{directory}/annotations/{label_name(nums, 10000)}.txt'
+            np.savetxt(annotate_name, annotate.values, fmt='%.2f')
 
             next_photo(path_images, func)
 
@@ -519,7 +528,7 @@ def detection(st, **state):
 
             image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
 
-            st10, st11, st12 = st.columns(3)
+            st10, st11, st12, st13 = st.columns(4)
 
             with st10:
                 st10.button("Back Image ⏭️",
@@ -531,7 +540,14 @@ def detection(st, **state):
                             on_click=delete_photo,
                             args=([image_files, 'delete']),
                             key='delete-photo-detection-1')
+
             with st12:
+                st11.button("Save Image ⏭️",
+                            on_click=save_photo,
+                            args=([image_files, 'save']),
+                            key='save-photo-detection-1')
+
+            with st13:
                 st12.button("Next Image ⏭️",
                             on_click=next_photo,
                             args=([image_files, 'next']),
@@ -552,13 +568,13 @@ def detection(st, **state):
             photo_convert = np.array(photo.convert('RGB'))
             x_size, y_size = 650, 650
 
-            st13, st14 = st.columns(2)
+            st14, st15 = st.columns(2)
 
-            with st13:
+            with st14:
                 st.write("Original Image")
                 st.image(cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA),
                          caption=caption)
-            with st14:
+            with st15:
                 st.write("Detection Image")
                 photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors, time_JKT,
                                                                   x_size, y_size)
