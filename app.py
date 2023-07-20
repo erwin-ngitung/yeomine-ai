@@ -282,8 +282,6 @@ def training(st, **state):
 
 
 def detection(st, **state):
-    global photo
-    
     # Title
     image = Image.open(f'{PATH}/images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
@@ -505,12 +503,8 @@ def detection(st, **state):
                 elif st.session_state.counter < 0:
                     st.session_state.counter = len(path_images) - 1
 
-        def delete_photo(path_images, func):
-            path_images.pop(st.session_state.counter)
-            next_photo(path_images, func)
-
         def save_photo(path_images, func):
-            directory = f'{PATH}/datasets/custom-data/{path_object[kind_object]}'
+            directory = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
             make_folder_only(directory)
 
             nums = len(os.listdir(f'{directory}/images'))
@@ -530,62 +524,59 @@ def detection(st, **state):
 
             image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
 
-            st10, st11, st12, st13 = st.columns(4)
-
-            with st10:
-                st10.button("Back Image ⏭️",
-                            on_click=next_photo,
-                            args=([image_files, 'back']),
-                            key='back-photo-detection-1')
-            with st11:
-                st11.button("Delete Image ⏭️",
-                            on_click=delete_photo,
-                            args=([image_files, 'delete']),
-                            key='delete-photo-detection-1')
-
-            with st12:
-                st12.button("Save Image ⏭️",
-                            on_click=save_photo,
-                            args=([image_files, 'save']),
-                            key='save-photo-detection-1')
-
-            with st13:
-                st13.button("Next Image ⏭️",
-                            on_click=next_photo,
-                            args=([image_files, 'next']),
-                            key='next-photo-detection-1')
-
             if 'counter' not in st.session_state:
                 st.session_state.counter = 0
 
-            try:
-                photo = image_files[st.session_state.counter]
-            except:
-                try:
-                    st.session_state.counter = 0
-                    photo = image_files[st.session_state.counter]
-                except:
-                    st.error('Please upload your images or video first!')
-
             tz_JKT = pytz.timezone('Asia/Jakarta')
             time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-            caption = f'The frame image-{st.session_state.counter} generated at {time_JKT}'
-            photo_convert = np.array(photo.convert('RGB'))
-            x_size, y_size = 650, 650
 
-            st14, st15 = st.columns(2)
+            try:
+                try:
+                    photo = image_files[st.session_state.counter]
+                except:
+                    st.session_state.counter = 0
+                    photo = image_files[st.session_state.counter]
 
-            with st14:
-                st.write("Original Image")
-                st.image(cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA),
-                         caption=caption)
-            with st15:
-                st.write("Detection Image")
-                photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors, time_JKT,
-                                                                  x_size, y_size)
-                st.image(cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA),
-                         caption=caption)
+                caption = f'The frame image-{st.session_state.counter} generated at {time_JKT}'
+                photo_convert = np.array(photo.convert('RGB'))
+                x_size, y_size = 650, 650
 
+                st10, st11 = st.columns(2)
+
+                with st10:
+                    st10.write("Original Image")
+                    st10.image(cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA),
+                               caption=caption)
+                with st11:
+                    st11.write("Detection Image")
+                    photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors, time_JKT,
+                                                                      x_size, y_size)
+                    st11.image(cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA),
+                               caption=caption)
+
+                st12, st13, st14 = st.columns(3)
+
+                with st12:
+                    st12.button("Back Image ⏭️",
+                                on_click=next_photo,
+                                args=([image_files, 'back']),
+                                key='back-photo-detection-1')
+
+                with st13:
+                    st13.button("Save Image ⏭️",
+                                on_click=save_photo,
+                                args=([image_files, 'save', photo_detect]),
+                                key='save-photo-detection-1')
+
+                with st14:
+                    st14.button("Next Image ⏭️",
+                                on_click=next_photo,
+                                args=([image_files, 'next']),
+                                key='next-photo-detection-1')
+
+                st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'))
+            except:
+                st.error('Please upload your images or video first!')
     with tab3:
         st.write('Coming Soon!')
 
