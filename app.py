@@ -568,18 +568,18 @@ def detection(st, **state):
                 st12, st13, st14, st15, st16 = st.columns(5)
 
                 with st13:
-                    st13.button("Back Image ⏭️",
+                    st13.button("Back ⏭️",
                                 on_click=next_photo,
                                 args=([image_files, 'back']),
                                 key='back-photo-detection-1')
                 with st14:
-                    btn = st14.button('Save Image ⏭️',
+                    btn = st14.button('Save ⏭️',
                                       on_click=save_photo,
                                       args=([image_files, 'save', photo_detect, annotate]),
                                       key='save-photo-detection-1')
 
                 with st15:
-                    st15.button('Next Image ⏭️',
+                    st15.button('Next ⏭️',
                                 on_click=next_photo,
                                 args=([image_files, 'next']),
                                 key='next-photo-detection-1')
@@ -696,17 +696,17 @@ def validation(st, **state):
         st1, st2, st3, st4, st5 = st.columns(5)
 
         with st2:
-            st2.button("Back Image ⏭️",
+            st2.button("Back ⏭️",
                        on_click=next_photo,
                        args=([path_files, 'back']),
                        key='back-photo-validation-1')
         with st3:
-            st3.button("Delete Image ⏭️",
+            st3.button("Delete ⏭️",
                        on_click=delete_photo,
                        args=([path_files, 'delete']),
                        key='delete-photo-validation-1')
         with st4:
-            st4.button("Next Image ⏭️",
+            st4.button("Next ⏭️",
                        on_click=next_photo,
                        args=([path_files, 'next']),
                        key='next-photo-validation-1')
