@@ -432,7 +432,10 @@ def detection(st, **state):
 
                             name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/' \
                                             f'{label_name(count, 10000)}.txt'
-                            np.savetxt(name_annotate, df2.values, fmt='%.2f')
+                            with open(name_annotate, 'a') as f:
+                                df_string = df2.to_string(header=False, index=False)
+                                f.write(df_string)
+                            # np.savetxt(name_annotate, df2.values, fmt='%.2f')
 
                         count += 1
                         time.sleep(0.5)
@@ -514,11 +517,17 @@ def detection(st, **state):
 
             try:
                 df = pd.DataFrame(annotate_file)
-                np.savetxt(annotate_name, df.values, fmt='%.2f')
+                with open(annotate_name, 'a') as f:
+                    df1_string = df.to_string(header=False, index=False)
+                    f.write(df1_string)
+                # np.savetxt(annotate_name, df.values, fmt='%.2f')
             except:
                 df = pd.DataFrame([0, 0, 0, 0],
                                   columns=['id', 'x', 'y', 'w', 'h'])
-                np.savetxt(annotate_name, df.values, fmt='%.2f')
+                with open(annotate_name, 'a') as f:
+                    df2_string = df.to_string(header=False, index=False)
+                    f.write(df2_string)
+                # np.savetxt(annotate_name, df.values, fmt='%.2f')
 
             next_photo(path_images, func)
 
