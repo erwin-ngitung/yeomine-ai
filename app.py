@@ -592,13 +592,13 @@ def detection(st, **state):
                             args=([image_files, 'next']),
                             key='next-photo-detection-1')
 
-            btn_single = st.checkbox('Download in single file',
-                                     value=False)
-            btn_all = st.checkbox('Download in all files',
-                                  value=False)
+            btn = st.radio('Do you want to download image in single or all files?',
+                           ['Single files', 'All files', 'Not yet'],
+                           index=2,
+                           key='download-button-1')
 
-            if btn_single:
-                st.success(f'Now, you can download the image-{st.session_state.counter} with annotation '
+            if btn == 'Single files':
+                st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
                            f'in the button bellow.')
                 st17, st18, st19, st20, st21 = st.columns(5)
 
@@ -609,7 +609,7 @@ def detection(st, **state):
                     with open(image_name, 'rb') as file:
                         st.download_button(label='Image (.png)',
                                            data=file,
-                                           on_click=True,
+                                           use_container_width=True,
                                            file_name=f'{label_name(st.session_state.counter, 10000)}.png',
                                            mime="image/png")
 
@@ -620,11 +620,13 @@ def detection(st, **state):
                     with open(annotate_name, 'rb') as file:
                         st.download_button(label='Text (.txt)',
                                            data=file,
-                                           on_click=True,
+                                           use_container_width=True,
                                            file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
                                            mime="text/plain")
 
-            if btn_all:
+            if btn == 'All files':
+                st.success(f'Now, you can download the all images with annotation '
+                           f'in the button bellow.')
                 path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
                 name = path_object[kind_object]
                 make_zip(path_folder, name)
@@ -632,6 +634,7 @@ def detection(st, **state):
                 with open(f'{path_folder}/{name}.zip', "rb") as fp:
                     st.download_button(label="Download ZIP",
                                        data=fp,
+                                       use_container_width=True,
                                        file_name=f'images_{name}.zip',
                                        mime="application/zip"
                                        )
