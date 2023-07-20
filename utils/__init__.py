@@ -63,7 +63,7 @@ def make_zip(path_folder):
     name = path_folder.split('/')[-1]
 
     if os.path.exists(f'{path_folder}/{name}.zip'):
-        shutil.rmtree(f'{path_folder}/{name}.zip')
+        os.remove(f'{path_folder}/{name}.zip')
 
     # Create object of ZipFile
     with ZipFile(f'{path_folder}/{name}.zip', 'w') as zip_object:
