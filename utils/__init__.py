@@ -4,6 +4,7 @@ import json
 import numpy as np
 import shutil
 import os
+from zipfile import ZipFile
 
 warnings.filterwarnings("ignore")
 
@@ -58,14 +59,29 @@ def make_folder_only(path_file):
         os.makedirs(directory3)
 
 
-def make_zip(weight_name):
-    # Creating the ZIP file 
-    archived = shutil.make_archive(f'weights/{weight_name}.pth', 'zip', f'weights/{weight_name}.zip')
+def make_zip(path_folder):
+    name = path_folder.split('/')[-1]
 
-    if os.path.exists(f'weights/{weight_name}.zip'):
-        print(archived) 
-    else: 
-        print("ZIP file not created")
+    if os.path.exists(f'{path_folder}/{name}.zip'):
+        shutil.rmtree(f'{path_folder}/{name}.zip')
+
+    # Create object of ZipFile
+    with ZipFile(f'{path_folder}/{name}.zip', 'w') as zip_object:
+        # Traverse all files in directory
+        for folder_name, sub_folders, file_names in os.walk(f'{path_folder}/images'):
+            for filename in file_names:
+                # Create filepath of files in directory
+                file_path = os.path.join(folder_name, filename)
+                # Add files to zip file
+                zip_object.write(file_path, os.path.basename(file_path))
+
+        # Traverse all files in directory
+        for folder_name, sub_folders, file_names in os.walk(f'{path_folder}/annotations'):
+            for filename in file_names:
+                # Create filepath of files in directory
+                file_path = os.path.join(folder_name, filename)
+                # Add files to zip file
+                zip_object.write(file_path, os.path.basename(file_path))
 
 
 def update_json(name, username, email, password):

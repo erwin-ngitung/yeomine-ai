@@ -6,7 +6,7 @@ import numpy as np
 import shutil
 import pandas as pd
 from PIL import Image
-from utils import make_folder, make_folder_only, label_name, \
+from utils import make_zip, make_folder, make_folder_only, label_name, \
     check_email, check_account, update_json, replace_json, computer_vision as cs
 
 # Package for Streamlit
@@ -572,10 +572,10 @@ def detection(st, **state):
                                 args=([image_files, 'back']),
                                 key='back-photo-detection-1')
                 with st14:
-                    btn = st14.button('Save ⏭️',
-                                      on_click=save_photo,
-                                      args=([image_files, 'save', photo_detect, annotate]),
-                                      key='save-photo-detection-1')
+                    st14.button('Save ⏭️',
+                                on_click=save_photo,
+                                args=([image_files, 'save', photo_detect, annotate]),
+                                key='save-photo-detection-1')
 
                 with st15:
                     st15.button('Next ⏭️',
@@ -583,7 +583,12 @@ def detection(st, **state):
                                 args=([image_files, 'next']),
                                 key='next-photo-detection-1')
 
-                if btn:
+                btn_single = st.checkbox('Download in single file',
+                                         value=False)
+                btn_all = st.checkbox('Download in all files',
+                                      value=False)
+
+                if btn_single:
                     st.success(f'Now, you can download the image-{st.session_state.counter} with annotation '
                                f'in the button bellow.')
                     st17, st18, st19, st20, st21 = st.columns(5)
@@ -610,9 +615,18 @@ def detection(st, **state):
                                                file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
                                                mime="text/plain")
 
-                else:
-                    st.success(f'You cannot download the image-{st.session_state.counter} with annotation, '
-                               f' until you click the save button.')
+                if btn_all:
+                    path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
+                    name = path_folder.split('.')[-1]
+                    make_zip(path_folder)
+
+                    with open(f'{path_folder}/{name}.zip', "rb") as fp:
+                        st.download_button(label="Download ZIP",
+                                           data=fp,
+                                           file_name=f'images_{name}.zip',
+                                           mime="application/zip"
+                                           )
+
             except:
                 st.error('Please upload your images or video first!')
     with tab3:
