@@ -504,7 +504,7 @@ def detection(st, **state):
                     st.session_state.counter = len(path_images) - 1
 
         def delete_photo(path_images, func):
-            del path_images[st.session_state.counter]
+            path_images.pop(st.session_state.counter)
             next_photo(path_images, func)
 
         def save_photo(path_images, func):
