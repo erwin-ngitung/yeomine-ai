@@ -599,7 +599,7 @@ def detection(st, **state):
                                          mime="image/png")
 
             with st16:
-                path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotate'
+                path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
                 num_annotate = len(os.listdir(path_annotate))
                 annotate_name = f'{path_annotate}/{label_name(num_annotate- 1, 10000)}.png'
 
