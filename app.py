@@ -3,9 +3,7 @@ import cv2
 import os
 import io
 import numpy as np
-import pandas as pd
 import shutil
-
 import pandas as pd
 from PIL import Image
 from utils import make_folder, label_name, check_email, check_account, update_json, replace_json, computer_vision as cs
@@ -193,7 +191,7 @@ def training(st, **state):
 
                 # Load a model
                 model = YOLO(
-                    f'{PATH}/weights/petrained-model/{kind_model}')  # load a pretrained model (recommended for training)
+                    f'{PATH}/weights/petrained-model/{kind_model}') 
                 model.train(data=path_file,
                             device=device,
                             epochs=int(epochs),
@@ -445,39 +443,37 @@ def detection(st, **state):
 
         colors = cs.generate_label_colors(model.names)
 
+        def next_photo(path_images, func):
+            path_images.sort()
+
+            if func == 'next':
+                st.session_state.counter += 1
+                if st.session_state.counter >= len(path_images):
+                    st.session_state.counter = 0
+            elif func == 'back':
+                st.session_state.counter -= 1
+                if st.session_state.counter >= len(path_images):
+                    st.session_state.counter = 0
+                elif st.session_state.counter < 0:
+                    st.session_state.counter = len(path_images) - 1
+
+        def delete_photo(path_images, func):
+            path_images.sort()
+            photo = path_images[st.session_state.counter]
+            text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
+                   photo.split("/")[-1].split(".")[0] + '.txt'
+
+            os.remove(photo)
+            os.remove(text)
+
+            next_photo(path_images, func)
+
         if extension_file == 'Image':
             uploaded_files = st.file_uploader("Upload your image",
                                               type=['jpg', 'jpeg', 'png'],
                                               accept_multiple_files=True)
 
             image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
-
-            def next_photo(path_files, func):
-                path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
-                path_images.sort()
-
-                if func == 'next':
-                    st.session_state.counter += 1
-                    if st.session_state.counter >= len(path_images):
-                        st.session_state.counter = 0
-                elif func == 'back':
-                    st.session_state.counter -= 1
-                    if st.session_state.counter >= len(path_images):
-                        st.session_state.counter = 0
-                    elif st.session_state.counter < 0:
-                        st.session_state.counter = len(path_images) - 1
-
-            def delete_photo(path_files, func):
-                path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
-                path_images.sort()
-                photo = path_images[st.session_state.counter]
-                text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
-                       photo.split("/")[-1].split(".")[0] + '.txt'
-
-                os.remove(photo)
-                os.remove(text)
-
-                next_photo(path_files, func)
 
             st10, st11, st12 = st.columns(3)
 
