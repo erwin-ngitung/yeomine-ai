@@ -550,14 +550,13 @@ def detection(st, **state):
             time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
             caption = f'The frame image-{st.session_state.counter} generated at {time_JKT}'
             photo_convert = np.array(photo.convert('RGB'))
-            x_size = 300
-            y_size = 300
-            
+            x_size, y_size = 650, 650
+
             st13, st14 = st.columns(2)
 
             with st13:
                 st.write("Original Image")
-                st.image(cv2.resize(photo, (x_size, y_size), interpolation=cv2.INTER_AREA),
+                st.image(cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA),
                          caption=caption)
             with st14:
                 st.write("Detection Image")
