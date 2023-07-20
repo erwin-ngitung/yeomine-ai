@@ -540,66 +540,66 @@ def detection(st, **state):
             tz_JKT = pytz.timezone('Asia/Jakarta')
             time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
 
+            # try:
+            x_size, y_size = 650, 650
+
             try:
-                x_size, y_size = 650, 650
-
-                try:
-                    photo = image_files[st.session_state.counter]
-                except:
-                    st.session_state.counter = 0
-                    photo = image_files[st.session_state.counter]
-
-                caption = f'The frame image-{st.session_state.counter} generated at {time_JKT}'
-                photo_convert = np.array(photo.convert('RGB'))
-
-                st10, st11 = st.columns(2)
-
-                with st10:
-                    st10.button("Back Image ⏭️",
-                                on_click=next_photo,
-                                args=([image_files, 'back']),
-                                key='back-photo-detection-1')
-
-                    st10.write("Original Image")
-                    st10.image(cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA),
-                               caption=caption)
-                with st11:
-                    st11.button('Next Image ⏭️',
-                                on_click=next_photo,
-                                args=([image_files, 'next']),
-                                key='next-photo-detection-1')
-
-                    st11.write("Detection Image")
-                    photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
-                                                                      time_JKT, x_size, y_size)
-                    st11.image(cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA),
-                               caption=caption)
-
-                st12, st13, st14 = st.columns(3)
-
-                with st12:
-                    st14.download_button(label='Download Image ⏭️',
-                                         data=photo_detect,
-                                         file_name=f'Image-{label_name(st.session_state.counter, 10000)}.png',
-                                         mime="image/png")
-
-                with st13:
-                    st13.button('Save Image ⏭️',
-                                on_click=save_photo,
-                                args=([image_files, 'save', photo_detect, annotate]),
-                                key='save-photo-detection-1')
-
-                with st14:
-                    st14.download_button(label='Download Annotations ⏭️',
-                                         data=pd.DataFrame(annotate).to_csv().encode('utf-8'),
-                                         file_name=f'Image-{label_name(st.session_state.counter, 10000)}.csv',
-                                         mime="image/csv")
-
-                st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'))
-                st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'))
-
+                photo = image_files[st.session_state.counter]
             except:
-                st.error('Please upload your images or video first!')
+                st.session_state.counter = 0
+                photo = image_files[st.session_state.counter]
+
+            caption = f'The frame image-{st.session_state.counter} generated at {time_JKT}'
+            photo_convert = np.array(photo.convert('RGB'))
+
+            st10, st11 = st.columns(2)
+
+            with st10:
+                st10.button("Back Image ⏭️",
+                            on_click=next_photo,
+                            args=([image_files, 'back']),
+                            key='back-photo-detection-1')
+
+                st10.write("Original Image")
+                st10.image(cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA),
+                           caption=caption)
+            with st11:
+                st11.button('Next Image ⏭️',
+                            on_click=next_photo,
+                            args=([image_files, 'next']),
+                            key='next-photo-detection-1')
+
+                st11.write("Detection Image")
+                photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
+                                                                  time_JKT, x_size, y_size)
+                st11.image(cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA),
+                           caption=caption)
+
+            st12, st13, st14 = st.columns(3)
+
+            with st12:
+                st14.download_button(label='Download Image ⏭️',
+                                     data=photo_detect,
+                                     file_name=f'Image-{label_name(st.session_state.counter, 10000)}.png',
+                                     mime="image/png")
+
+            with st13:
+                st13.button('Save Image ⏭️',
+                            on_click=save_photo,
+                            args=([image_files, 'save', photo_detect, annotate]),
+                            key='save-photo-detection-1')
+
+            with st14:
+                st14.download_button(label='Download Annotations ⏭️',
+                                     data=pd.DataFrame(annotate).to_csv().encode('utf-8'),
+                                     file_name=f'Image-{label_name(st.session_state.counter, 10000)}.csv',
+                                     mime="image/csv")
+
+            st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'))
+            st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'))
+
+            # except:
+            #     st.error('Please upload your images or video first!')
     with tab3:
         st.write('Coming Soon!')
 
