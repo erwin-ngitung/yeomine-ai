@@ -560,9 +560,9 @@ def detection(st, **state):
                          caption=caption)
             with st14:
                 st.write("Detection Image")
-                photo, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors, time_JKT,
+                photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors, time_JKT,
                                                            x_size, y_size)
-                st.image(photo, caption=caption)
+                st.image(photo_detect, caption=caption)
 
     with tab3:
         st.write('Coming Soon!')
