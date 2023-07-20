@@ -601,7 +601,7 @@ def detection(st, **state):
             with st16:
                 path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
                 num_annotate = len(os.listdir(path_annotate))
-                annotate_name = f'{path_annotate}/{label_name(num_annotate- 1, 10000)}.png'
+                annotate_name = f'{path_annotate}/{label_name(num_annotate- 1, 10000)}.txt'
 
                 with open(annotate_name, 'rb') as file:
                     st16.download_button(label='Download Annotations ⏭️',
