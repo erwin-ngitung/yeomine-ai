@@ -507,9 +507,9 @@ def detection(st, **state):
             directory = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
             make_folder_only(directory)
 
-            nums = len(os.listdir(f'{directory}/images'))
+            num_img = len(os.listdir(f'{directory}/images'))
 
-            image_name = f'{directory}/images/{label_name(nums, 10000)}.png'
+            image_name = f'{directory}/images/{label_name(num_img, 10000)}.png'
             cv2.imwrite(image_name, img_file)
 
             annotate_name = f'{directory}/annotations/{label_name(nums, 10000)}.txt'
@@ -524,6 +524,10 @@ def detection(st, **state):
             next_photo(path_images, func)
 
         if extension_file == 'Image':
+            st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' '
+                        'stroke=\'black\''
+                        'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
+
             uploaded_files = st.file_uploader("Upload your image",
                                               type=['jpg', 'jpeg', 'png'],
                                               accept_multiple_files=True)
@@ -551,10 +555,20 @@ def detection(st, **state):
                 st10, st11 = st.columns(2)
 
                 with st10:
+                    st10.button("Back Image ⏭️",
+                                on_click=next_photo,
+                                args=([image_files, 'back']),
+                                key='back-photo-detection-1')
+
                     st10.write("Original Image")
                     st10.image(cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA),
                                caption=caption)
                 with st11:
+                    st11.button('Next Image ⏭️',
+                                on_click=next_photo,
+                                args=([image_files, 'next']),
+                                key='next-photo-detection-1')
+
                     st11.write("Detection Image")
                     photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
                                                                       time_JKT, x_size, y_size)
@@ -564,23 +578,24 @@ def detection(st, **state):
                 st12, st13, st14 = st.columns(3)
 
                 with st12:
-                    st12.button("Back Image ⏭️",
-                                on_click=next_photo,
-                                args=([image_files, 'back']),
-                                key='back-photo-detection-1')
+                    st14.download_button(label='Download Image ⏭️',
+                                         data=photo_detect,
+                                         file_name=f'Image-{label_name(st.session_state.counter, 10000)}.png',
+                                         mime="image/png")
 
                 with st13:
-                    st13.button("Save Image ⏭️",
+                    st13.button('Save Image ⏭️',
                                 on_click=save_photo,
                                 args=([image_files, 'save', photo_detect, annotate]),
                                 key='save-photo-detection-1')
 
                 with st14:
-                    st14.button("Next Image ⏭️",
-                                on_click=next_photo,
-                                args=([image_files, 'next']),
-                                key='next-photo-detection-1')
+                    st14.download_button(label='Download Annotations ⏭️',
+                                         data=pd.DataFrame(annotate).to_csv().encode('utf-8'),
+                                         file_name=f'Image-{label_name(st.session_state.counter, 10000)}.csv',
+                                         mime="image/csv")
 
+                st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'))
                 st.write(os.listdir(f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'))
 
             except:
