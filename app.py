@@ -590,24 +590,22 @@ def detection(st, **state):
 
                     with st18:
                         path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
-                        num_img = len(os.listdir(path_images))
-                        image_name = f'{path_images}/{label_name(num_img - 1, 10000)}.png'
+                        image_name = f'{path_images}/{label_name(st.session_state.counter, 10000)}.png'
 
                         with open(image_name, 'rb') as file:
                             st.download_button(label='Image (.png)',
                                                data=file,
-                                               file_name=f'{label_name(num_img - 1, 10000)}.png',
+                                               file_name=f'{label_name(st.session_state.counter, 10000)}.png',
                                                mime="image/png")
 
                     with st20:
                         path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
-                        num_annotate = len(os.listdir(path_annotate))
-                        annotate_name = f'{path_annotate}/{label_name(num_annotate - 1, 10000)}.txt'
+                        annotate_name = f'{path_annotate}/{label_name(st.session_state.counter, 10000)}.txt'
 
                         with open(annotate_name, 'rb') as file:
                             st.download_button(label='Text (.txt)',
                                                data=file,
-                                               file_name=f'{label_name(num_annotate - 1, 10000)}.txt',
+                                               file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
                                                mime="text/plain")
 
                 else:
