@@ -1,6 +1,7 @@
 import time
 import cv2
 import os
+import io
 import numpy as np
 import pandas as pd
 import shutil
@@ -276,38 +277,155 @@ def detection(st, **state):
                    'Core Detection': 'core-logging',
                    'Smart-HSE': 'hse-monitor'}
 
-    kind_object = st.selectbox('Please select the kind of object detection do you want',
-                               ['General Detection',
-                                'Coal Detection',
-                                'Seam Detection',
-                                'Core Detection',
-                                'Smart HSE'])
+    tab1, tab2, tab3 = st.tabs(['Dataset by Admin', 'Upload File', 'Streaming'])
 
-    conf = st.slider('Number of Confidence (%)',
-                     min_value=0,
-                     max_value=100,
-                     step=1,
-                     value=60,
-                     key='confidence')
-    stop_program = st.slider('Number of Image',
-                             min_value=0,
-                             max_value=1000,
-                             step=1,
-                             value=20,
-                             key='stop-program')
+    with tab1:
+        kind_object = st.selectbox('Please select the kind of object detection do you want',
+                                   ['General Detection',
+                                    'Coal Detection',
+                                    'Seam Detection',
+                                    'Core Detection',
+                                    'Smart HSE'])
 
-    st4, st5 = st.columns(2)
+        conf = st.slider('Number of Confidence (%)',
+                         min_value=0,
+                         max_value=100,
+                         step=1,
+                         value=60,
+                         key='confidence')
+        stop_program = st.slider('Number of Image',
+                                 min_value=0,
+                                 max_value=500,
+                                 step=1,
+                                 value=20,
+                                 key='stop-program')
 
-    with st4:
-        custom = st.radio('Do you want to use custom model that has trained?',
-                          ['Yes', 'No'], index=1)
-    with st5:
-        type_camera = st.radio('Do you want to use Integrated Webcam?',
+        st4, st5 = st.columns(2)
+
+        with st4:
+            custom = st.radio('Do you want to use custom model that has trained?',
+                              ['Yes', 'No'], index=1)
+        with st5:
+            type_camera = st.radio('Do you want to use Integrated Webcam?',
+                                   ['Yes', 'No'], index=1)
+
+        st6, st7 = st.columns(2)
+
+        with st6:
+            if custom == 'Yes':
+                option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
+                model = YOLO(option_model)
+                st.success('The model have successfully loaded!')
+            else:
+                list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
+                option_model = st.selectbox('Please select model do you want!',
+                                            list_weights)
+                model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
+
+        with st7:
+            if type_camera == 'Yes':
+                source = st.text_input('Please input your Webcam link', 'Auto')
+                if source == 'Auto':
+                    cap = cv2.VideoCapture(0)
+                else:
+                    cap = cv2.VideoStream(source).start()
+            else:
+                list_files = [file for file in os.listdir(f'datasets/{path_object[kind_object]}/predict')]
+                sample_video = st.selectbox('Please select sample video do you want',
+                                            list_files)
+                source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
+                cap = cv2.VideoCapture(source)
+
+        if torch.cuda.is_available():
+            st.success(f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
+            device = 0
+        else:
+            st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
+            device = 'cpu'
+
+        next_detect = st.radio('Are you sure to detect image/video using parameter above?',
                                ['Yes', 'No'], index=1)
 
-    st6, st7 = st.columns(2)
+        if next_detect == 'Yes':
+            st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' '
+                        'stroke=\'black\''
+                        'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
 
-    with st6:
+            path_detections = f'{PATH}/detections/{path_object[kind_object]}'
+            make_folder(path_detections)
+
+            show_label = st.checkbox('Show label predictions',
+                                     value=True,
+                                     key='show-label')
+            save_annotate = st.checkbox('Save annotate and images',
+                                        value=False,
+                                        key='save-annotate')
+
+            count = 0
+            placeholder = st.empty()
+            colors = cs.generate_label_colors(model.names)
+
+            # Detection Model
+            while count < stop_program:
+                with placeholder.container():
+                    ret, img = cap.read()
+
+                    if ret:
+                        tz_JKT = pytz.timezone('Asia/Jakarta')
+                        time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                        caption = f'The frame image-{count} generated at {time_JKT}'
+
+                        img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
+                        st.image(img, caption=caption)
+                        df1 = pd.DataFrame(parameter)
+                        df2 = pd.DataFrame(annotate)
+
+                        if show_label:
+                            st.table(df1)
+
+                        if save_annotate:
+                            name_image = f'{PATH}/detections/{path_object[kind_object]}/images/' \
+                                         f'{label_name(count, 10000)}.png'
+                            cv2.imwrite(name_image, img)
+
+                            name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/' \
+                                            f'{label_name(count, 10000)}.txt'
+                            np.savetxt(name_annotate, df2.values, fmt='%.2f')
+
+                        count += 1
+                        time.sleep(0.5)
+
+                    else:
+                        st.error('Image is not found')
+
+            st.success('Your all images have successfully saved')
+
+    with tab2:
+        kind_object = st.selectbox('Please select the kind of object detection do you want',
+                                   ['General Detection',
+                                    'Coal Detection',
+                                    'Seam Detection',
+                                    'Core Detection',
+                                    'Smart HSE'])
+
+        conf = st.slider('Number of Confidence (%)',
+                         min_value=0,
+                         max_value=100,
+                         step=1,
+                         value=60,
+                         key='confidence')
+
+        st8, st9 = st.columns(2)
+
+        with st8:
+            custom = st.radio('Do you want to use custom model that has trained?',
+                              ['Yes', 'No'],
+                              index=1)
+        with st9:
+            extension_file = st.radio('What is the kind of file that you want to upload?',
+                                      ['Image', 'Video'],
+                                      index=0)
+
         if custom == 'Yes':
             option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
             model = YOLO(option_model)
@@ -318,82 +436,85 @@ def detection(st, **state):
                                         list_weights)
             model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
 
-    with st7:
-        if type_camera == 'Yes':
-            source = st.text_input('Please input your Webcam link', 'Auto')
-            if source == 'Auto':
-                cap = cv2.VideoCapture(0)
-            else:
-                cap = cv2.VideoStream(source).start()
+        if torch.cuda.is_available():
+            st.success(f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
+            device = 0
         else:
-            list_files = [file for file in os.listdir(f'datasets/{path_object[kind_object]}/predict')]
-            sample_video = st.selectbox('Please select sample video do you want',
-                                        list_files)
-            source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
-            cap = cv2.VideoCapture(source)
+            st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
+            device = 'cpu'
 
-    if torch.cuda.is_available():
-        st.success(f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
-        device = 0
-    else:
-        st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
-        device = 'cpu'
-
-    next_detect = st.radio('Are you sure to detect image/video using parameter above?',
-                           ['Yes', 'No'], index=1)
-
-    if next_detect == 'Yes':
-        st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' stroke=\'black\' '
-                    'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
-
-        path_detections = f'{PATH}/detections/{path_object[kind_object]}'
-        make_folder(path_detections)
-
-        show_label = st.checkbox('Show label predictions',
-                                 value=True,
-                                 key='show-label')
-        save_annotate = st.checkbox('Save annotate and images',
-                                    value=False,
-                                    key='save-annotate')
-
-        count = 0
-        placeholder = st.empty()
         colors = cs.generate_label_colors(model.names)
 
-        # Detection Model
-        while count < stop_program:
-            with placeholder.container():
-                ret, img = cap.read()
+        if extension_file == 'Image':
+            uploaded_files = st.file_uploader("Upload your image",
+                                              type=['jpg', 'jpeg', 'png'],
+                                              accept_multiple_files=True)
 
-                if ret:
-                    tz_JKT = pytz.timezone('Asia/Jakarta')
-                    time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-                    caption = f'The frame image-{count} generated at {time_JKT}'
+            image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
 
-                    img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT)
-                    st.image(img, caption=caption)
-                    df1 = pd.DataFrame(parameter)
-                    df2 = pd.DataFrame(annotate)
+            def next_photo(path_files, func):
+                path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
+                path_images.sort()
 
-                    if show_label:
-                        st.table(df1)
+                if func == 'next':
+                    st.session_state.counter += 1
+                    if st.session_state.counter >= len(path_images):
+                        st.session_state.counter = 0
+                elif func == 'back':
+                    st.session_state.counter -= 1
+                    if st.session_state.counter >= len(path_images):
+                        st.session_state.counter = 0
+                    elif st.session_state.counter < 0:
+                        st.session_state.counter = len(path_images) - 1
 
-                    if save_annotate:
-                        name_image = f'{PATH}/detections/{path_object[kind_object]}/images/' \
-                                     f'{label_name(count, 10000)}.png'
-                        cv2.imwrite(name_image, img)
+            def delete_photo(path_files, func):
+                path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
+                path_images.sort()
+                photo = path_images[st.session_state.counter]
+                text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
+                       photo.split("/")[-1].split(".")[0] + '.txt'
 
-                        name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/' \
-                                        f'{label_name(count, 10000)}.txt'
-                        np.savetxt(name_annotate, df2.values, fmt='%.2f')
+                os.remove(photo)
+                os.remove(text)
 
-                    count += 1
-                    time.sleep(0.5)
+                next_photo(path_files, func)
 
-                else:
-                    st.error('Image is not found')
+            st10, st11, st12 = st.columns(3)
 
-        st.success('Your all images have successfully saved')
+            with st10:
+                st10.button("Back Image ⏭️", on_click=next_photo, args=([image_files, 'back']))
+            with st11:
+                st11.button("Delete Image ⏭️", on_click=delete_photo, args=([image_files, 'delete']))
+            with st12:
+                st12.button("Next Image ⏭️", on_click=next_photo, args=([image_files, 'next']))
+
+            if 'counter' not in st.session_state:
+                st.session_state.counter = 0
+
+            image_files.sort()
+
+            try:
+                photo = image_files[st.session_state.counter]
+            except:
+                st.session_state.counter = 0
+                photo = image_files[st.session_state.counter]
+
+            tz_JKT = pytz.timezone('Asia/Jakarta')
+            time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+            caption = f'The frame image-{count} generated at {time_JKT}'
+
+            st13, st14 = st.columns(2)
+
+            with st13:
+                st.write("Original Image")
+                st.image(photo, caption=caption)
+            with st14:
+                st.write("Detection Image")
+                photo, parameter, annotate = cs.draw_image(model, device, photo, conf / 100, colors, time_JKT)
+                st.image(photo, caption=caption)
+
+    with tab3:
+        st.write('Coming Soon!')
 
 
 def validation(st, **state):
