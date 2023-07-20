@@ -543,7 +543,7 @@ def detection(st, **state):
 
             tz_JKT = pytz.timezone('Asia/Jakarta')
             time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-            caption = f'The frame image-{count} generated at {time_JKT}'
+            caption = f'The frame image-{st.session_state.counter} generated at {time_JKT}'
 
             st13, st14 = st.columns(2)
 
