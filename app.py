@@ -282,6 +282,8 @@ def training(st, **state):
 
 
 def detection(st, **state):
+    global photo
+    
     # Title
     image = Image.open(f'{PATH}/images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
