@@ -559,8 +559,11 @@ def detection(st, **state):
             try:
                 photo = image_files[st.session_state.counter]
             except:
-                st.session_state.counter = 0
-                photo = image_files[st.session_state.counter]
+                try:
+                    st.session_state.counter = 0
+                    photo = image_files[st.session_state.counter]
+                except:
+                    st.error('Please upload your images or video first!')
 
             tz_JKT = pytz.timezone('Asia/Jakarta')
             time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
