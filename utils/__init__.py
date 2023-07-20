@@ -59,9 +59,7 @@ def make_folder_only(path_file):
         os.makedirs(directory3)
 
 
-def make_zip(path_folder):
-    name = path_folder.split('/')[-1]
-
+def make_zip(path_folder, name):
     if os.path.exists(f'{path_folder}/{name}.zip'):
         os.remove(f'{path_folder}/{name}.zip')
 

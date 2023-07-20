@@ -617,8 +617,8 @@ def detection(st, **state):
 
             if btn_all:
                 path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
-                name = path_folder.split('.')[-1]
-                make_zip(path_folder)
+                name = path_object[kind_object]
+                make_zip(path_folder, name)
 
                 with open(f'{path_folder}/{name}.zip', "rb") as fp:
                     st.download_button(label="Download ZIP",
