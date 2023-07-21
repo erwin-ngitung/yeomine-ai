@@ -248,7 +248,7 @@ def training(st, **state):
                            icon='✅')
 
                 path_folder = f'{PATH}/datasets/{path_object[kind_object]}/weights'
-                name = f'{path_object[kind_object]}-{label_name(len(os.listdir(path_folder)), 10000)}'
+                name = f'{path_object[kind_object]}-{label_name(num_weights, 10000)}'
                 make_zip_only(path_folder, src, name)
 
                 with open(f'{path_folder}/{name}.zip', "rb") as fp:
@@ -320,7 +320,7 @@ def training(st, **state):
 
         path_folder = f'{PATH}/datasets/{path_object[kind_object]}/weights'
         src = f'{PATH}/weights/{path_object[kind_object]}/{option_model}'
-        name = f'{path_object[kind_object]}-{label_name(len(os.listdir(path_folder)), 10000)}'
+        name = f'{option_model}'
         make_zip_only(path_folder, src, name)
 
         with open(f'{path_folder}/{name}.zip', "rb") as fp:
