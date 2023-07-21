@@ -146,7 +146,7 @@ def training(st, **state):
         st.warning('Please login with your registered email!')
         return
 
-    tab1, tab2, tab3 = st.tabs(['Train Model', 'Dashboard Model', 'Validating Result'])
+    tab1, tab2, tab3 = st.tabs(['⌚ Training Model', '📊 Dashboard Model', '🎭 Validating Result'])
 
     with tab1:
         try:
@@ -305,7 +305,7 @@ def detection(st, **state):
                    'Core Detection': 'core-logging',
                    'Smart-HSE': 'hse-monitor'}
 
-    tab1, tab2, tab3 = st.tabs(['Dataset by Admin', 'Upload File', 'Streaming'])
+    tab1, tab2, tab3 = st.tabs(['👨‍🔧 Dataset by Admin', '📁 Upload File', '🎦 Streaming'])
 
     with tab1:
         kind_object = st.selectbox('Please select the kind of object detection do you want',
@@ -348,7 +348,7 @@ def detection(st, **state):
             if custom == 'Yes':
                 option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
                 model = YOLO(option_model)
-                st.success('The model have successfully loaded!')
+                st.success('The model have successfully loaded!', icon='✅')
             else:
                 list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
                 option_model = st.selectbox('Please select model do you want!',
@@ -440,9 +440,9 @@ def detection(st, **state):
                         time.sleep(0.5)
 
                     else:
-                        st.error('Image is not found')
+                        st.error('Image is not found', icon='❎')
 
-            st.success('Your all images have successfully saved')
+            st.success('Your all images have successfully saved', icon='✅')
 
     with tab2:
         kind_object = st.selectbox('Please select the kind of object detection do you want',
@@ -476,7 +476,7 @@ def detection(st, **state):
         if custom == 'Yes':
             option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
             model = YOLO(option_model)
-            st.success('The model have successfully loaded!')
+            st.success('The model have successfully loaded!', icon='✅')
         else:
             list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
             option_model = st.selectbox('Please select model do you want!',
@@ -573,20 +573,20 @@ def detection(st, **state):
                 st12, st13, st14, st15, st16 = st.columns(5)
 
                 with st13:
-                    st13.button("Back ⏭️",
+                    st13.button('◀️ Back',
                                 on_click=next_photo,
                                 use_container_width=True,
                                 args=([image_files, 'back']),
                                 key='back-photo-detection-1')
                 with st14:
-                    st14.button('Save ⏭️',
+                    st14.button('Save 💾',
                                 on_click=save_photo,
                                 use_container_width=True,
                                 args=([image_files, 'save', photo_detect, annotate]),
                                 key='save-photo-detection-1')
 
                 with st15:
-                    st15.button('Next ⏭️',
+                    st15.button('Next ▶️',
                                 on_click=next_photo,
                                 use_container_width=True,
                                 args=([image_files, 'next']),
@@ -599,7 +599,7 @@ def detection(st, **state):
 
                 if btn == 'Single files':
                     st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
-                               f'in the button bellow.')
+                               f'in the button bellow.', icon='✅')
                     st17, st18, st19, st20, st21 = st.columns(5)
 
                     with st18:
@@ -607,7 +607,7 @@ def detection(st, **state):
                         image_name = f'{path_images}/{label_name(st.session_state.counter, 10000)}.png'
 
                         with open(image_name, 'rb') as file:
-                            st.download_button(label='Image (.png)',
+                            st.download_button(label='🔗 Image (.png)',
                                                data=file,
                                                use_container_width=True,
                                                file_name=f'{label_name(st.session_state.counter, 10000)}.png',
@@ -618,7 +618,7 @@ def detection(st, **state):
                         annotate_name = f'{path_annotate}/{label_name(st.session_state.counter, 10000)}.txt'
 
                         with open(annotate_name, 'rb') as file:
-                            st.download_button(label='Text (.txt)',
+                            st.download_button(label='🔗 Text (.txt)',
                                                data=file,
                                                use_container_width=True,
                                                file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
@@ -626,13 +626,13 @@ def detection(st, **state):
 
                 elif btn == 'All files':
                     st.success(f'Now, you can download the all images with annotation '
-                               f'in the button bellow.')
+                               f'in the button bellow.', icon='✅')
                     path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
                     name = path_object[kind_object]
                     make_zip(path_folder, name)
 
                     with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                        st.download_button(label="Download ZIP",
+                        st.download_button(label="🔗 Download ZIP",
                                            data=fp,
                                            use_container_width=True,
                                            file_name=f'detection_{name}.zip',
@@ -640,7 +640,7 @@ def detection(st, **state):
                                            )
 
             except:
-                st.error('Please upload your images or video first!')
+                st.error('Please upload your images or video first!', icon='❎')
     with tab3:
         st.write('Coming Soon!')
 
@@ -724,19 +724,19 @@ def validation(st, **state):
         st1, st2, st3, st4, st5 = st.columns(5)
 
         with st2:
-            st2.button("Back ⏭️",
+            st2.button('◀️ Back',
                        on_click=next_photo,
                        use_container_width=True,
                        args=([path_files, 'back']),
                        key='back-photo-validation-1')
         with st3:
-            st3.button("Delete ⏭️",
+            st3.button('Delete ♻️',
                        on_click=delete_photo,
                        use_container_width=True,
                        args=([path_files, 'delete']),
                        key='delete-photo-validation-1')
         with st4:
-            st4.button("Next ⏭️",
+            st4.button('Next ▶️',
                        on_click=next_photo,
                        use_container_width=True,
                        args=([path_files, 'next']),
@@ -749,12 +749,12 @@ def validation(st, **state):
 
         if btn == 'Single files':
             st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
-                       f'in the button bellow.')
+                       f'in the button bellow.', icon='✅')
             st6, st7, st8, st9, st10 = st.columns(5)
 
             with st7:
                 with open(photo, 'rb') as file:
-                    st.download_button(label='Image (.png)',
+                    st.download_button(label='🔗 Image (.png)',
                                        data=file,
                                        use_container_width=True,
                                        file_name=f'{photo.split("/")[-1]}',
@@ -765,7 +765,7 @@ def validation(st, **state):
                                 photo.split("/")[-1].split(".")[0] + '.txt'
 
                 with open(annotate_path, 'rb') as file:
-                    st.download_button(label='Text (.txt)',
+                    st.download_button(label='🔗 Text (.txt)',
                                        data=file,
                                        use_container_width=True,
                                        file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
@@ -773,20 +773,20 @@ def validation(st, **state):
 
         elif btn == 'All files':
             st.success(f'Now, you can download the all images with annotation '
-                       f'in the button bellow.')
+                       f'in the button bellow.', icon='✅')
             path_folder = f'{PATH}/detections/{path_object[kind_object]}'
             name = path_object[kind_object]
             make_zip(path_folder, name)
 
             with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                st.download_button(label="Download ZIP",
+                st.download_button(label="🔗 Download ZIP",
                                    data=fp,
                                    use_container_width=True,
                                    file_name=f'detection_{name}.zip',
                                    mime="application/zip"
                                    )
     except:
-        st.error('Please go to the menu Detection first!')
+        st.error('Please go to the menu Detection first!', icon='❎')
 
 
 def report(st, **state):
@@ -922,13 +922,13 @@ app.navbar_style = 'VerticalButton'
 app.hide_menu = False
 app.hide_navigation = True
 
-app.add_app('Sign Up', sign_up)
-app.add_app('Login', login)
-app.add_app('Training', training)
-app.add_app('Detection', detection)
-app.add_app('Validation', validation)
-app.add_app('Report', report)
-app.add_app('Account Setting', account)
-app.add_app('Logout', logout)
+app.add_app('🔐 Sign Up        ', sign_up)
+app.add_app('🔓 Login          ', login)
+app.add_app('⚙️ Training       ', training)
+app.add_app('📹 Detection      ', detection)
+app.add_app('👁‍🗨 Validation    ', validation)
+app.add_app('💬 Report         ', report)
+app.add_app('👨‍⚖️ Account Setting', account)
+app.add_app('🔒 Logout         ', logout)
 
 app.run()
