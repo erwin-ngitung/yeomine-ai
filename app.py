@@ -32,6 +32,10 @@ pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
 
+# wandb.disabled = True
+os.environ['WANDB_API_KEY'] = '4f5a7ee65633a504c993e0a7a05be54d0f9084f6'
+# os.environ['WANDB_DISABLED'] = 'true'
+
 app = MultiPage()
 
 
@@ -218,9 +222,6 @@ def training(st, **state):
                 st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
                 device = 'cpu'
 
-            wandb.disabled = True
-            os.environ['WANDB_DISABLED'] = 'true'
-            
             # Load a model
             model = YOLO(
                 f'{PATH}/weights/petrained-model/{kind_model}')
