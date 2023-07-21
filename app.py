@@ -283,7 +283,7 @@ def training(st, **state):
             st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.png',
                      caption=f'The image of {visual}')
         except:
-            st.warnings('Please measure that you have trained model in the sub-menu training model.')
+            st.error('Please measure that you have trained model in the sub-menu training model.')
 
     with tab3:
         try:
@@ -301,7 +301,7 @@ def training(st, **state):
             st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.jpg',
                      caption=f'The image of {visual}')
         except:
-            st.warnings('Please measure that you have trained model in the sub-menu training model.')
+            st.error('Please measure that you have trained model in the sub-menu training model.')
 
     with tab4:
         try:
@@ -331,7 +331,7 @@ def training(st, **state):
                                    mime="application/zip",
                                    key='download-zip-2')
         except:
-            st.warnings('Please measure that you have trained model in the sub-menu training model.')
+            st.error('Please measure that you have trained model in the sub-menu training model.')
 
 
 def detection(st, **state):
