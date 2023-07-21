@@ -916,7 +916,7 @@ def logout(st, **state):
 
 app.st = st
 
-app.navbar_name = 'Menu'
+app.navbar_name = 'Application Menu'
 app.navbar_style = 'VerticalButton'
 
 app.hide_menu = False
