@@ -32,10 +32,10 @@ pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
 
-os.environ['WANDB_DISABLED'] = 'true'
-os.environ['WANDB_MODE'] = 'offline'
+# os.environ['WANDB_DISABLED'] = 'true'
+# os.environ['WANDB_MODE'] = 'offline'
 # os.environ['WANDB_API_KEY'] = '4f5a7ee65633a504c993e0a7a05be54d0f9084f6'
-# wandb.disabled = True
+wandb.disabled = True
 # wandb.login(key=wandb_token)
 # wandb.login(anonymous="must")
 # api = wandb.Api()
@@ -229,7 +229,6 @@ def training(st, **state):
             # Load a model
             model = YOLO(
                 f'{PATH}/weights/petrained-model/{kind_model}')
-            wandb.init()
             model.train(data=f'{PATH}/data-yaml/{path_object[kind_object]}/{path_yaml}',
                         device=device,
                         epochs=int(epochs),
