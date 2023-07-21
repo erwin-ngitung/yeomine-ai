@@ -164,7 +164,6 @@ def training(st, **state):
                            'Core Detection': 'core-logging',
                            'Smart-HSE': 'hse-monitor'}
 
-            path_file = st.text_input('Please input your path data YAML', 'data/front-coal.yaml')
             list_model = os.listdir(f'{PATH}/weights/petrained-model')
             kind_model = st.selectbox('Please select the petrained model',
                                       list_model,
@@ -172,32 +171,37 @@ def training(st, **state):
             st4, st5 = st.columns(2)
 
             with st4:
-                epochs = st.number_input('Number of Epochs',
+                epochs = st4.number_input('Number of Epochs',
                                          format='%i',
                                          value=10,
                                          key='epochs-training-1')
-                imgsz = st.number_input('Number of Image Size',
+                imgsz = st4.number_input('Number of Image Size',
                                         format='%i',
                                         value=640,
                                         key='imgsz-training-1')
-                batch = st.number_input('Number of Batch Size',
+                batch = st4.number_input('Number of Batch Size',
                                         format='%i',
                                         value=10,
                                         key='batch-training-1')
 
             with st5:
-                lr_rate = st.number_input('Number of Learning Rate',
+                lr_rate = st5.number_input('Number of Learning Rate',
                                           format='%f',
                                           value=0.05,
                                           key='lr-rate-training-1')
-                momentum = st.number_input('Number of Size Rate',
+                momentum = st5.number_input('Number of Size Rate',
                                            format='%f',
                                            value=0.05,
                                            key='momentum-training-1')
-                weight_decay = st.number_input('Number of Weight Decay',
+                weight_decay = st5.number_input('Number of Weight Decay',
                                                format='%f',
                                                value=0.05,
                                                key='weight-decay-training-1')
+
+            list_yaml = os.listdir(f'{PATH}/data-yaml/{path_object[kind_object]}')
+            path_file = st.selectbox('Please select your data YAML!',
+                                      list_yaml,
+                                      key='data-yaml-1')
 
             next_train = st.radio('Are you sure to train model with the parameter above?',
                                   ['Yes', 'No'],
@@ -205,8 +209,6 @@ def training(st, **state):
                                   key='next-train-training-1')
 
             if next_train == 'Yes':
-                # shutil.rmtree(f'{PATH}/results/{path_object[kind_object]}')
-
                 if torch.cuda.is_available():
                     st.success(
                         f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
