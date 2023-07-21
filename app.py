@@ -223,9 +223,10 @@ def training(st, **state):
                     st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
                     device = 'cpu'
 
+                shutil.rmtree(f'{PATH}/results/{path_object[kind_object]}')
+
                 # Load a model
-                model = YOLO(
-                    f'{PATH}/weights/petrained-model/{kind_model}')
+                model = YOLO(f'{PATH}/weights/petrained-model/{kind_model}')
                 model.train(data=f'{PATH}/data-yaml/{path_object[kind_object]}/{path_yaml}',
                             device=device,
                             epochs=int(epochs),
