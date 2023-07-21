@@ -5,6 +5,8 @@ import io
 import numpy as np
 import shutil
 import pandas as pd
+from pathlib import Path
+import logging
 from PIL import Image
 from utils import make_zip, make_zip_only, make_folder, make_folder_only, label_name, \
     check_email, check_account, update_json, replace_json, computer_vision as cs
@@ -19,8 +21,7 @@ import pytesseract
 # Package for Machine Learning
 import torch
 from ultralytics import YOLO
-from pathlib import Path
-import logging
+import wandb
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -30,7 +31,7 @@ torch.backends.cudnn.benchmark = False
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
-os.environ['WANDB_DISABLED'] = 'true'
+wandb.disabled = True
 
 app = MultiPage()
 
