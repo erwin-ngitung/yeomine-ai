@@ -60,6 +60,9 @@ def make_folder_only(path_file):
 
 
 def make_zip_only(path_folder, file_path, name):
+    if not os.path.exists(f'{path_folder}'):
+        os.makedirs(f'{path_folder}')
+
     if os.path.exists(f'{path_folder}/{name}.zip'):
         os.remove(f'{path_folder}/{name}.zip')
 
@@ -68,6 +71,9 @@ def make_zip_only(path_folder, file_path, name):
 
 
 def make_zip(path_folder, name):
+    if not os.path.exists(f'{path_folder}'):
+        os.makedirs(f'{path_folder}')
+
     if os.path.exists(f'{path_folder}/{name}.zip'):
         os.remove(f'{path_folder}/{name}.zip')
 
