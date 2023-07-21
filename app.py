@@ -150,7 +150,7 @@ def training(st, **state):
 
     with tab1:
         try:
-            kind_object = st.selectbox('Please select the kind of object detection do you want',
+            kind_object = st.selectbox('Please select the kind of object detection do you want.',
                                        ['General Detection',
                                         'Coal Detection',
                                         'Seam Detection',
@@ -165,43 +165,43 @@ def training(st, **state):
                            'Smart-HSE': 'hse-monitor'}
 
             list_model = os.listdir(f'{PATH}/weights/petrained-model')
-            kind_model = st.selectbox('Please select the petrained model',
+            kind_model = st.selectbox('Please select the petrained model.',
                                       list_model,
                                       key='kind-model-training-1')
             st4, st5 = st.columns(2)
 
             with st4:
                 epochs = st4.number_input('Number of Epochs',
+                                          format='%i',
+                                          value=10,
+                                          key='epochs-training-1')
+                imgsz = st4.number_input('Number of Image Size',
+                                         format='%i',
+                                         value=640,
+                                         key='imgsz-training-1')
+                batch = st4.number_input('Number of Batch Size',
                                          format='%i',
                                          value=10,
-                                         key='epochs-training-1')
-                imgsz = st4.number_input('Number of Image Size',
-                                        format='%i',
-                                        value=640,
-                                        key='imgsz-training-1')
-                batch = st4.number_input('Number of Batch Size',
-                                        format='%i',
-                                        value=10,
-                                        key='batch-training-1')
+                                         key='batch-training-1')
 
             with st5:
                 lr_rate = st5.number_input('Number of Learning Rate',
-                                          format='%f',
-                                          value=0.05,
-                                          key='lr-rate-training-1')
-                momentum = st5.number_input('Number of Size Rate',
                                            format='%f',
                                            value=0.05,
-                                           key='momentum-training-1')
+                                           key='lr-rate-training-1')
+                momentum = st5.number_input('Number of Size Rate',
+                                            format='%f',
+                                            value=0.05,
+                                            key='momentum-training-1')
                 weight_decay = st5.number_input('Number of Weight Decay',
-                                               format='%f',
-                                               value=0.05,
-                                               key='weight-decay-training-1')
+                                                format='%f',
+                                                value=0.05,
+                                                key='weight-decay-training-1')
 
             list_yaml = os.listdir(f'{PATH}/data-yaml/{path_object[kind_object]}')
-            path_file = st.selectbox('Please select your data YAML!',
-                                      list_yaml,
-                                      key='data-yaml-1')
+            path_file = st.selectbox('Please select your data YAML.',
+                                     list_yaml,
+                                     key='data-yaml-1')
 
             next_train = st.radio('Are you sure to train model with the parameter above?',
                                   ['Yes', 'No'],
@@ -325,7 +325,7 @@ def detection(st, **state):
     tab1, tab2, tab3 = st.tabs(['👨‍🔧 Dataset by Admin', '📁 Upload File', '🎦 Streaming'])
 
     with tab1:
-        kind_object = st.selectbox('Please select the kind of object detection do you want',
+        kind_object = st.selectbox('Please select the kind of object detection do you want.',
                                    ['General Detection',
                                     'Coal Detection',
                                     'Seam Detection',
@@ -368,7 +368,7 @@ def detection(st, **state):
                 st.success('The model have successfully loaded!', icon='✅')
             else:
                 list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
-                option_model = st.selectbox('Please select model do you want!',
+                option_model = st.selectbox('Please select model do you want.',
                                             list_weights,
                                             key='option-model-detection-1')
                 model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
@@ -382,7 +382,7 @@ def detection(st, **state):
                     cap = cv2.VideoStream(source).start()
             else:
                 list_files = [file for file in os.listdir(f'datasets/{path_object[kind_object]}/predict')]
-                sample_video = st.selectbox('Please select sample video do you want',
+                sample_video = st.selectbox('Please select sample video do you want.',
                                             list_files,
                                             key='sample-video-detection-1')
                 source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
@@ -462,7 +462,7 @@ def detection(st, **state):
             st.success('Your all images have successfully saved', icon='✅')
 
     with tab2:
-        kind_object = st.selectbox('Please select the kind of object detection do you want',
+        kind_object = st.selectbox('Please select the kind of object detection do you want.',
                                    ['General Detection',
                                     'Coal Detection',
                                     'Seam Detection',
@@ -496,7 +496,7 @@ def detection(st, **state):
             st.success('The model have successfully loaded!', icon='✅')
         else:
             list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
-            option_model = st.selectbox('Please select model do you want!',
+            option_model = st.selectbox('Please select model do you want.',
                                         list_weights,
                                         key='select-model-detection-2')
             model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
@@ -689,7 +689,7 @@ def validation(st, **state):
                    'Core Detection': 'core-logging',
                    'Smart-HSE': 'hse-monitor'}
 
-    kind_object = st.selectbox('Please select the kind of object detection do you want',
+    kind_object = st.selectbox('Please select the kind of object detection do you want.',
                                ['General Detection',
                                 'Coal Detection',
                                 'Seam Detection',
