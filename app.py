@@ -149,115 +149,118 @@ def training(st, **state):
         st.warning('Please login with your registered email!')
         return
 
-    tab1, tab2, tab3 = st.tabs(['⌚ Training Model', '📊 Dashboard Model', '🎭 Validating Result'])
+    path_object = {'General Detection': 'general-detect',
+                   'Coal Detection': 'front-coal',
+                   'Seam Detection': 'seam-gb',
+                   'Core Detection': 'core-logging',
+                   'Smart-HSE': 'hse-monitor'}
+
+    tab1, tab2, tab3, tab4 = st.tabs(['⌚ Training Model',
+                                      '📊 Dashboard Model',
+                                      '🎭 Validating Model',
+                                      '📦 Download Model'])
 
     with tab1:
-        # try:
-        kind_object = st.selectbox('Please select the kind of object detection do you want.',
-                                   ['General Detection',
-                                    'Coal Detection',
-                                    'Seam Detection',
-                                    'Core Detection',
-                                    'Smart-HSE'],
-                                   key='kind-object-training-1')
+        try:
+            kind_object = st.selectbox('Please select the kind of object detection do you want.',
+                                       ['General Detection',
+                                        'Coal Detection',
+                                        'Seam Detection',
+                                        'Core Detection',
+                                        'Smart-HSE'],
+                                       key='kind-object-training-1')
 
-        path_object = {'General Detection': 'general-detect',
-                       'Coal Detection': 'front-coal',
-                       'Seam Detection': 'seam-gb',
-                       'Core Detection': 'core-logging',
-                       'Smart-HSE': 'hse-monitor'}
+            list_model = os.listdir(f'{PATH}/weights/petrained-model')
+            kind_model = st.selectbox('Please select the petrained model.',
+                                      list_model,
+                                      key='kind-model-training-1')
+            st4, st5 = st.columns(2)
 
-        list_model = os.listdir(f'{PATH}/weights/petrained-model')
-        kind_model = st.selectbox('Please select the petrained model.',
-                                  list_model,
-                                  key='kind-model-training-1')
-        st4, st5 = st.columns(2)
+            with st4:
+                epochs = st4.number_input('Number of Epochs',
+                                          format='%i',
+                                          value=10,
+                                          key='epochs-training-1')
+                imgsz = st4.number_input('Number of Image Size',
+                                         format='%i',
+                                         value=640,
+                                         key='imgsz-training-1')
+                batch = st4.number_input('Number of Batch Size',
+                                         format='%i',
+                                         value=10,
+                                         key='batch-training-1')
 
-        with st4:
-            epochs = st4.number_input('Number of Epochs',
-                                      format='%i',
-                                      value=10,
-                                      key='epochs-training-1')
-            imgsz = st4.number_input('Number of Image Size',
-                                     format='%i',
-                                     value=640,
-                                     key='imgsz-training-1')
-            batch = st4.number_input('Number of Batch Size',
-                                     format='%i',
-                                     value=10,
-                                     key='batch-training-1')
-
-        with st5:
-            lr_rate = st5.number_input('Number of Learning Rate',
-                                       format='%f',
-                                       value=0.05,
-                                       key='lr-rate-training-1')
-            momentum = st5.number_input('Number of Size Rate',
-                                        format='%f',
-                                        value=0.05,
-                                        key='momentum-training-1')
-            weight_decay = st5.number_input('Number of Weight Decay',
+            with st5:
+                lr_rate = st5.number_input('Number of Learning Rate',
+                                           format='%f',
+                                           value=0.05,
+                                           key='lr-rate-training-1')
+                momentum = st5.number_input('Number of Size Rate',
                                             format='%f',
                                             value=0.05,
-                                            key='weight-decay-training-1')
+                                            key='momentum-training-1')
+                weight_decay = st5.number_input('Number of Weight Decay',
+                                                format='%f',
+                                                value=0.05,
+                                                key='weight-decay-training-1')
 
-        list_yaml = os.listdir(f'{PATH}/data-yaml/{path_object[kind_object]}')
-        path_yaml = st.selectbox('Please select your data YAML.',
-                                 list_yaml,
-                                 key='data-yaml-1')
+            list_yaml = os.listdir(f'{PATH}/data-yaml/{path_object[kind_object]}')
+            path_yaml = st.selectbox('Please select your data YAML.',
+                                     list_yaml,
+                                     key='data-yaml-1')
 
-        next_train = st.radio('Are you sure to train model with the parameter above?',
-                              ['Yes', 'No'],
-                              index=1,
-                              key='next-train-training-1')
+            next_train = st.radio('Are you sure to train model with the parameter above?',
+                                  ['Yes', 'No'],
+                                  index=1,
+                                  key='next-train-training-1')
 
-        if next_train == 'Yes':
-            if torch.cuda.is_available():
-                st.success(
-                    f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
-                device = 0
-            else:
-                st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
-                device = 'cpu'
+            if next_train == 'Yes':
+                if torch.cuda.is_available():
+                    st.success(
+                        f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
+                    device = 0
+                else:
+                    st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
+                    device = 'cpu'
 
-            # Load a model
-            model = YOLO(
-                f'{PATH}/weights/petrained-model/{kind_model}')
-            model.train(data=f'{PATH}/data-yaml/{path_object[kind_object]}/{path_yaml}',
-                        device=device,
-                        epochs=int(epochs),
-                        batch=int(batch),
-                        imgsz=int(imgsz),
-                        lrf=lr_rate,
-                        momentum=momentum,
-                        weight_decay=weight_decay,
-                        project='results',
-                        name=path_object[kind_object])
+                # Load a model
+                model = YOLO(
+                    f'{PATH}/weights/petrained-model/{kind_model}')
+                model.train(data=f'{PATH}/data-yaml/{path_object[kind_object]}/{path_yaml}',
+                            device=device,
+                            epochs=int(epochs),
+                            batch=int(batch),
+                            imgsz=int(imgsz),
+                            lrf=lr_rate,
+                            momentum=momentum,
+                            weight_decay=weight_decay,
+                            project='results',
+                            name=path_object[kind_object])
 
-            num_weights = len(os.listdir(f'{PATH}/weights/{path_object[kind_object]}'))
-            src = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
-            dest = f'{PATH}/weights/{path_object[kind_object]}/{path_object[kind_object]}-' \
-                   f'{label_name(num_weights, 10000)}.pt'
+                num_weights = len(os.listdir(f'{PATH}/weights/{path_object[kind_object]}'))
+                src = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
+                dest = f'{PATH}/weights/{path_object[kind_object]}/{path_object[kind_object]}-' \
+                       f'{label_name(num_weights, 10000)}.pt'
 
-            shutil.copyfile(src, dest)
+                shutil.copyfile(src, dest)
 
-            st.success('The model have been successfully saved. Now you can download model in the button bellow',
-                       icon='✅')
+                st.success('The model have been successfully saved. Now you can download model in the button bellow',
+                           icon='✅')
 
-            path_folder = f'{PATH}/datasets/{path_object[kind_object]}/weights'
-            name = f'{path_object[kind_object]}-{label_name(num_weights, 10000)}'
-            make_zip_only(path_folder, src, name)
+                path_folder = f'{PATH}/datasets/{path_object[kind_object]}/weights'
+                name = f'{path_object[kind_object]}-{label_name(len(os.listdir(path_folder)), 10000)}'
+                make_zip_only(path_folder, src, name)
 
-            with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                st.download_button(label="🔗 Download ZIP (.zip)",
-                                   data=fp,
-                                   use_container_width=True,
-                                   file_name=f'weight_{name}.zip',
-                                   mime="application/zip",
-                                   key='download-zip-1')
-        # except:
-        #     with st.spinner('Wait a moment..'):
-        #         time.sleep(100)
+                with open(f'{path_folder}/{name}.zip', "rb") as fp:
+                    st.download_button(label="🔗 Download ZIP (.zip)",
+                                       data=fp,
+                                       use_container_width=True,
+                                       file_name=f'weight_{name}.zip',
+                                       mime="application/zip",
+                                       key='download-zip-1')
+        except:
+            with st.spinner('Wait a moment..'):
+                time.sleep(100)
 
     with tab2:
         try:
@@ -299,6 +302,33 @@ def training(st, **state):
                      caption=f'The image of {visual}')
         except:
             pass
+
+    with tab4:
+        kind_object = st.selectbox('Please select the kind of object detection that you want.',
+                                   ['General Detection',
+                                    'Coal Detection',
+                                    'Seam Detection',
+                                    'Core Detection',
+                                    'Smart-HSE'],
+                                   key='kind-object-training-2')
+
+        list_weights = [weight_file for weight_file in os.listdir(f'{PATH}/weights/{path_object[kind_object]}')]
+        option_model = st.selectbox('Please select model do you want.',
+                                    list_weights,
+                                    key='option-model-detection-1')
+        
+        path_folder = f'{PATH}/datasets/{path_object[kind_object]}/weights'
+        src = f'{PATH}/weights/{path_object[kind_object]}/{option_model}'
+        name = f'{path_object[kind_object]}-{label_name(len(os.listdir(path_folder)), 10000)}'
+        make_zip_only(path_folder, src, name)
+
+        with open(f'{path_folder}/{name}.zip', "rb") as fp:
+            st.download_button(label="🔗 Download ZIP (.zip)",
+                               data=fp,
+                               use_container_width=True,
+                               file_name=f'weight_{name}.zip',
+                               mime="application/zip",
+                               key='download-zip-1')
 
 
 def detection(st, **state):
@@ -370,7 +400,7 @@ def detection(st, **state):
                 model = YOLO(option_model)
                 st.success('The model have successfully loaded!', icon='✅')
             else:
-                list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
+                list_weights = [weight_file for weight_file in os.listdir(f'{PATH}/weights/{path_object[kind_object]}')]
                 option_model = st.selectbox('Please select model do you want.',
                                             list_weights,
                                             key='option-model-detection-1')
@@ -384,7 +414,7 @@ def detection(st, **state):
                 else:
                     cap = cv2.VideoStream(source).start()
             else:
-                list_files = [file for file in os.listdir(f'datasets/{path_object[kind_object]}/predict')]
+                list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
                 sample_video = st.selectbox('Please select sample video do you want.',
                                             list_files,
                                             key='sample-video-detection-1')
