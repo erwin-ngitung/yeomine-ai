@@ -30,6 +30,7 @@ torch.backends.cudnn.benchmark = False
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
+os.environ['WANDB_DISABLED'] = 'true'
 
 app = MultiPage()
 
