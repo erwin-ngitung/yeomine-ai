@@ -6,7 +6,7 @@ import numpy as np
 import shutil
 import pandas as pd
 from PIL import Image
-from utils import make_zip, make_folder, make_folder_only, label_name, \
+from utils import make_zip, make_zip_only, make_folder, make_folder_only, label_name, \
     check_email, check_account, update_json, replace_json, computer_vision as cs
 
 # Package for Streamlit
@@ -229,12 +229,27 @@ def training(st, **state):
                             project='results',
                             name=path_object[kind_object])
 
+                num_weights = len(os.listdir(f'{PATH}/weights/{path_object[kind_object]}'))
                 src = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
-                dest = f'{PATH}/weights/{path_object[kind_object]}/{path_object[kind_object]}-000.pt'
+                dest = f'{PATH}/weights/{path_object[kind_object]}/{path_object[kind_object]}-' \
+                       f'{label_name(num_weights, 10000)}.pt'
 
                 shutil.copyfile(src, dest)
 
-                st.success('The model have been successfully saved!', icon='✅')
+                st.success('The model have been successfully saved. Now you can download model in the button bellow',
+                           icon='✅')
+
+                path_folder = f'{PATH}/datasets/{path_object[kind_object]}/weights'
+                name = f'{path_object[kind_object]}-{label_name(num_weights, 10000)}'
+                make_zip_only(path_folder, src, name)
+
+                with open(f'{path_folder}/{name}.zip', "rb") as fp:
+                    st.download_button(label="🔗 Download ZIP (.zip)",
+                                       data=fp,
+                                       use_container_width=True,
+                                       file_name=f'weight_{name}.zip',
+                                       mime="application/zip",
+                                       key='download-zip-1')
         except:
             with st.spinner('Wait a moment..'):
                 time.sleep(100)
@@ -634,7 +649,7 @@ def detection(st, **state):
                     make_zip(path_folder, name)
 
                     with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                        st.download_button(label="🔗 Download ZIP",
+                        st.download_button(label="🔗 Download ZIP (.zip)",
                                            data=fp,
                                            use_container_width=True,
                                            file_name=f'detection_{name}.zip',
@@ -784,7 +799,7 @@ def validation(st, **state):
             make_zip(path_folder, name)
 
             with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                st.download_button(label="🔗 Download ZIP",
+                st.download_button(label="🔗 Download ZIP (.zip)",
                                    data=fp,
                                    use_container_width=True,
                                    file_name=f'detection_{name}.zip',
