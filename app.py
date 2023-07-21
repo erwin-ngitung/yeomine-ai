@@ -600,29 +600,29 @@ def detection(st, **state):
                 if btn == 'Single files':
                     st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
                                f'in the button bellow.', icon='✅')
-                    st17, st18, st19, st20, st21 = st.columns(5)
+                    st17, st18 = st.columns(2)
 
-                    with st18:
+                    with st17:
                         path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
                         image_name = f'{path_images}/{label_name(st.session_state.counter, 10000)}.png'
 
                         with open(image_name, 'rb') as file:
-                            st.download_button(label='🔗 Image (.png)',
-                                               data=file,
-                                               use_container_width=True,
-                                               file_name=f'{label_name(st.session_state.counter, 10000)}.png',
-                                               mime="image/png")
+                            st17.download_button(label='🔗 Image (.png)',
+                                                 data=file,
+                                                 use_container_width=True,
+                                                 file_name=f'{label_name(st.session_state.counter, 10000)}.png',
+                                                 mime="image/png")
 
-                    with st20:
+                    with st18:
                         path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
                         annotate_name = f'{path_annotate}/{label_name(st.session_state.counter, 10000)}.txt'
 
                         with open(annotate_name, 'rb') as file:
-                            st.download_button(label='🔗 Text (.txt)',
-                                               data=file,
-                                               use_container_width=True,
-                                               file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
-                                               mime="text/plain")
+                            st18.download_button(label='🔗 Annotation (.txt)',
+                                                 data=file,
+                                                 use_container_width=True,
+                                                 file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
+                                                 mime="text/plain")
 
                 elif btn == 'All files':
                     st.success(f'Now, you can download the all images with annotation '
@@ -748,24 +748,24 @@ def validation(st, **state):
                        key='download-button-2')
 
         if btn == 'Single files':
-            st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
+            st.success(f'Now, you can download the image-{label_name(st.session_state.counter, 10000)} with annotation '
                        f'in the button bellow.', icon='✅')
-            st6, st7, st8, st9, st10 = st.columns(5)
+            st6, st7 = st.columns(2)
 
-            with st7:
+            with st6:
                 with open(photo, 'rb') as file:
-                    st.download_button(label='🔗 Image (.png)',
+                    st6.download_button(label='🔗 Image (.png)',
                                        data=file,
                                        use_container_width=True,
                                        file_name=f'{photo.split("/")[-1]}',
                                        mime="image/png")
 
-            with st9:
+            with st7:
                 annotate_path = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
                                 photo.split("/")[-1].split(".")[0] + '.txt'
 
                 with open(annotate_path, 'rb') as file:
-                    st.download_button(label='🔗 Text (.txt)',
+                    st7.download_button(label='🔗 Annotation (.txt)',
                                        data=file,
                                        use_container_width=True,
                                        file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
