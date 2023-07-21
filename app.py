@@ -32,12 +32,13 @@ pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
 
+# Set up Wandb
 # os.environ['WANDB_DISABLED'] = 'true'
 # os.environ['WANDB_MODE'] = 'offline'
 # os.environ['WANDB_API_KEY'] = '4f5a7ee65633a504c993e0a7a05be54d0f9084f6'
 # wandb.disabled = True
-wandb.init(mode="disabled")
-# wandb.login(key=wandb_token)
+# wandb.init(mode="disabled")
+wandb.login(key='4f5a7ee65633a504c993e0a7a05be54d0f9084f6')
 # wandb.login(anonymous="must")
 # api = wandb.Api()
 
