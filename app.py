@@ -283,7 +283,7 @@ def training(st, **state):
             st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.png',
                      caption=f'The image of {visual}')
         except:
-            pass
+            st.warnings('Please measure that you have trained model in the sub-menu training model.')
 
     with tab3:
         try:
@@ -301,34 +301,37 @@ def training(st, **state):
             st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.jpg',
                      caption=f'The image of {visual}')
         except:
-            pass
+            st.warnings('Please measure that you have trained model in the sub-menu training model.')
 
     with tab4:
-        kind_object = st.selectbox('Please select the kind of object detection that you want.',
-                                   ['General Detection',
-                                    'Coal Detection',
-                                    'Seam Detection',
-                                    'Core Detection',
-                                    'Smart-HSE'],
-                                   key='kind-object-training-2')
+        try:
+            kind_object = st.selectbox('Please select the kind of object detection that you want.',
+                                       ['General Detection',
+                                        'Coal Detection',
+                                        'Seam Detection',
+                                        'Core Detection',
+                                        'Smart-HSE'],
+                                       key='kind-object-training-2')
 
-        list_weights = [weight_file for weight_file in os.listdir(f'{PATH}/weights/{path_object[kind_object]}')]
-        option_model = st.selectbox('Please select model do you want.',
-                                    list_weights,
-                                    key='option-model-detection-1')
-        
-        path_folder = f'{PATH}/datasets/{path_object[kind_object]}/weights'
-        src = f'{PATH}/weights/{path_object[kind_object]}/{option_model}'
-        name = f'{path_object[kind_object]}-{label_name(len(os.listdir(path_folder)), 10000)}'
-        make_zip_only(path_folder, src, name)
+            list_weights = [weight_file for weight_file in os.listdir(f'{PATH}/weights/{path_object[kind_object]}')]
+            option_model = st.selectbox('Please select model do you want.',
+                                        list_weights,
+                                        key='option-model-detection-1')
 
-        with open(f'{path_folder}/{name}.zip', "rb") as fp:
-            st.download_button(label="🔗 Download ZIP (.zip)",
-                               data=fp,
-                               use_container_width=True,
-                               file_name=f'weight_{name}.zip',
-                               mime="application/zip",
-                               key='download-zip-1')
+            path_folder = f'{PATH}/datasets/{path_object[kind_object]}/weights'
+            src = f'{PATH}/weights/{path_object[kind_object]}/{option_model}'
+            name = f'{path_object[kind_object]}-{label_name(len(os.listdir(path_folder)), 10000)}'
+            make_zip_only(path_folder, src, name)
+
+            with open(f'{path_folder}/{name}.zip', "rb") as fp:
+                st.download_button(label="🔗 Download ZIP (.zip)",
+                                   data=fp,
+                                   use_container_width=True,
+                                   file_name=f'weight_{name}.zip',
+                                   mime="application/zip",
+                                   key='download-zip-2')
+        except:
+            st.warnings('Please measure that you have trained model in the sub-menu training model.')
 
 
 def detection(st, **state):
