@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 # wandb.disabled = True
 os.environ['WANDB_API_KEY'] = '4f5a7ee65633a504c993e0a7a05be54d0f9084f6'
 # os.environ['WANDB_DISABLED'] = 'true'
+os.environ['WANDB_MODE'] = 'offline'
 
 app = MultiPage()
 
