@@ -199,7 +199,7 @@ def training(st, **state):
                                             key='weight-decay-training-1')
 
         list_yaml = os.listdir(f'{PATH}/data-yaml/{path_object[kind_object]}')
-        path_file = st.selectbox('Please select your data YAML.',
+        path_yaml = st.selectbox('Please select your data YAML.',
                                  list_yaml,
                                  key='data-yaml-1')
 
@@ -220,7 +220,7 @@ def training(st, **state):
             # Load a model
             model = YOLO(
                 f'{PATH}/weights/petrained-model/{kind_model}')
-            model.train(data=path_file,
+            model.train(data=f'{PATH}/data-yaml/{path_object[kind_object]}/{path_yaml}',
                         device=device,
                         epochs=int(epochs),
                         batch=int(batch),
