@@ -229,6 +229,7 @@ def training(st, **state):
             # Load a model
             model = YOLO(
                 f'{PATH}/weights/petrained-model/{kind_model}')
+            wandb.init()
             model.train(data=f'{PATH}/data-yaml/{path_object[kind_object]}/{path_yaml}',
                         device=device,
                         epochs=int(epochs),
