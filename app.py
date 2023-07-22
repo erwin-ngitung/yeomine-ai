@@ -585,8 +585,7 @@ def detection(st, **state):
 
         if extension_file == 'Yes':
             st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' '
-                        'stroke=\'black\''
-                        'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
+                        'stroke=\'black\' stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
 
             uploaded_files = st.file_uploader("Upload your image",
                                               type=['jpg', 'jpeg', 'png'],
