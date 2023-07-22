@@ -1,0 +1,37 @@
+.btn-success{
+	background-color: #28a745;
+	border-color: #28a745;
+	&:hover{
+		background-color: #28a745 !important;
+		border-color: #28a745 !important;
+	}
+	&:active{
+		background-color: #28a745 !important;
+		border-color: #28a745 !important;
+	}
+	&:focus{
+		background-color: #28a745 !important;
+		border-color: #28a745 !important;
+		box-shadow: none !important;
+	}
+}
+.btn-primary{
+	background-color: $color-primary;
+	border-color: $color-primary;
+	&:hover{
+		background-color: $color-primary !important;
+		border-color: $color-primary !important;
+	}
+	&:active{
+		background-color: $color-primary !important;
+		border-color: $color-primary !important;
+	}
+	&:focus{
+		background-color: $color-primary !important;
+		border-color: $color-primary !important;
+		box-shadow: none !important;
+	}
+}
+.btn{
+	@include card-1();
+}

@@ -41,7 +41,7 @@ def sign_up(st, **state):
     placeholder = st.empty()
 
     with placeholder.form('Sign Up'):
-        image = Image.open(f'{PATH}/images/logo_yeomine.png')
+        image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
         st1, st2, st3 = st.columns(3)
 
         with st2:
@@ -92,7 +92,7 @@ def login(st, **state):
     try:
         # Insert a form in the container
         with placeholder.form('login'):
-            image = Image.open(f'{PATH}/images/logo_yeomine.png')
+            image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
             st1, st2, st3 = st.columns(3)
 
             with st2:
@@ -133,7 +133,7 @@ def login(st, **state):
 
 def training(st, **state):
     # Title
-    image = Image.open(f'{PATH}/images/logo_yeomine.png')
+    image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
 
     with st2:
@@ -337,7 +337,7 @@ def training(st, **state):
 
 def detection(st, **state):
     # Title
-    image = Image.open(f'{PATH}/images/logo_yeomine.png')
+    image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
 
     with st2:
@@ -704,7 +704,7 @@ def detection(st, **state):
 
 def validation(st, **state):
     # Title
-    image = Image.open(f'{PATH}/images/logo_yeomine.png')
+    image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
 
     with st2:
@@ -850,7 +850,7 @@ def validation(st, **state):
 
 def report(st, **state):
     # Title
-    image = Image.open(f'{PATH}/images/logo_yeomine.png')
+    image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
 
     with st2:
@@ -899,7 +899,7 @@ def report(st, **state):
 
 def account(st, **state):
     # Title
-    image = Image.open(f'{PATH}/images/logo_yeomine.png')
+    image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
     st1, st2, st3 = st.columns(3)
 
     with st2:
@@ -967,7 +967,7 @@ def account(st, **state):
 
 def logout(st, **state):
     # Title
-    image = Image.open(f'{PATH}/images/logo_yeomine.png')
+    image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
 
     st.success('Your account has been log out from this app')
     MultiPage.save({'login': False})

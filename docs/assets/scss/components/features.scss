@@ -1,0 +1,43 @@
+.features{
+    @include big-padding();
+    .feature-row{
+        margin-top: 30px;
+        .feature-col{
+          text-align: left;
+            background-color: #FFF;
+            padding: 30px;
+            margin-bottom: 30px;
+
+             @include shado-4();
+            i{
+                font-size: 2.5rem;
+                margin-bottom: 20px;
+                color: #28a745;
+            }
+            &:hover{
+                @include shado-1();
+            }
+        }
+    }
+}
+
+.more-features{
+    @include big-padding();
+    background-color: #fff;
+    .more-featur-ro{
+      margin-top: 20px;
+      .more-feat{
+        display: flex;
+        margin-bottom: 30px;
+        .icon{
+            padding: 15px;
+            img{
+              width: 110px;
+            }
+        }
+        .detail{
+              padding: 15px;
+        }
+      }
+    }
+}

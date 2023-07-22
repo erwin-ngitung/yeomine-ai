@@ -1,0 +1,22 @@
+.gallery{
+    @include big-padding();
+    padding-left: 0px;
+    padding-right: 0px;
+    background-color: #ffffff9e;
+    @media (min-width: 478px){
+        .gg-element:nth-child(3n+0) {
+            grid-row-end: span 1;
+        }
+    }
+    .gg-element{
+        border: 1px solid #ccc;
+        @include card-1();
+        background-color: #FFF;
+        padding: 3px;
+    }
+}
+.gg-box {
+  width: 100%;
+  grid-auto-rows: 300px;
+
+}
