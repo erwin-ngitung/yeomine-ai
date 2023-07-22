@@ -33,7 +33,6 @@ PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
 
 wandb.init(mode='disabled')
-# wandb.login(key='4f5a7ee65633a504c993e0a7a05be54d0f9084f6')
 
 app = MultiPage()
 
