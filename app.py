@@ -391,7 +391,7 @@ def detection(st, **state):
                               index=1,
                               key='custom-detection-1')
         with st5:
-            type_camera = st.radio('Do you want to use Integrated Webcam?',
+            type_camera = st.radio('Do you want to upload dataset by yourself?',
                                    ['Yes', 'No'],
                                    index=1,
                                    key='camera-detection-1')
@@ -523,7 +523,7 @@ def detection(st, **state):
                               key='custom-detection-2')
         with st9:
             extension_file = st.radio('What is the kind of file that you want to upload?',
-                                      ['Image', 'Video'],
+                                      ['Yes', 'No'],
                                       index=0,
                                       key='extension-file-detection-1')
 
@@ -582,7 +582,7 @@ def detection(st, **state):
 
             next_photo(path_images, func)
 
-        if extension_file == 'Image':
+        if extension_file == 'Yes':
             st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' '
                         'stroke=\'black\''
                         'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
