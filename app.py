@@ -353,17 +353,17 @@ def detection(st, **state):
         st.warning('Please login with your registered email!')
         return
 
-    path_object = {'&#xf1b3; General Detection': 'general-detect',
+    path_object = {'General Detection': 'general-detect',
                    'Coal Detection': 'front-coal',
                    'Seam Detection': 'seam-gb',
                    'Core Detection': 'core-logging',
                    'Smart-HSE': 'hse-monitor'}
 
-    tab1, tab2, tab3 = st.tabs(['👨‍🔧 Dataset by Admin', '📁 Upload File', '🎦 Streaming'])
+    tab1, tab2, tab3 = st.tabs(['🎬 Video', '📷 Image', '🎦 Streaming'])
 
     with tab1:
         kind_object = st.selectbox('Please select the kind of object detection do you want.',
-                                   ['&#xf1b3; General Detection',
+                                   ['General Detection',
                                     'Coal Detection',
                                     'Seam Detection',
                                     'Core Detection',
