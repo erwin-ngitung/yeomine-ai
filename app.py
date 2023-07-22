@@ -353,7 +353,7 @@ def detection(st, **state):
         st.warning('Please login with your registered email!')
         return
 
-    path_object = {'General Detection': 'general-detect',
+    path_object = {'&#xf1b3; General Detection': 'general-detect',
                    'Coal Detection': 'front-coal',
                    'Seam Detection': 'seam-gb',
                    'Core Detection': 'core-logging',
@@ -363,7 +363,7 @@ def detection(st, **state):
 
     with tab1:
         kind_object = st.selectbox('Please select the kind of object detection do you want.',
-                                   ['General Detection',
+                                   ['&#xf1b3; General Detection',
                                     'Coal Detection',
                                     'Seam Detection',
                                     'Core Detection',
