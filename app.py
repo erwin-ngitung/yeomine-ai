@@ -439,8 +439,7 @@ def detection(st, **state):
 
         if next_detect == 'Yes':
             st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' '
-                        'stroke=\'black\''
-                        'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
+                        'stroke=\'black\' stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
 
             path_detections = f'{PATH}/detections/{path_object[kind_object]}'
             make_folder(path_detections)
