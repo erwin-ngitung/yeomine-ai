@@ -1,2 +1,2 @@
-# yeomine-ai
- This software has goals to improve mining industry
+# Yeomine Digital Service
+ This software has goals to improve the mining industry
