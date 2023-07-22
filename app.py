@@ -5,8 +5,10 @@ import io
 import numpy as np
 import shutil
 import pandas as pd
+from pathlib import Path
+import logging
 from PIL import Image
-from utils import make_zip, make_folder, make_folder_only, label_name, \
+from utils import make_zip, make_zip_only, make_folder, make_folder_only, label_name, \
     check_email, check_account, update_json, replace_json, computer_vision as cs
 
 # Package for Streamlit
@@ -19,8 +21,7 @@ import pytesseract
 # Package for Machine Learning
 import torch
 from ultralytics import YOLO
-from pathlib import Path
-import logging
+import wandb
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -30,6 +31,8 @@ torch.backends.cudnn.benchmark = False
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
+
+wandb.login(key='4f5a7ee65633a504c993e0a7a05be54d0f9084f6')
 
 app = MultiPage()
 
@@ -146,11 +149,20 @@ def training(st, **state):
         st.warning('Please login with your registered email!')
         return
 
-    tab1, tab2, tab3 = st.tabs(['Train Model', 'Dashboard Model', 'Validating Result'])
+    path_object = {'General Detection': 'general-detect',
+                   'Coal Detection': 'front-coal',
+                   'Seam Detection': 'seam-gb',
+                   'Core Detection': 'core-logging',
+                   'Smart-HSE': 'hse-monitor'}
+
+    tab1, tab2, tab3, tab4 = st.tabs(['⌚ Training Model',
+                                      '📊 Dashboard Model',
+                                      '🎭 Validating Model',
+                                      '📦 Download Model'])
 
     with tab1:
         try:
-            kind_object = st.selectbox('Please select the kind of object detection do you want',
+            kind_object = st.selectbox('Please select the kind of object detection do you want.',
                                        ['General Detection',
                                         'Coal Detection',
                                         'Seam Detection',
@@ -158,46 +170,44 @@ def training(st, **state):
                                         'Smart-HSE'],
                                        key='kind-object-training-1')
 
-            path_object = {'General Detection': 'general-detect',
-                           'Coal Detection': 'front-coal',
-                           'Seam Detection': 'seam-gb',
-                           'Core Detection': 'core-logging',
-                           'Smart-HSE': 'hse-monitor'}
-
-            path_file = st.text_input('Please input your path data YAML', 'data/front-coal.yaml')
             list_model = os.listdir(f'{PATH}/weights/petrained-model')
-            kind_model = st.selectbox('Please select the petrained model',
+            kind_model = st.selectbox('Please select the petrained model.',
                                       list_model,
                                       key='kind-model-training-1')
             st4, st5 = st.columns(2)
 
             with st4:
-                epochs = st.number_input('Number of Epochs',
+                epochs = st4.number_input('Number of Epochs',
+                                          format='%i',
+                                          value=10,
+                                          key='epochs-training-1')
+                imgsz = st4.number_input('Number of Image Size',
+                                         format='%i',
+                                         value=640,
+                                         key='imgsz-training-1')
+                batch = st4.number_input('Number of Batch Size',
                                          format='%i',
                                          value=10,
-                                         key='epochs-training-1')
-                imgsz = st.number_input('Number of Image Size',
-                                        format='%i',
-                                        value=640,
-                                        key='imgsz-training-1')
-                batch = st.number_input('Number of Batch Size',
-                                        format='%i',
-                                        value=10,
-                                        key='batch-training-1')
+                                         key='batch-training-1')
 
             with st5:
-                lr_rate = st.number_input('Number of Learning Rate',
-                                          format='%f',
-                                          value=0.05,
-                                          key='lr-rate-training-1')
-                momentum = st.number_input('Number of Size Rate',
+                lr_rate = st5.number_input('Number of Learning Rate',
                                            format='%f',
                                            value=0.05,
-                                           key='momentum-training-1')
-                weight_decay = st.number_input('Number of Weight Decay',
-                                               format='%f',
-                                               value=0.05,
-                                               key='weight-decay-training-1')
+                                           key='lr-rate-training-1')
+                momentum = st5.number_input('Number of Size Rate',
+                                            format='%f',
+                                            value=0.05,
+                                            key='momentum-training-1')
+                weight_decay = st5.number_input('Number of Weight Decay',
+                                                format='%f',
+                                                value=0.05,
+                                                key='weight-decay-training-1')
+
+            list_yaml = os.listdir(f'{PATH}/data-yaml/{path_object[kind_object]}')
+            path_yaml = st.selectbox('Please select your data YAML.',
+                                     list_yaml,
+                                     key='data-yaml-1')
 
             next_train = st.radio('Are you sure to train model with the parameter above?',
                                   ['Yes', 'No'],
@@ -205,8 +215,6 @@ def training(st, **state):
                                   key='next-train-training-1')
 
             if next_train == 'Yes':
-                # shutil.rmtree(f'{PATH}/results/{path_object[kind_object]}')
-
                 if torch.cuda.is_available():
                     st.success(
                         f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
@@ -215,10 +223,11 @@ def training(st, **state):
                     st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
                     device = 'cpu'
 
+                shutil.rmtree(f'{PATH}/results/{path_object[kind_object]}')
+
                 # Load a model
-                model = YOLO(
-                    f'{PATH}/weights/petrained-model/{kind_model}')
-                model.train(data=path_file,
+                model = YOLO(f'{PATH}/weights/petrained-model/{kind_model}')
+                model.train(data=f'{PATH}/data-yaml/{path_object[kind_object]}/{path_yaml}',
                             device=device,
                             epochs=int(epochs),
                             batch=int(batch),
@@ -229,12 +238,27 @@ def training(st, **state):
                             project='results',
                             name=path_object[kind_object])
 
+                num_weights = len(os.listdir(f'{PATH}/weights/{path_object[kind_object]}'))
                 src = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
-                dest = f'{PATH}/weights/{path_object[kind_object]}/{path_object[kind_object]}-000.pt'
+                dest = f'{PATH}/weights/{path_object[kind_object]}/{path_object[kind_object]}-' \
+                       f'{label_name(num_weights, 10000)}.pt'
 
                 shutil.copyfile(src, dest)
 
-                st.success('The model have been successfully saved!', icon='✅')
+                st.success('The model have been successfully saved. Now you can download model in the button bellow',
+                           icon='✅')
+
+                path_folder = f'{PATH}/datasets/{path_object[kind_object]}/weights'
+                name = f'{path_object[kind_object]}-{label_name(num_weights, 10000)}'
+                make_zip_only(path_folder, src, name)
+
+                with open(f'{path_folder}/{name}.zip', "rb") as fp:
+                    st.download_button(label="🔗 Download ZIP (.zip)",
+                                       data=fp,
+                                       use_container_width=True,
+                                       file_name=f'weight_{name}.zip',
+                                       mime="application/zip",
+                                       key='download-zip-1')
         except:
             with st.spinner('Wait a moment..'):
                 time.sleep(100)
@@ -260,7 +284,7 @@ def training(st, **state):
             st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.png',
                      caption=f'The image of {visual}')
         except:
-            pass
+            st.error('Please measure that you have trained model in the sub-menu training model.')
 
     with tab3:
         try:
@@ -278,7 +302,37 @@ def training(st, **state):
             st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.jpg',
                      caption=f'The image of {visual}')
         except:
-            pass
+            st.error('Please measure that you have trained model in the sub-menu training model.')
+
+    with tab4:
+        try:
+            kind_object = st.selectbox('Please select the kind of object detection that you want.',
+                                       ['General Detection',
+                                        'Coal Detection',
+                                        'Seam Detection',
+                                        'Core Detection',
+                                        'Smart-HSE'],
+                                       key='kind-object-training-2')
+
+            list_weights = [weight_file for weight_file in os.listdir(f'{PATH}/weights/{path_object[kind_object]}')]
+            option_model = st.selectbox('Please select model do you want.',
+                                        list_weights,
+                                        key='option-model-detection-1')
+
+            path_folder = f'{PATH}/datasets/{path_object[kind_object]}/weights'
+            src = f'{PATH}/weights/{path_object[kind_object]}/{option_model}'
+            name = f'{option_model.split(".")[0]}'
+            make_zip_only(path_folder, src, name)
+
+            with open(f'{path_folder}/{name}.zip', "rb") as fp:
+                st.download_button(label="🔗 Download ZIP (.zip)",
+                                   data=fp,
+                                   use_container_width=True,
+                                   file_name=f'weight_{name}.zip',
+                                   mime="application/zip",
+                                   key='download-zip-2')
+        except:
+            st.error('Please measure that you have trained model in the sub-menu training model.')
 
 
 def detection(st, **state):
@@ -305,10 +359,10 @@ def detection(st, **state):
                    'Core Detection': 'core-logging',
                    'Smart-HSE': 'hse-monitor'}
 
-    tab1, tab2, tab3 = st.tabs(['Dataset by Admin', 'Upload File', 'Streaming'])
+    tab1, tab2, tab3 = st.tabs(['👨‍🔧 Dataset by Admin', '📁 Upload File', '🎦 Streaming'])
 
     with tab1:
-        kind_object = st.selectbox('Please select the kind of object detection do you want',
+        kind_object = st.selectbox('Please select the kind of object detection do you want.',
                                    ['General Detection',
                                     'Coal Detection',
                                     'Seam Detection',
@@ -348,10 +402,10 @@ def detection(st, **state):
             if custom == 'Yes':
                 option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
                 model = YOLO(option_model)
-                st.success('The model have successfully loaded!')
+                st.success('The model have successfully loaded!', icon='✅')
             else:
-                list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
-                option_model = st.selectbox('Please select model do you want!',
+                list_weights = [weight_file for weight_file in os.listdir(f'{PATH}/weights/{path_object[kind_object]}')]
+                option_model = st.selectbox('Please select model do you want.',
                                             list_weights,
                                             key='option-model-detection-1')
                 model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
@@ -364,8 +418,8 @@ def detection(st, **state):
                 else:
                     cap = cv2.VideoStream(source).start()
             else:
-                list_files = [file for file in os.listdir(f'datasets/{path_object[kind_object]}/predict')]
-                sample_video = st.selectbox('Please select sample video do you want',
+                list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
+                sample_video = st.selectbox('Please select sample video do you want.',
                                             list_files,
                                             key='sample-video-detection-1')
                 source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
@@ -410,7 +464,7 @@ def detection(st, **state):
                     if ret:
                         tz_JKT = pytz.timezone('Asia/Jakarta')
                         time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-                        caption = f'The frame image-{count} generated at {time_JKT}'
+                        caption = f'The frame image-{label_name(count, 10000)} generated at {time_JKT}'
 
                         x_size = 650
                         y_size = 640
@@ -440,12 +494,12 @@ def detection(st, **state):
                         time.sleep(0.5)
 
                     else:
-                        st.error('Image is not found')
+                        st.error('Image is not found', icon='❎')
 
-            st.success('Your all images have successfully saved')
+            st.success('Your all images have successfully saved', icon='✅')
 
     with tab2:
-        kind_object = st.selectbox('Please select the kind of object detection do you want',
+        kind_object = st.selectbox('Please select the kind of object detection do you want.',
                                    ['General Detection',
                                     'Coal Detection',
                                     'Seam Detection',
@@ -476,10 +530,10 @@ def detection(st, **state):
         if custom == 'Yes':
             option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
             model = YOLO(option_model)
-            st.success('The model have successfully loaded!')
+            st.success('The model have successfully loaded!', icon='✅')
         else:
             list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
-            option_model = st.selectbox('Please select model do you want!',
+            option_model = st.selectbox('Please select model do you want.',
                                         list_weights,
                                         key='select-model-detection-2')
             model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
@@ -573,20 +627,20 @@ def detection(st, **state):
                 st12, st13, st14, st15, st16 = st.columns(5)
 
                 with st13:
-                    st13.button("Back ⏭️",
+                    st13.button('◀️ Back',
                                 on_click=next_photo,
                                 use_container_width=True,
                                 args=([image_files, 'back']),
                                 key='back-photo-detection-1')
                 with st14:
-                    st14.button('Save ⏭️',
+                    st14.button('Save 💾',
                                 on_click=save_photo,
                                 use_container_width=True,
                                 args=([image_files, 'save', photo_detect, annotate]),
                                 key='save-photo-detection-1')
 
                 with st15:
-                    st15.button('Next ⏭️',
+                    st15.button('Next ▶️',
                                 on_click=next_photo,
                                 use_container_width=True,
                                 args=([image_files, 'next']),
@@ -599,48 +653,51 @@ def detection(st, **state):
 
                 if btn == 'Single files':
                     st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
-                               f'in the button bellow.')
-                    st17, st18, st19, st20, st21 = st.columns(5)
+                               f'in the button bellow.', icon='✅')
+                    st17, st18 = st.columns(2)
 
-                    with st18:
+                    with st17:
                         path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
                         image_name = f'{path_images}/{label_name(st.session_state.counter, 10000)}.png'
 
                         with open(image_name, 'rb') as file:
-                            st.download_button(label='Image (.png)',
-                                               data=file,
-                                               use_container_width=True,
-                                               file_name=f'{label_name(st.session_state.counter, 10000)}.png',
-                                               mime="image/png")
+                            st17.download_button(label='🔗 Image (.png)',
+                                                 data=file,
+                                                 use_container_width=True,
+                                                 file_name=f'{label_name(st.session_state.counter, 10000)}.png',
+                                                 mime="image/png",
+                                                 key='download-image-2')
 
-                    with st20:
+                    with st18:
                         path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
                         annotate_name = f'{path_annotate}/{label_name(st.session_state.counter, 10000)}.txt'
 
                         with open(annotate_name, 'rb') as file:
-                            st.download_button(label='Text (.txt)',
-                                               data=file,
-                                               use_container_width=True,
-                                               file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
-                                               mime="text/plain")
+                            st18.download_button(label='🔗 Annotation (.txt)',
+                                                 data=file,
+                                                 use_container_width=True,
+                                                 file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
+                                                 mime="text/plain",
+                                                 key='download-annotate-2')
 
                 elif btn == 'All files':
                     st.success(f'Now, you can download the all images with annotation '
-                               f'in the button bellow.')
+                               f'in the button bellow.', icon='✅')
                     path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
                     name = path_object[kind_object]
                     make_zip(path_folder, name)
 
                     with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                        st.download_button(label="Download ZIP",
+                        st.download_button(label="🔗 Download ZIP (.zip)",
                                            data=fp,
                                            use_container_width=True,
                                            file_name=f'detection_{name}.zip',
-                                           mime="application/zip"
+                                           mime="application/zip",
+                                           key='download-zip-2'
                                            )
 
             except:
-                st.error('Please upload your images or video first!')
+                st.error('Please upload your images or video first!', icon='❎')
     with tab3:
         st.write('Coming Soon!')
 
@@ -669,7 +726,7 @@ def validation(st, **state):
                    'Core Detection': 'core-logging',
                    'Smart-HSE': 'hse-monitor'}
 
-    kind_object = st.selectbox('Please select the kind of object detection do you want',
+    kind_object = st.selectbox('Please select the kind of object detection do you want.',
                                ['General Detection',
                                 'Coal Detection',
                                 'Seam Detection',
@@ -724,19 +781,19 @@ def validation(st, **state):
         st1, st2, st3, st4, st5 = st.columns(5)
 
         with st2:
-            st2.button("Back ⏭️",
+            st2.button('◀️ Back',
                        on_click=next_photo,
                        use_container_width=True,
                        args=([path_files, 'back']),
                        key='back-photo-validation-1')
         with st3:
-            st3.button("Delete ⏭️",
+            st3.button('Delete ♻️',
                        on_click=delete_photo,
                        use_container_width=True,
                        args=([path_files, 'delete']),
                        key='delete-photo-validation-1')
         with st4:
-            st4.button("Next ⏭️",
+            st4.button('Next ▶️',
                        on_click=next_photo,
                        use_container_width=True,
                        args=([path_files, 'next']),
@@ -748,45 +805,47 @@ def validation(st, **state):
                        key='download-button-2')
 
         if btn == 'Single files':
-            st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
-                       f'in the button bellow.')
-            st6, st7, st8, st9, st10 = st.columns(5)
+            st.success(f'Now, you can download the image-{label_name(st.session_state.counter, 10000)} with annotation '
+                       f'in the button bellow.', icon='✅')
+            st6, st7 = st.columns(2)
+
+            with st6:
+                with open(photo, 'rb') as file:
+                    st6.download_button(label='🔗 Image (.png)',
+                                        data=file,
+                                        use_container_width=True,
+                                        file_name=f'{photo.split("/")[-1]}',
+                                        mime="image/png",
+                                        key='download-image-1')
 
             with st7:
-                with open(photo, 'rb') as file:
-                    st.download_button(label='Image (.png)',
-                                       data=file,
-                                       use_container_width=True,
-                                       file_name=f'{photo.split("/")[-1]}',
-                                       mime="image/png")
-
-            with st9:
                 annotate_path = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
                                 photo.split("/")[-1].split(".")[0] + '.txt'
 
                 with open(annotate_path, 'rb') as file:
-                    st.download_button(label='Text (.txt)',
-                                       data=file,
-                                       use_container_width=True,
-                                       file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
-                                       mime="text/plain")
+                    st7.download_button(label='🔗 Annotation (.txt)',
+                                        data=file,
+                                        use_container_width=True,
+                                        file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
+                                        mime="text/plain",
+                                        key='download-annotate-1')
 
         elif btn == 'All files':
             st.success(f'Now, you can download the all images with annotation '
-                       f'in the button bellow.')
+                       f'in the button bellow.', icon='✅')
             path_folder = f'{PATH}/detections/{path_object[kind_object]}'
             name = path_object[kind_object]
             make_zip(path_folder, name)
 
             with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                st.download_button(label="Download ZIP",
+                st.download_button(label="🔗 Download ZIP (.zip)",
                                    data=fp,
                                    use_container_width=True,
                                    file_name=f'detection_{name}.zip',
-                                   mime="application/zip"
-                                   )
+                                   mime="application/zip",
+                                   key='download-zip-1')
     except:
-        st.error('Please go to the menu Detection first!')
+        st.error('Please go to the menu Detection first!', icon='❎')
 
 
 def report(st, **state):
@@ -916,19 +975,19 @@ def logout(st, **state):
 
 app.st = st
 
-app.navbar_name = 'Menu'
+app.navbar_name = 'Application Menu'
 app.navbar_style = 'VerticalButton'
 
 app.hide_menu = False
 app.hide_navigation = True
 
-app.add_app('Sign Up', sign_up)
-app.add_app('Login', login)
-app.add_app('Training', training)
-app.add_app('Detection', detection)
-app.add_app('Validation', validation)
-app.add_app('Report', report)
-app.add_app('Account Setting', account)
-app.add_app('Logout', logout)
+app.add_app('🔐 Sign Up        ', sign_up)
+app.add_app('🔓 Login          ', login)
+app.add_app('⚙️ Training       ', training)
+app.add_app('📹 Detection      ', detection)
+app.add_app('👁‍🗨 Validation    ', validation)
+app.add_app('💬 Report         ', report)
+app.add_app('👨‍⚖️ Account Setting', account)
+app.add_app('🔒 Logout         ', logout)
 
 app.run()
