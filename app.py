@@ -650,8 +650,8 @@ def detection(st, **state):
                                    key='download-button-1')
 
                     if btn == 'Single files':
-                        st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
-                                   f'in the button bellow.', icon='✅')
+                        # st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
+                        #            f'in the button bellow.', icon='✅')
                         st17, st18 = st.columns(2)
 
                         with st17:
@@ -679,8 +679,8 @@ def detection(st, **state):
                                                      key='download-annotate-2')
 
                     elif btn == 'All files':
-                        st.success(f'Now, you can download the all images with annotation '
-                                   f'in the button bellow.', icon='✅')
+                        # st.success(f'Now, you can download the all images with annotation '
+                        #            f'in the button bellow.', icon='✅')
                         path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
                         name = path_object[kind_object]
                         make_zip(path_folder, name)
