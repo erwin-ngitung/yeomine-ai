@@ -412,7 +412,7 @@ def detection(st, **state):
 
         with st7:
             if type_camera == 'Yes':
-                source = st.text_input('Please input your Webcam link', 'Auto')
+                source = st.text_input('Please input your Webcam link.', 'Auto')
                 if source == 'Auto':
                     cap = cv2.VideoCapture(0)
                 else:
