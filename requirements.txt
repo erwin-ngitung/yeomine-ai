@@ -18,6 +18,7 @@ torchvision>=0.8.1,!=0.13.0
 tqdm>=4.64.0
 detecto>=1.2.2
 ultralytics
+dill
 openpyxl
 xlsxwriter
 imutils

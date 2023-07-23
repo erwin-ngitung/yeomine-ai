@@ -521,30 +521,23 @@ def detection(st, **state):
                               index=1,
                               key='custom-detection-2')
         with st9:
-            extension_file = st.radio('What is the kind of file that you want to upload?',
-                                      ['Yes', 'No'],
-                                      index=0,
-                                      key='extension-file-detection-1')
-
-        if custom == 'Yes':
-            option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
-            model = YOLO(option_model)
-            st.success('The model have successfully loaded!', icon='✅')
-        else:
-            list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
-            option_model = st.selectbox('Please select model do you want.',
-                                        list_weights,
-                                        key='select-model-detection-2')
-            model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
-
-        if torch.cuda.is_available():
-            st.success(f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
-            device = 0
-        else:
-            st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
-            device = 'cpu'
+            if custom == 'Yes':
+                option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
+                model = YOLO(option_model)
+                st.success('The model have successfully loaded!', icon='✅')
+            else:
+                list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
+                option_model = st.selectbox('Please select model do you want.',
+                                            list_weights,
+                                            key='select-model-detection-2')
+                model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
 
         colors = cs.generate_label_colors(model.names)
+
+        extension_file = st.radio('Are you sure to use parameter above?',
+                                  ['Yes', 'No'],
+                                  index=1,
+                                  key='extension-file-detection-1')
 
         def next_photo(path_images, func):
             if func == 'next':
@@ -582,9 +575,13 @@ def detection(st, **state):
             next_photo(path_images, func)
 
         if extension_file == 'Yes':
-            st.markdown(
-                '<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' stroke=\'black\' '
-                'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
+            if torch.cuda.is_available():
+                st.success(
+                    f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
+                device = 0
+            else:
+                st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
+                device = 'cpu'
             
             uploaded_files = st.file_uploader("Upload your image",
                                               type=['jpg', 'jpeg', 'png'],
