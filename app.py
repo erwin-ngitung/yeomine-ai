@@ -586,6 +586,9 @@ def detection(st, **state):
             uploaded_files = st.file_uploader("Upload your image",
                                               type=['jpg', 'jpeg', 'png'],
                                               accept_multiple_files=True)
+            if uploaded_files:
+                if os.path.exists(f'{PATH}/detections/custom-data/{path_object[kind_object]}'):
+                    shutil.rmtree(f'{PATH}/detections/custom-data/{path_object[kind_object]}')
 
             image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
 
