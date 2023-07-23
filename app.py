@@ -582,16 +582,13 @@ def detection(st, **state):
             else:
                 st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
                 device = 'cpu'
-            
-            uploaded_files = st.file_uploader("Upload your image",
-                                              type=['jpg', 'jpeg', 'png'],
-                                              accept_multiple_files=True)
-            if uploaded_files:
-                if os.path.exists(f'{PATH}/detections/custom-data/{path_object[kind_object]}'):
-                    st.write('Hello')
-                    shutil.rmtree(f'{PATH}/detections/custom-data/{path_object[kind_object]}')
 
-            image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
+            with st.form("my-form", clear_on_submit=True):
+                uploaded_files = st.file_uploader("Upload your image",
+                                                  type=['jpg', 'jpeg', 'png'],
+                                                  accept_multiple_files=True)
+                submitted = st.form_submit_button("submit")
+                image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
 
             if 'counter' not in st.session_state:
                 st.session_state.counter = 0
