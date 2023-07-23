@@ -32,8 +32,8 @@ def generate_label_colors(name):
     return np.random.uniform(0, 255, size=(len(name), 3))
 
 
-def draw_image(model, device, img, conf, colors, time, x_size, y_size):
-    results = model.predict(img, device=device, conf=0.2, iou=0.7)
+def draw_image(model, device, img, confi, colors, time, x_size, y_size):
+    results = model.predict(img, device=device, conf=0.1, iou=0.5)
     names = model.names
     parameter = {'label': [],
                  'score': [],
@@ -48,7 +48,7 @@ def draw_image(model, device, img, conf, colors, time, x_size, y_size):
                 'h': []}
 
     for i, confid in enumerate(results[0].boxes.conf.tolist()):
-        if confid >= conf:
+        if confid >= confi:
             data = results[0].boxes.xyxy[i].tolist()
             idx = int(results[0].boxes.cls[i])
             label = names[idx]
@@ -75,7 +75,7 @@ def draw_image(model, device, img, conf, colors, time, x_size, y_size):
                               color, 2)
 
             parameter['label'].append(label)
-            parameter['score'].append(conf)
+            parameter['score'].append(confid)
             parameter['x1'].append(x1)
             parameter['y1'].append(y1)
             parameter['x2'].append(x2)
