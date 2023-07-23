@@ -391,7 +391,7 @@ def detection(st, **state):
                               index=1,
                               key='custom-detection-1')
         with st5:
-            type_camera = st.radio('Do you want to upload dataset by yourself?',
+            type_camera = st.radio('Do you want to use webcam/camera for detection?',
                                    ['Yes', 'No'],
                                    index=1,
                                    key='camera-detection-1')
@@ -425,19 +425,20 @@ def detection(st, **state):
                 source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
                 cap = cv2.VideoCapture(source)
 
-        if torch.cuda.is_available():
-            st.success(f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
-            device = 0
-        else:
-            st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
-            device = 'cpu'
-
         next_detect = st.radio('Are you sure to detect video using parameter above?',
                                ['Yes', 'No'],
                                index=1,
                                key='next-detect-detection-1')
 
         if next_detect == 'Yes':
+            if torch.cuda.is_available():
+                st.success(
+                    f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
+                device = 0
+            else:
+                st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
+                device = 'cpu'
+                
             st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' '
                         'stroke=\'black\' stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
 
