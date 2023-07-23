@@ -587,6 +587,7 @@ def detection(st, **state):
                                               type=['jpg', 'jpeg', 'png'],
                                               accept_multiple_files=True)
             if uploaded_files:
+                st.write('Hello')
                 if os.path.exists(f'{PATH}/detections/custom-data/{path_object[kind_object]}'):
                     shutil.rmtree(f'{PATH}/detections/custom-data/{path_object[kind_object]}')
 
