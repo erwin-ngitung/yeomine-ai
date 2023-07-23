@@ -432,7 +432,7 @@ def detection(st, **state):
             st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
             device = 'cpu'
 
-        next_detect = st.radio('Are you sure to detect image/video using parameter above?',
+        next_detect = st.radio('Are you sure to detect video using parameter above?',
                                ['Yes', 'No'],
                                index=1,
                                key='next-detect-detection-1')
@@ -534,9 +534,10 @@ def detection(st, **state):
 
         colors = cs.generate_label_colors(model.names)
 
-        extension_file = st.checkbox('Show label predictions',
-                                     value=True,
-                                     key='extension-file-detection-1')
+        extension_file = st.radio('Are you sure to detect image using parameter above?',
+                                  ['Yes', 'No'],
+                                  index=1,
+                                  key='next-detect-detection-2')
 
         def next_photo(path_images, func):
             if func == 'next':
@@ -573,7 +574,7 @@ def detection(st, **state):
 
             next_photo(path_images, func)
 
-        if extension_file:
+        if extension_file == 'Yes':
             if torch.cuda.is_available():
                 st.success(
                     f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
