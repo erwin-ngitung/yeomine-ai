@@ -534,10 +534,9 @@ def detection(st, **state):
 
         colors = cs.generate_label_colors(model.names)
 
-        extension_file = st.radio('Are you sure to use parameter above?',
-                                  ['Yes', 'No'],
-                                  index=1,
-                                  key='extension-file-detection-1')
+        extension_file = st.checkbox('Show label predictions',
+                                     value=True,
+                                     key='extension-file-detection-1')
 
         def next_photo(path_images, func):
             if func == 'next':
@@ -568,13 +567,13 @@ def detection(st, **state):
             except:
                 df = pd.DataFrame([0, 0, 0, 0],
                                   columns=['id', 'x', 'y', 'w', 'h'])
-                with open(annotate_name, 'a') as f:
+                with open(annotate_name, 'a') as data:
                     df2_string = df.to_string(header=False, index=False)
-                    f.write(df2_string)
+                    data.write(df2_string)
 
             next_photo(path_images, func)
 
-        if extension_file == 'Yes':
+        if extension_file:
             if torch.cuda.is_available():
                 st.success(
                     f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
