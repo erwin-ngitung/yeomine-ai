@@ -255,7 +255,7 @@ def training(st, **state):
             make_zip_only(path_folder, src, name)
 
             with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                st.download_button(label="🔗 Download ZIP (.zip)",
+                st.download_button(label="🔗 Download Weights Model (.zip)",
                                    data=fp,
                                    use_container_width=True,
                                    file_name=f'weight_{name}.zip',
@@ -324,7 +324,7 @@ def training(st, **state):
             make_zip_only(path_folder, src, name)
 
             with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                st.download_button(label="🔗 Download ZIP (.zip)",
+                st.download_button(label="🔗 Download Weights Model (.zip)",
                                    data=fp,
                                    use_container_width=True,
                                    file_name=f'weight_{name}.zip',
@@ -676,7 +676,7 @@ def detection(st, **state):
                         make_zip(path_folder, name)
 
                         with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                            st.download_button(label="🔗 Download ZIP (.zip)",
+                            st.download_button(label="🔗 Download All Files (.zip)",
                                                data=fp,
                                                use_container_width=True,
                                                file_name=f'detection_{name}.zip',
@@ -825,7 +825,7 @@ def validation(st, **state):
             make_zip(path_folder, name)
 
             with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                st.download_button(label="🔗 Download ZIP (.zip)",
+                st.download_button(label="🔗 Download All Files (.zip)",
                                    data=fp,
                                    use_container_width=True,
                                    file_name=f'detection_{name}.zip',
