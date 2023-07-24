@@ -14,6 +14,7 @@ from utils import make_zip, make_zip_only, make_folder, make_folder_only, label_
 # Package for Streamlit
 import streamlit as st
 from streamlit_multipage import MultiPage
+from streamlit_webrtc import WebRtcMode, webrtc_streamer
 from datetime import datetime
 import pytz
 import pytesseract
