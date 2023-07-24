@@ -983,7 +983,7 @@ app.hide_menu = False
 app.hide_navigation = True
 
 app.add_app('🔐 Sign Up        ', sign_up)
-app.add_app('🔓 Login          ', login)
+app.add_app('🔓 Login          ', login, initial_page=True)
 app.add_app('⚙️ Training       ', training)
 app.add_app('📹 Detection      ', detection)
 app.add_app('👁‍🗨 Validation    ', validation)
