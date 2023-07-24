@@ -362,75 +362,74 @@ def detection(st, **state):
     tab1, tab2, tab3 = st.tabs(['🎬 Video', '📷 Image', '🎦 Streaming'])
 
     with tab1:
-        kind_object = st.selectbox('Please select the kind of object detection do you want.',
-                                   ['General Detection',
-                                    'Coal Detection',
-                                    'Seam Detection',
-                                    'Core Detection',
-                                    'Smart HSE'],
-                                   key='kind-object-detection-1')
+        with st.form("form-process-video", clear_on_submit=True):
+            kind_object = st.selectbox('Please select the kind of object detection do you want.',
+                                       ['General Detection',
+                                        'Coal Detection',
+                                        'Seam Detection',
+                                        'Core Detection',
+                                        'Smart HSE'],
+                                       key='kind-object-detection-1')
 
-        conf = st.slider('Number of Confidence (%)',
-                         min_value=0,
-                         max_value=100,
-                         step=1,
-                         value=60,
-                         key='confidence-detection-1')
-        stop_program = st.slider('Number of Image',
-                                 min_value=0,
-                                 max_value=500,
-                                 step=1,
-                                 value=20,
-                                 key='stop-program-detection-1')
+            conf = st.slider('Number of Confidence (%)',
+                             min_value=0,
+                             max_value=100,
+                             step=1,
+                             value=60,
+                             key='confidence-detection-1')
+            stop_program = st.slider('Number of Image',
+                                     min_value=0,
+                                     max_value=500,
+                                     step=1,
+                                     value=20,
+                                     key='stop-program-detection-1')
 
-        st4, st5 = st.columns(2)
+            st4, st5 = st.columns(2)
 
-        with st4:
-            custom = st.radio('Do you want to use custom model that has trained?',
-                              ['Yes', 'No'],
-                              index=1,
-                              key='custom-detection-1')
-        with st5:
-            type_camera = st.radio('Do you want to use webcam/camera for detection?',
-                                   ['Yes', 'No'],
-                                   index=1,
-                                   key='camera-detection-1')
+            with st4:
+                custom = st.radio('Do you want to use custom model that has trained?',
+                                  ['Yes', 'No'],
+                                  index=1,
+                                  key='custom-detection-1')
+            with st5:
+                type_camera = st.radio('Do you want to use webcam/camera for detection?',
+                                       ['Yes', 'No'],
+                                       index=1,
+                                       key='camera-detection-1')
 
-        st6, st7 = st.columns(2)
+            st6, st7 = st.columns(2)
 
-        with st6:
-            if custom == 'Yes':
-                option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
-                model = YOLO(option_model)
-                st.success('The model have successfully loaded!', icon='✅')
-            else:
-                list_weights = [weight_file for weight_file in os.listdir(f'{PATH}/weights/{path_object[kind_object]}')]
-                option_model = st.selectbox('Please select model do you want.',
-                                            list_weights,
-                                            key='option-model-detection-1')
-                model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
-
-        with st7:
-            if type_camera == 'Yes':
-                source = st.text_input('Please input your Webcam link.', 'Auto')
-                if source == 'Auto':
-                    cap = cv2.VideoCapture(0)
+            with st6:
+                if custom == 'Yes':
+                    option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
+                    model = YOLO(option_model)
+                    st.success('The model have successfully loaded!', icon='✅')
                 else:
-                    cap = cv2.VideoStream(source).start()
-            else:
-                list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
-                sample_video = st.selectbox('Please select sample video do you want.',
-                                            list_files,
-                                            key='sample-video-detection-1')
-                source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
-                cap = cv2.VideoCapture(source)
+                    list_weights = [weight_file for weight_file in
+                                    os.listdir(f'{PATH}/weights/{path_object[kind_object]}')]
+                    option_model = st.selectbox('Please select model do you want.',
+                                                list_weights,
+                                                key='option-model-detection-1')
+                    model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
 
-        next_detect = st.radio('Are you sure to detect video using parameter above?',
-                               ['Yes', 'No'],
-                               index=1,
-                               key='next-detect-detection-1')
+            with st7:
+                if type_camera == 'Yes':
+                    source = st.text_input('Please input your Webcam link.', 'Auto')
+                    if source == 'Auto':
+                        cap = cv2.VideoCapture(0)
+                    else:
+                        cap = cv2.VideoStream(source).start()
+                else:
+                    list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
+                    sample_video = st.selectbox('Please select sample video do you want.',
+                                                list_files,
+                                                key='sample-video-detection-1')
+                    source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
+                    cap = cv2.VideoCapture(source)
 
-        if next_detect == 'Yes':
+            next_detect = st.form_submit_button("Process")
+
+        if next_detect:
             if torch.cuda.is_available():
                 st.success(
                     f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
@@ -499,46 +498,44 @@ def detection(st, **state):
             st.success('Your all images have successfully saved', icon='✅')
 
     with tab2:
-        kind_object = st.selectbox('Please select the kind of object detection do you want.',
-                                   ['General Detection',
-                                    'Coal Detection',
-                                    'Seam Detection',
-                                    'Core Detection',
-                                    'Smart HSE'],
-                                   key='kind-object-detection-2')
+        with st.form("form-process-image", clear_on_submit=True):
+            kind_object = st.selectbox('Please select the kind of object detection do you want.',
+                                       ['General Detection',
+                                        'Coal Detection',
+                                        'Seam Detection',
+                                        'Core Detection',
+                                        'Smart HSE'],
+                                       key='kind-object-detection-2')
 
-        conf = st.slider('Number of Confidence (%)',
-                         min_value=0,
-                         max_value=100,
-                         step=1,
-                         value=60,
-                         key='confidence-detection-2')
+            conf = st.slider('Number of Confidence (%)',
+                             min_value=0,
+                             max_value=100,
+                             step=1,
+                             value=60,
+                             key='confidence-detection-2')
 
-        st8, st9 = st.columns(2)
+            st8, st9 = st.columns(2)
 
-        with st8:
-            custom = st.radio('Do you want to use custom model that has trained?',
-                              ['Yes', 'No'],
-                              index=1,
-                              key='custom-detection-2')
-        with st9:
-            if custom == 'Yes':
-                option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
-                model = YOLO(option_model)
-                st.success('The model have successfully loaded!', icon='✅')
-            else:
-                list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
-                option_model = st.selectbox('Please select model do you want.',
-                                            list_weights,
-                                            key='select-model-detection-2')
-                model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
-
-        colors = cs.generate_label_colors(model.names)
-
-        extension_file = st.radio('Are you sure to detect image using parameter above?',
+            with st8:
+                custom = st.radio('Do you want to use custom model that has trained?',
                                   ['Yes', 'No'],
                                   index=1,
-                                  key='next-detect-detection-2')
+                                  key='custom-detection-2')
+            with st9:
+                if custom == 'Yes':
+                    option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
+                    model = YOLO(option_model)
+                    st.success('The model have successfully loaded!', icon='✅')
+                else:
+                    list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
+                    option_model = st.selectbox('Please select model do you want.',
+                                                list_weights,
+                                                key='select-model-detection-2')
+                    model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
+
+            colors = cs.generate_label_colors(model.names)
+
+            extension_file = st.form_submit_button("Process")
 
         def next_photo(path_images, func):
             if func == 'next':
@@ -575,7 +572,7 @@ def detection(st, **state):
 
             next_photo(path_images, func)
 
-        if extension_file == 'Yes':
+        if extension_file:
             if torch.cuda.is_available():
                 st.success(
                     f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
@@ -584,7 +581,7 @@ def detection(st, **state):
                 st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
                 device = 'cpu'
 
-            with st.form("my-form", clear_on_submit=True):
+            with st.form("form-upload-image", clear_on_submit=True):
                 uploaded_files = st.file_uploader("Upload your image",
                                                   type=['jpg', 'jpeg', 'png'],
                                                   accept_multiple_files=True)
@@ -651,8 +648,6 @@ def detection(st, **state):
                                    key='download-button-1')
 
                     if btn == 'Single files':
-                        # st.success(f'Now, you can download the single image-{st.session_state.counter} with annotation '
-                        #            f'in the button bellow.', icon='✅')
                         st17, st18 = st.columns(2)
 
                         with st17:
@@ -680,8 +675,6 @@ def detection(st, **state):
                                                      key='download-annotate-2')
 
                     elif btn == 'All files':
-                        # st.success(f'Now, you can download the all images with annotation '
-                        #            f'in the button bellow.', icon='✅')
                         path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
                         name = path_object[kind_object]
                         make_zip(path_folder, name)
