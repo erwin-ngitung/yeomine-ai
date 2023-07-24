@@ -40,7 +40,7 @@ wandb.init(mode='disabled')
 app = MultiPage()
 
 
-@st.cache_resource
+@st.cache_resource(experimental_allow_widgets=True)
 def sign_up(st, **state):
     placeholder = st.empty()
 
@@ -88,7 +88,7 @@ def sign_up(st, **state):
         pass
 
 
-@st.cache_resource
+@st.cache_resource(experimental_allow_widgets=True)
 def login(st, **state):
     st.snow()
     # Create an empty container
@@ -136,7 +136,7 @@ def login(st, **state):
         st.error('Please login with your registered email!')
 
 
-@st.cache_resource
+@st.cache_resource(experimental_allow_widgets=True)
 def training(st, **state):
     # Title
     image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
@@ -340,7 +340,7 @@ def training(st, **state):
             st.error('Please measure that you have trained model in the sub-menu training model.')
 
 
-@st.cache_resource
+@st.cache_resource(experimental_allow_widgets=True)
 def detection(st, **state):
     # Title
     image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
@@ -707,7 +707,7 @@ def detection(st, **state):
                                      async_processing=True)
 
 
-@st.cache_resource
+@st.cache_resource(experimental_allow_widgets=True)
 def validation(st, **state):
     # Title
     image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
@@ -854,7 +854,7 @@ def validation(st, **state):
         st.error('Please go to the menu Detection first!', icon='❎')
 
 
-@st.cache_resource
+@st.cache_resource(experimental_allow_widgets=True)
 def report(st, **state):
     # Title
     image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
@@ -904,7 +904,7 @@ def report(st, **state):
         pass
 
 
-@st.cache_resource
+@st.cache_resource(experimental_allow_widgets=True)
 def account(st, **state):
     # Title
     image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
