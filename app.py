@@ -40,6 +40,12 @@ wandb.init(mode='disabled')
 app = MultiPage()
 
 
+def landing_page(st, **state):
+    Image.open(f'{PATH}/data/images/logo_yeomine.png')
+    st.markdown('Welcome to the Yeomine Website')
+    MultiPage.save({'login': True})
+
+
 def sign_up(st, **state):
     placeholder = st.empty()
 
@@ -982,8 +988,9 @@ app.navbar_style = 'VerticalButton'
 app.hide_menu = False
 app.hide_navigation = True
 
+app.add_app('Landing Page      ', landing_page, initial_page=True)
 app.add_app('🔐 Sign Up        ', sign_up)
-app.add_app('🔓 Login          ', login, initial_page=True)
+app.add_app('🔓 Login          ', login)
 app.add_app('⚙️ Training       ', training)
 app.add_app('📹 Detection      ', detection)
 app.add_app('👁‍🗨 Validation    ', validation)
