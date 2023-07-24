@@ -969,13 +969,23 @@ def account(st, **state):
 def logout(st, **state):
     # Title
     image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
+    st1, st2, st3 = st.columns(3)
+
+    with st2:
+        st.image(image)
 
     st.success('Your account has been log out from this app')
     MultiPage.save({'login': False})
+    st.cache_resource.clear()
 
 
 def landing_page(st):
-    Image.open(f'{PATH}/data/images/logo_yeomine.png')
+    image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
+    st1, st2, st3 = st.columns(3)
+
+    with st2:
+        st.image(image)
+
     st.markdown('Welcome to the Yeomine Website')
 
 
