@@ -180,29 +180,23 @@ def training(st, **state):
                 with st4:
                     epochs = st4.number_input('Number of Epochs',
                                               format='%i',
-                                              value=10,
                                               key='epochs-training-1')
                     imgsz = st4.number_input('Number of Image Size',
                                              format='%i',
-                                             value=640,
                                              key='imgsz-training-1')
                     batch = st4.number_input('Number of Batch Size',
                                              format='%i',
-                                             value=10,
                                              key='batch-training-1')
 
                 with st5:
                     lr_rate = st5.number_input('Number of Learning Rate',
                                                format='%f',
-                                               value=0.05,
                                                key='lr-rate-training-1')
                     momentum = st5.number_input('Number of Size Rate',
                                                 format='%f',
-                                                value=0.05,
                                                 key='momentum-training-1')
                     weight_decay = st5.number_input('Number of Weight Decay',
                                                     format='%f',
-                                                    value=0.05,
                                                     key='weight-decay-training-1')
 
                 list_yaml = os.listdir(f'{PATH}/data-yaml/{path_object[kind_object]}')
