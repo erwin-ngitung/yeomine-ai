@@ -982,6 +982,7 @@ def logout(st, **state):
 
 app.st = st
 
+app.start_button = "Go to the main page"
 app.navbar_name = 'Application Menu'
 app.navbar_style = 'VerticalButton'
 
