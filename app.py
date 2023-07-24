@@ -161,7 +161,6 @@ def training(st, **state):
                                       '📦 Download Model'])
 
     with tab1:
-        # try:
         with st.form("form-training", clear_on_submit=True):
             kind_object = st.selectbox('Please select the kind of object detection do you want.',
                                        ['General Detection',
@@ -178,17 +177,17 @@ def training(st, **state):
             st4, st5 = st.columns(2)
 
             with st4:
-                epochs = st4.slider('Number of Image',
+                epochs = st4.slider('Number of Epochs',
                                     min_value=1,
                                     max_value=200,
                                     step=1,
                                     key='epochs-training-1')
-                imgsz = st4.slider('Number of Image',
+                imgsz = st4.slider('Size of Image',
                                    min_value=50,
                                    max_value=1500,
                                    step=5,
                                    key='imgsz-training-1')
-                batch = st4.slider('Number of Image',
+                batch = st4.slider('Number of Batch Size',
                                    min_value=1,
                                    max_value=200,
                                    step=1,
@@ -256,9 +255,6 @@ def training(st, **state):
                                    file_name=f'weight_{name}.zip',
                                    mime="application/zip",
                                    key='download-zip-1')
-        # except:
-        #     with st.spinner('Wait a moment..'):
-        #         time.sleep(100)
 
     with tab2:
         try:
