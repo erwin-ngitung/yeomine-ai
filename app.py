@@ -177,31 +177,37 @@ def training(st, **state):
             st4, st5 = st.columns(2)
 
             with st4:
-                epochs = st4.slider('Number of Epochs',
-                                    min_value=1,
-                                    max_value=200,
-                                    step=1,
-                                    key='epochs-training-1')
-                imgsz = st4.slider('Size of Image',
-                                   min_value=50,
-                                   max_value=1500,
-                                   step=5,
-                                   key='imgsz-training-1')
-                batch = st4.slider('Number of Batch Size',
-                                   min_value=1,
-                                   max_value=200,
-                                   step=1,
-                                   key='batch-training-1')
+                epochs = st4.number_input('Number of Epochs',
+                                          min_value=1,
+                                          max_value=200,
+                                          step=1,
+                                          key='epochs-training-1')
+                imgsz = st4.number_input('Size of Image',
+                                         min_value=50,
+                                         max_value=1500,
+                                         step=5,
+                                         key='imgsz-training-1')
+                batch = st4.number_input('Number of Batch Size',
+                                         min_value=1,
+                                         max_value=200,
+                                         step=1,
+                                         key='batch-training-1')
 
             with st5:
                 lr_rate = st5.number_input('Number of Learning Rate',
-                                           format='%f',
+                                           min_value=0.001,
+                                           max_value=1,
+                                           step=0.001,
                                            key='lr-rate-training-1')
                 momentum = st5.number_input('Number of Size Rate',
-                                            format='%f',
+                                            min_value=0.001,
+                                            max_value=1,
+                                            step=0.001,
                                             key='momentum-training-1')
                 weight_decay = st5.number_input('Number of Weight Decay',
-                                                format='%f',
+                                                min_value=0.001,
+                                                max_value=1,
+                                                step=0.001,
                                                 key='weight-decay-training-1')
 
             list_yaml = os.listdir(f'{PATH}/data-yaml/{path_object[kind_object]}')
