@@ -686,7 +686,9 @@ def detection(st, **state):
             except:
                 pass
     with tab3:
-        st.write('Coming Soon!')
+        webrtc_ctx = webrtc_streamer(key="streaming-detection",
+                                     media_stream_constraints={"video": True, "audio": False}
+                                     )
 
 
 def validation(st, **state):
