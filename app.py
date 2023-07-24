@@ -162,59 +162,56 @@ def training(st, **state):
 
     with tab1:
         try:
-            kind_object = st.selectbox('Please select the kind of object detection do you want.',
-                                       ['General Detection',
-                                        'Coal Detection',
-                                        'Seam Detection',
-                                        'Core Detection',
-                                        'Smart-HSE'],
-                                       key='kind-object-training-1')
+            with st.form("form-training", clear_on_submit=True):
+                kind_object = st.selectbox('Please select the kind of object detection do you want.',
+                                           ['General Detection',
+                                            'Coal Detection',
+                                            'Seam Detection',
+                                            'Core Detection',
+                                            'Smart-HSE'],
+                                           key='kind-object-training-1')
 
-            list_model = os.listdir(f'{PATH}/weights/petrained-model')
-            kind_model = st.selectbox('Please select the petrained model.',
-                                      list_model,
-                                      key='kind-model-training-1')
-            st4, st5 = st.columns(2)
+                list_model = os.listdir(f'{PATH}/weights/petrained-model')
+                kind_model = st.selectbox('Please select the petrained model.',
+                                          list_model,
+                                          key='kind-model-training-1')
+                st4, st5 = st.columns(2)
 
-            with st4:
-                epochs = st4.number_input('Number of Epochs',
-                                          format='%i',
-                                          value=10,
-                                          key='epochs-training-1')
-                imgsz = st4.number_input('Number of Image Size',
-                                         format='%i',
-                                         value=640,
-                                         key='imgsz-training-1')
-                batch = st4.number_input('Number of Batch Size',
-                                         format='%i',
-                                         value=10,
-                                         key='batch-training-1')
+                with st4:
+                    epochs = st4.number_input('Number of Epochs',
+                                              format='%i',
+                                              value=10,
+                                              key='epochs-training-1')
+                    imgsz = st4.number_input('Number of Image Size',
+                                             format='%i',
+                                             value=640,
+                                             key='imgsz-training-1')
+                    batch = st4.number_input('Number of Batch Size',
+                                             format='%i',
+                                             value=10,
+                                             key='batch-training-1')
 
-            with st5:
-                lr_rate = st5.number_input('Number of Learning Rate',
-                                           format='%f',
-                                           value=0.05,
-                                           key='lr-rate-training-1')
-                momentum = st5.number_input('Number of Size Rate',
-                                            format='%f',
-                                            value=0.05,
-                                            key='momentum-training-1')
-                weight_decay = st5.number_input('Number of Weight Decay',
+                with st5:
+                    lr_rate = st5.number_input('Number of Learning Rate',
+                                               format='%f',
+                                               value=0.05,
+                                               key='lr-rate-training-1')
+                    momentum = st5.number_input('Number of Size Rate',
                                                 format='%f',
                                                 value=0.05,
-                                                key='weight-decay-training-1')
+                                                key='momentum-training-1')
+                    weight_decay = st5.number_input('Number of Weight Decay',
+                                                    format='%f',
+                                                    value=0.05,
+                                                    key='weight-decay-training-1')
 
-            list_yaml = os.listdir(f'{PATH}/data-yaml/{path_object[kind_object]}')
-            path_yaml = st.selectbox('Please select your data YAML.',
-                                     list_yaml,
-                                     key='data-yaml-1')
+                list_yaml = os.listdir(f'{PATH}/data-yaml/{path_object[kind_object]}')
+                path_yaml = st.selectbox('Please select your data YAML.',
+                                         list_yaml,
+                                         key='data-yaml-1')
+                next_train = st.form_submit_button("Process")
 
-            next_train = st.radio('Are you sure to train model with the parameter above?',
-                                  ['Yes', 'No'],
-                                  index=1,
-                                  key='next-train-training-1')
-
-            if next_train == 'Yes':
+            if next_train:
                 if torch.cuda.is_available():
                     st.success(
                         f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
