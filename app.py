@@ -873,6 +873,8 @@ def report(st, **state):
         text = st.text_area('Messages')
         submit = st.form_submit_button('Send')
 
+    st.write(check_email(email))
+    
     if submit and check_email(email) == 'valid email':
         placeholder.empty()
         st.success('Before your message will be send, please confirm your messages again!')
