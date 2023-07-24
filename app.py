@@ -873,7 +873,7 @@ def report(st, **state):
         text = st.text_area('Messages')
         submit = st.form_submit_button('Send')
 
-    if submit and check_email(email) == 'valid email' or check_email(email) == 'duplicate email':
+    if submit and check_email(email) == 'valid email' and check_email(email) == 'duplicate email':
         placeholder.empty()
         st.success('Before your message will be send, please confirm your messages again!')
         vals = st.write("<form action= 'https://formspree.io/f/xeqdqdon' "
