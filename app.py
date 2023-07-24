@@ -375,13 +375,11 @@ def detection(st, **state):
                              min_value=0,
                              max_value=100,
                              step=1,
-                             value=60,
                              key='confidence-detection-1')
             stop_program = st.slider('Number of Image',
                                      min_value=0,
                                      max_value=500,
                                      step=1,
-                                     value=20,
                                      key='stop-program-detection-1')
 
             st4, st5 = st.columns(2)
@@ -511,7 +509,6 @@ def detection(st, **state):
                              min_value=0,
                              max_value=100,
                              step=1,
-                             value=60,
                              key='confidence-detection-2')
 
             st8, st9 = st.columns(2)
@@ -549,7 +546,7 @@ def detection(st, **state):
                 elif st.session_state.counter < 0:
                     st.session_state.counter = len(path_images) - 1
 
-        def save_photo(path_images, func, img_file, annotate_file):
+        def save_photo(path_images_1, func, img_file, annotate_file):
             directory = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
             make_folder_only(directory)
 
@@ -570,7 +567,7 @@ def detection(st, **state):
                     df2_string = df.to_string(header=False, index=False)
                     data.write(df2_string)
 
-            next_photo(path_images, func)
+            next_photo(path_images_1, func)
 
         if extension_file:
             if torch.cuda.is_available():
