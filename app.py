@@ -428,7 +428,8 @@ def detection(st, **state):
                 source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
                 cap = cv2.VideoCapture(source)
 
-        next_detect = st.button('Process')
+        next_detect = st.button('Process',
+                                key='next_detect')
 
         if next_detect:
             if torch.cuda.is_available():
@@ -535,7 +536,8 @@ def detection(st, **state):
 
         colors = cs.generate_label_colors(model.names)
 
-        extension_file = st.button('Process')
+        extension_file = st.button('Process',
+                                   key='extension_file')
 
         def next_photo(path_images, func):
             if func == 'next':
