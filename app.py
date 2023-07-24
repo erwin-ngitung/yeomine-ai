@@ -708,8 +708,7 @@ def detection(st, **state):
 
         RTC_CONFIGURATION = RTCConfiguration(server)
 
-        webrtc_ctx = webrtc_streamer(key="WYH",
-                                     mode=WebRtcMode.SENDRECV,
+        webrtc_ctx = webrtc_streamer(key="webcam",
                                      rtc_configuration=RTC_CONFIGURATION,
                                      media_stream_constraints={"video": True, "audio": False},
                                      video_frame_callback=cs.recv,
