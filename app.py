@@ -43,7 +43,7 @@ app = MultiPage()
 def landing_page(st, **state):
     Image.open(f'{PATH}/data/images/logo_yeomine.png')
     st.markdown('Welcome to the Yeomine Website')
-    MultiPage.save({'login': True})
+    MultiPage.save({'login': False})
 
 
 def sign_up(st, **state):
