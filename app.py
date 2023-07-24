@@ -910,9 +910,8 @@ def account(st, **state):
     st.markdown('<h3 style=\'text-align:center;\'>Account Setting</h3>', unsafe_allow_html=True)
 
     restriction = state['login']
-    password = state['password']
 
-    if ('login' not in state or not restriction) or ('password' not in state):
+    if 'login' not in state or not restriction:
         st.warning('Please login with your registered email!')
         return
 
