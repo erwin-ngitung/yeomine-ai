@@ -161,104 +161,104 @@ def training(st, **state):
                                       '📦 Download Model'])
 
     with tab1:
-        try:
-            with st.form("form-training", clear_on_submit=True):
-                kind_object = st.selectbox('Please select the kind of object detection do you want.',
-                                           ['General Detection',
-                                            'Coal Detection',
-                                            'Seam Detection',
-                                            'Core Detection',
-                                            'Smart-HSE'],
-                                           key='kind-object-training-1')
+        # try:
+        with st.form("form-training", clear_on_submit=True):
+            kind_object = st.selectbox('Please select the kind of object detection do you want.',
+                                       ['General Detection',
+                                        'Coal Detection',
+                                        'Seam Detection',
+                                        'Core Detection',
+                                        'Smart-HSE'],
+                                       key='kind-object-training-1')
 
-                list_model = os.listdir(f'{PATH}/weights/petrained-model')
-                kind_model = st.selectbox('Please select the petrained model.',
-                                          list_model,
-                                          key='kind-model-training-1')
-                st4, st5 = st.columns(2)
+            list_model = os.listdir(f'{PATH}/weights/petrained-model')
+            kind_model = st.selectbox('Please select the petrained model.',
+                                      list_model,
+                                      key='kind-model-training-1')
+            st4, st5 = st.columns(2)
 
-                with st4:
-                    epochs = st4.slider('Number of Image',
-                                        min_value=1,
-                                        max_value=200,
-                                        step=1,
-                                        key='epochs-training-1')
-                    imgsz = st4.slider('Number of Image',
-                                       min_value=50,
-                                       max_value=1500,
-                                       step=5,
-                                       key='imgsz-training-1')
-                    batch = st4.slider('Number of Image',
-                                       min_value=1,
-                                       max_value=200,
-                                       step=1,
-                                       key='batch-training-1')
+            with st4:
+                epochs = st4.slider('Number of Image',
+                                    min_value=1,
+                                    max_value=200,
+                                    step=1,
+                                    key='epochs-training-1')
+                imgsz = st4.slider('Number of Image',
+                                   min_value=50,
+                                   max_value=1500,
+                                   step=5,
+                                   key='imgsz-training-1')
+                batch = st4.slider('Number of Image',
+                                   min_value=1,
+                                   max_value=200,
+                                   step=1,
+                                   key='batch-training-1')
 
-                with st5:
-                    lr_rate = st5.number_input('Number of Learning Rate',
-                                               format='%f',
-                                               key='lr-rate-training-1')
-                    momentum = st5.number_input('Number of Size Rate',
+            with st5:
+                lr_rate = st5.number_input('Number of Learning Rate',
+                                           format='%f',
+                                           key='lr-rate-training-1')
+                momentum = st5.number_input('Number of Size Rate',
+                                            format='%f',
+                                            key='momentum-training-1')
+                weight_decay = st5.number_input('Number of Weight Decay',
                                                 format='%f',
-                                                key='momentum-training-1')
-                    weight_decay = st5.number_input('Number of Weight Decay',
-                                                    format='%f',
-                                                    key='weight-decay-training-1')
+                                                key='weight-decay-training-1')
 
-                list_yaml = os.listdir(f'{PATH}/data-yaml/{path_object[kind_object]}')
-                path_yaml = st.selectbox('Please select your data YAML.',
-                                         list_yaml,
-                                         key='data-yaml-1')
-                next_train = st.form_submit_button("Process")
+            list_yaml = os.listdir(f'{PATH}/data-yaml/{path_object[kind_object]}')
+            path_yaml = st.selectbox('Please select your data YAML.',
+                                     list_yaml,
+                                     key='data-yaml-1')
+            next_train = st.form_submit_button("Process")
 
-            if next_train:
-                if torch.cuda.is_available():
-                    st.success(
-                        f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
-                    device = 0
-                else:
-                    st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
-                    device = 'cpu'
+        if next_train:
+            if torch.cuda.is_available():
+                st.success(
+                    f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
+                device = 0
+            else:
+                st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
+                device = 'cpu'
 
-                shutil.rmtree(f'{PATH}/results/{path_object[kind_object]}')
+            shutil.rmtree(f'{PATH}/results/{path_object[kind_object]}')
 
-                # Load a model
-                model = YOLO(f'{PATH}/weights/petrained-model/{kind_model}')
-                model.train(data=f'{PATH}/data-yaml/{path_object[kind_object]}/{path_yaml}',
-                            device=device,
-                            epochs=int(epochs),
-                            batch=int(batch),
-                            imgsz=int(imgsz),
-                            lrf=lr_rate,
-                            momentum=momentum,
-                            weight_decay=weight_decay,
-                            project='results',
-                            name=path_object[kind_object])
+            # Load a model
+            model = YOLO(f'{PATH}/weights/petrained-model/{kind_model}')
+            model.train(data=f'{PATH}/data-yaml/{path_object[kind_object]}/{path_yaml}',
+                        device=device,
+                        epochs=int(epochs),
+                        batch=int(batch),
+                        imgsz=int(imgsz),
+                        lrf=lr_rate,
+                        momentum=momentum,
+                        weight_decay=weight_decay,
+                        project='results',
+                        name=path_object[kind_object])
 
-                num_weights = len(os.listdir(f'{PATH}/weights/{path_object[kind_object]}'))
-                src = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
-                dest = f'{PATH}/weights/{path_object[kind_object]}/{path_object[kind_object]}-' \
-                       f'{label_name(num_weights, 10000)}.pt'
+            num_weights = len(os.listdir(f'{PATH}/weights/{path_object[kind_object]}'))
+            src = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
+            dest = f'{PATH}/weights/{path_object[kind_object]}/{path_object[kind_object]}-' \
+                   f'{label_name(num_weights, 10000)}.pt'
 
-                shutil.copyfile(src, dest)
+            shutil.copyfile(src, dest)
 
-                st.success('The model have been successfully saved. Now you can download model in the button bellow',
-                           icon='✅')
+            st.success('The model have been successfully saved. Now you can download model in the button bellow',
+                       icon='✅')
 
-                path_folder = f'{PATH}/datasets/{path_object[kind_object]}/weights'
-                name = f'{path_object[kind_object]}-{label_name(num_weights, 10000)}'
-                make_zip_only(path_folder, src, name)
+            path_folder = f'{PATH}/datasets/{path_object[kind_object]}/weights'
+            name = f'{path_object[kind_object]}-{label_name(num_weights, 10000)}'
+            make_zip_only(path_folder, src, name)
 
-                with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                    st.download_button(label="🔗 Download ZIP (.zip)",
-                                       data=fp,
-                                       use_container_width=True,
-                                       file_name=f'weight_{name}.zip',
-                                       mime="application/zip",
-                                       key='download-zip-1')
-        except:
-            with st.spinner('Wait a moment..'):
-                time.sleep(100)
+            with open(f'{path_folder}/{name}.zip', "rb") as fp:
+                st.download_button(label="🔗 Download ZIP (.zip)",
+                                   data=fp,
+                                   use_container_width=True,
+                                   file_name=f'weight_{name}.zip',
+                                   mime="application/zip",
+                                   key='download-zip-1')
+        # except:
+        #     with st.spinner('Wait a moment..'):
+        #         time.sleep(100)
 
     with tab2:
         try:
