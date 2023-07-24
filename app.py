@@ -922,7 +922,8 @@ def account(st, **state):
     state['edit'] = np.invert(edited)
 
     old_email = state['email']
-
+    password = state['password']
+    
     with placeholder.form('Account'):
         name_ = state['name'] if 'name' in state else ''
         name = st.text_input('Name', placeholder=name_, disabled=state['edit'])
