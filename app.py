@@ -693,7 +693,7 @@ def detection(st, **state):
                 pass
     with tab3:
         RTC_CONFIGURATION = RTCConfiguration(
-            {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+            {"iceServers": [{"urls": ["stun:stunserver.org"]}]})
 
         webrtc_ctx = webrtc_streamer(key="WYH",
                                      mode=WebRtcMode.SENDRECV,
