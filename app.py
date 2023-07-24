@@ -196,17 +196,17 @@ def training(st, **state):
             with st5:
                 lr_rate = st5.number_input('Number of Learning Rate',
                                            min_value=0.001,
-                                           max_value=1,
+                                           max_value=1.0,
                                            step=0.001,
                                            key='lr-rate-training-1')
                 momentum = st5.number_input('Number of Size Rate',
                                             min_value=0.001,
-                                            max_value=1,
+                                            max_value=1.0,
                                             step=0.001,
                                             key='momentum-training-1')
                 weight_decay = st5.number_input('Number of Weight Decay',
                                                 min_value=0.001,
-                                                max_value=1,
+                                                max_value=1.0,
                                                 step=0.001,
                                                 key='weight-decay-training-1')
 
