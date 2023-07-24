@@ -977,7 +977,7 @@ def logout(st, **state):
                 'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
 
     st.success('Your account has been log out from this app')
-    del state
+    MultiPage.save({'login': False})
 
 
 def landing_page(st):
