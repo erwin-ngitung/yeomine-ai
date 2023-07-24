@@ -40,7 +40,7 @@ wandb.init(mode='disabled')
 app = MultiPage()
 
 
-def landing_page(st, **state):
+def landing_page(st):
     Image.open(f'{PATH}/data/images/logo_yeomine.png')
     st.markdown('Welcome to the Yeomine Website')
     MultiPage.save({'login': False})
