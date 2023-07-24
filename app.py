@@ -361,7 +361,7 @@ def detection(st, **state):
                    'Core Detection': 'core-logging',
                    'Smart-HSE': 'hse-monitor'}
 
-    tab1, tab2, tab3 = st.tabs(['🎬 Video', '📷 Image', '🎦 Streaming'])
+    tab1, tab2 = st.tabs(['🎦 Video', '📷 Image'])
 
     with tab1:
         kind_object = st.selectbox('Please select the kind of object detection do you want.',
@@ -691,28 +691,6 @@ def detection(st, **state):
                                                )
             except:
                 pass
-    with tab3:
-        server = {"iceServers": [{"urls": "stun:stun.relay.metered.ca:80"},
-                                 {"urls": "turn:a.relay.metered.ca:80",
-                                  "username": "a881e2f4f78c7370f52afa76",
-                                  "credential": "rccsyaGuQkFsZAg0"},
-                                 {"urls": "turn:a.relay.metered.ca:80?transport=tcp",
-                                  "username": "a881e2f4f78c7370f52afa76",
-                                  "credential": "rccsyaGuQkFsZAg0"},
-                                 {"urls": "turn:a.relay.metered.ca:443",
-                                  "username": "a881e2f4f78c7370f52afa76",
-                                  "credential": "rccsyaGuQkFsZAg0"},
-                                 {"urls": "turn:a.relay.metered.ca:443?transport=tcp",
-                                  "username": "a881e2f4f78c7370f52afa76",
-                                  "credential": "rccsyaGuQkFsZAg0"}]}
-
-        RTC_CONFIGURATION = RTCConfiguration(server)
-
-        webrtc_ctx = webrtc_streamer(key="webcam",
-                                     rtc_configuration=RTC_CONFIGURATION,
-                                     media_stream_constraints={"video": True, "audio": False},
-                                     video_frame_callback=cs.recv,
-                                     async_processing=True)
 
 
 def validation(st, **state):
