@@ -178,15 +178,21 @@ def training(st, **state):
                 st4, st5 = st.columns(2)
 
                 with st4:
-                    epochs = st4.number_input('Number of Epochs',
-                                              format='%i',
-                                              key='epochs-training-1')
-                    imgsz = st4.number_input('Number of Image Size',
-                                             format='%i',
-                                             key='imgsz-training-1')
-                    batch = st4.number_input('Number of Batch Size',
-                                             format='%i',
-                                             key='batch-training-1')
+                    epochs = st4.slider('Number of Image',
+                                        min_value=1,
+                                        max_value=200,
+                                        step=1,
+                                        key='epochs-training-1')
+                    imgsz = st4.slider('Number of Image',
+                                       min_value=50,
+                                       max_value=1500,
+                                       step=5,
+                                       key='imgsz-training-1')
+                    batch = st4.slider('Number of Image',
+                                       min_value=1,
+                                       max_value=200,
+                                       step=1,
+                                       key='batch-training-1')
 
                 with st5:
                     lr_rate = st5.number_input('Number of Learning Rate',
