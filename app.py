@@ -695,7 +695,7 @@ def detection(st, **state):
                                      mode=WebRtcMode.SENDRECV,
                                      rtc_configuration=RTC_CONFIGURATION,
                                      media_stream_constraints={"video": True, "audio": False},
-                                     video_frame_callback=cs.recv(av.VideoFrame),
+                                     video_frame_callback=cs.recv,
                                      async_processing=True)
 
 
