@@ -869,13 +869,11 @@ def report(st, **state):
     placeholder = st.empty()
 
     with placeholder.form('Message'):
-        email = st.text_input('Email', state['email'])
+        email = st.text_input('Email', value=state['email'])
         text = st.text_area('Messages')
         submit = st.form_submit_button('Send')
 
-    st.write(check_email(email))
-    
-    if submit and check_email(email) == 'valid email':
+    if submit:
         placeholder.empty()
         st.success('Before your message will be send, please confirm your messages again!')
         vals = st.write("<form action= 'https://formspree.io/f/xeqdqdon' "
