@@ -869,7 +869,7 @@ def report(st, **state):
     placeholder = st.empty()
 
     with placeholder.form('Message'):
-        email = st.text_input('Email')
+        email = st.text_input('Email', state['email'])
         text = st.text_area('Messages')
         submit = st.form_submit_button('Send')
 
