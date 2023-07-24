@@ -175,7 +175,7 @@ def check_email(email):
         if email not in data_email['email']:
             value = "valid email"
         else:
-            value = "duplicate email"
+            value = "not register"
     else:
         value = "invalid email"
 

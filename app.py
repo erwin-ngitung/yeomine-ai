@@ -702,7 +702,6 @@ def detection(st, **state):
                                      video_frame_callback=cs.recv,
                                      async_processing=True)
 
-
 def validation(st, **state):
     # Title
     image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
@@ -870,11 +869,11 @@ def report(st, **state):
     placeholder = st.empty()
 
     with placeholder.form('Message'):
-        email = st.text_input('Email')
+        email = st.text_input('Email', value=state['email'])
         text = st.text_area('Messages')
         submit = st.form_submit_button('Send')
 
-    if submit and check_email(email) == 'valid email' or check_email(email) == 'duplicate email':
+    if submit:
         placeholder.empty()
         st.success('Before your message will be send, please confirm your messages again!')
         vals = st.write("<form action= 'https://formspree.io/f/xeqdqdon' "
@@ -969,19 +968,38 @@ def account(st, **state):
 def logout(st, **state):
     # Title
     image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
+    st1, st2, st3 = st.columns(3)
+
+    with st2:
+        st.image(image)
+
+    st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' stroke=\'black\' '
+                'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
 
     st.success('Your account has been log out from this app')
     MultiPage.save({'login': False})
 
 
+def landing_page(st):
+    image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
+    st1, st2, st3 = st.columns(3)
+
+    with st2:
+        st.image(image)
+
+    st.markdown('Welcome to the Yeomine Website')
+
+
 app.st = st
 
+app.start_button = "Go to the main page"
 app.navbar_name = 'Application Menu'
 app.navbar_style = 'VerticalButton'
 
-app.hide_menu = False
+app.hide_menu = True
 app.hide_navigation = True
 
+app.add_app('Landing Page      ', landing_page, initial_page=True)
 app.add_app('🔐 Sign Up        ', sign_up)
 app.add_app('🔓 Login          ', login)
 app.add_app('⚙️ Training       ', training)
