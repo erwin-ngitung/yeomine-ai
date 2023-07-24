@@ -40,12 +40,6 @@ wandb.init(mode='disabled')
 app = MultiPage()
 
 
-def landing_page(st):
-    Image.open(f'{PATH}/data/images/logo_yeomine.png')
-    st.markdown('Welcome to the Yeomine Website')
-    MultiPage.save({'login': False})
-
-
 def sign_up(st, **state):
     placeholder = st.empty()
 
@@ -977,6 +971,12 @@ def logout(st, **state):
     image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
 
     st.success('Your account has been log out from this app')
+    MultiPage.save({'login': False})
+
+
+def landing_page(st):
+    Image.open(f'{PATH}/data/images/logo_yeomine.png')
+    st.markdown('Welcome to the Yeomine Website')
     MultiPage.save({'login': False})
 
 
