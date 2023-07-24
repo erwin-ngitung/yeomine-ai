@@ -974,6 +974,9 @@ def logout(st, **state):
     with st2:
         st.image(image)
 
+    st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' stroke=\'black\' '
+                'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
+    
     st.success('Your account has been log out from this app')
     MultiPage.save({'login': False})
     st.cache_resource.clear()
