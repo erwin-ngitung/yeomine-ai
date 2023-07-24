@@ -986,7 +986,7 @@ app.start_button = "Go to the main page"
 app.navbar_name = 'Application Menu'
 app.navbar_style = 'VerticalButton'
 
-app.hide_menu = False
+app.hide_menu = True
 app.hide_navigation = True
 
 app.add_app('Landing Page      ', landing_page, initial_page=True)
