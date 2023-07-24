@@ -88,3 +88,8 @@ def draw_image(model, device, img, confi, colors, time, x_size, y_size):
             annotate['h'].append(np.round(float(h), decimals=3))
 
     return img, parameter, annotate
+
+
+def recv(frame):
+    img = frame.to_ndarray(format="bgr24")
+    return av.VideoFrame.from_ndarray(img, format="bgr24")

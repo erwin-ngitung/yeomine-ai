@@ -1,5 +1,4 @@
 import time
-import cv2
 import os
 import io
 import numpy as np
@@ -14,10 +13,13 @@ from utils import make_zip, make_zip_only, make_folder, make_folder_only, label_
 # Package for Streamlit
 import streamlit as st
 from streamlit_multipage import MultiPage
-from streamlit_webrtc import WebRtcMode, webrtc_streamer
+from streamlit_webrtc import WebRtcMode, webrtc_streamer, RTCConfiguration
 from datetime import datetime
 import pytz
 import pytesseract
+
+import av
+import cv2
 
 # Package for Machine Learning
 import torch
@@ -687,9 +689,14 @@ def detection(st, **state):
             except:
                 pass
     with tab3:
-        webrtc_ctx = webrtc_streamer(key="streaming-detection",
-                                     media_stream_constraints={"video": True, "audio": False}
-                                     )
+        RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+
+        webrtc_ctx = webrtc_streamer(key="WYH",
+                                     mode=WebRtcMode.SENDRECV,
+                                     rtc_configuration=RTC_CONFIGURATION,
+                                     media_stream_constraints={"video": True, "audio": False},
+                                     video_frame_callback=cs.recv(av.VideoFrame),
+                                     async_processing=True)
 
 
 def validation(st, **state):
