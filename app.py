@@ -419,7 +419,7 @@ def detection(st, **state):
                 if source == 'Auto':
                     cap = cv2.VideoCapture(0)
                 else:
-                    cap = cv2.VideoStream(source).start()
+                    cap = cv2.VideoCapture(source)
             else:
                 list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
                 sample_video = st.selectbox('Please select sample video do you want.',
@@ -458,7 +458,7 @@ def detection(st, **state):
             colors = cs.generate_label_colors(model.names)
 
             # Detection Model
-            while count < stop_program:
+            while cap.isOpened() and count < stop_program:
                 with placeholder.container():
                     ret, img = cap.read()
 
