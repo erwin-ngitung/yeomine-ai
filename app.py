@@ -129,9 +129,13 @@ def training(st, **state):
                 'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
     st.markdown('<h3 style=\'text-align:center;\'>Train Custom Model</h3>', unsafe_allow_html=True)
 
-    restriction = state['login']
+    if 'login' not in state:
+        state['login'] = False
+        restriction = state['login']
+    else:
+        restriction = state['login']
 
-    if 'login' not in state or not restriction:
+    if not restriction:
         st.warning('Please login with your registered email!')
         return
 
@@ -332,9 +336,13 @@ def detection(st, **state):
                 'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
     st.markdown('<h3 style=\'text-align:center;\'>Detection Model</h3>', unsafe_allow_html=True)
 
-    restriction = state['login']
+    if 'login' not in state:
+        state['login'] = False
+        restriction = state['login']
+    else:
+        restriction = state['login']
 
-    if 'login' not in state or not restriction:
+    if not restriction:
         st.warning('Please login with your registered email!')
         return
 
@@ -686,9 +694,13 @@ def validation(st, **state):
                 'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
     st.markdown('<h3 style=\'text-align:center;\'>Validation Result</h3>', unsafe_allow_html=True)
 
-    restriction = state['login']
+    if 'login' not in state:
+        state['login'] = False
+        restriction = state['login']
+    else:
+        restriction = state['login']
 
-    if 'login' not in state or not restriction:
+    if not restriction:
         st.warning('Please login with your registered email!')
         return
 
@@ -834,7 +846,13 @@ def report(st, **state):
 
     restriction = state['login']
 
-    if 'login' not in state or not restriction:
+    if 'login' not in state:
+        state['login'] = False
+        restriction = state['login']
+    else:
+        restriction = state['login']
+
+    if not restriction:
         st.warning('Please login with your registered email!')
         return
 
@@ -881,9 +899,13 @@ def account(st, **state):
                 'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
     st.markdown('<h3 style=\'text-align:center;\'>Account Setting</h3>', unsafe_allow_html=True)
 
-    restriction = state['login']
+    if 'login' not in state:
+        state['login'] = False
+        restriction = state['login']
+    else:
+        restriction = state['login']
 
-    if 'login' not in state or not restriction:
+    if not restriction:
         st.warning('Please login with your registered email!')
         return
 
