@@ -77,7 +77,7 @@ def sign_up(st, **state):
 
 
 def login(st, **state):
-    
+
     st.snow()
     placeholder = st.empty()
 
@@ -412,8 +412,16 @@ def detection(st, **state):
                 source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
                 cap = cv2.VideoCapture(source)
 
+        show_label = st.checkbox('Show label predictions',
+                                 value=True,
+                                 key='show-label-detection-1')
+        save_annotate = st.checkbox('Save annotate and images',
+                                    value=False,
+                                    key='save-annotate-detection-1')
+
         next_detect = st.button('Process',
-                                key='next_detect')
+                                key='next_detect',
+                                use_container_width=True)
 
         if next_detect:
             if torch.cuda.is_available():
@@ -424,18 +432,8 @@ def detection(st, **state):
                 st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
                 device = 'cpu'
                 
-            st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' '
-                        'stroke=\'black\' stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
-
             path_detections = f'{PATH}/detections/{path_object[kind_object]}'
             make_folder(path_detections)
-
-            show_label = st.checkbox('Show label predictions',
-                                     value=True,
-                                     key='show-label-detection-1')
-            save_annotate = st.checkbox('Save annotate and images',
-                                        value=False,
-                                        key='save-annotate-detection-1')
 
             count = 0
             placeholder = st.empty()
