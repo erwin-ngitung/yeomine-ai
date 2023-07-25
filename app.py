@@ -58,11 +58,17 @@ def sign_up(st, **state):
         placeholder.empty()
         st.success('Hello ' + name + ', your profile has been save successfully')
 
-        state['name'] = name
-        state['username'] = username
-        state['email'] = email
-        state['password'] = password
-        state['login'] = True
+        MultiPage.save({'name': name,
+                        'username': username,
+                        'email': email,
+                        'password': password,
+                        'login': False})
+
+        # state['name'] = name
+        # state['username'] = username
+        # state['email'] = email
+        # state['password'] = password
+        # state['login'] = False
 
         update_json(name, username, email, password)
 
@@ -100,12 +106,19 @@ def login(st, **state):
         placeholder.empty()
         st.success('Login successful')
 
-        state['name'] = name
-        state['username'] = username
-        state['email'] = email
-        state['password'] = password
-        state['login'] = True
-        state['edit'] = True
+        MultiPage.save({'name': name,
+                        'username': username,
+                        'email': email,
+                        'password': password,
+                        'login': True,
+                        'edit': True})
+
+        # state['name'] = name
+        # state['username'] = username
+        # state['email'] = email
+        # state['password'] = password
+        # state['login'] = True
+        # state['edit'] = True
 
     elif submit and status == 'wrong password':
         st.error('Login failed because your password is wrong!')
@@ -939,11 +952,17 @@ def account(st, **state):
     if save and current_password == password:
         st.success('Hi ' + name + ', your profile has been update successfully')
 
-        state['name'] = name
-        state['username'] = username
-        state['email'] = email
-        state['password'] = password
-        state['edit'] = True
+        MultiPage.save({'name': name,
+                        'username': username,
+                        'email': email,
+                        'password': password,
+                        'edit': True})
+
+        # state['name'] = name
+        # state['username'] = username
+        # state['email'] = email
+        # state['password'] = password
+        # state['edit'] = True
 
         replace_json(name, username, old_email, email, new_password)
 
@@ -971,8 +990,8 @@ def logout(st, **state):
 
     st.success('Your account has been log out from this app')
 
-    state['login'] = False
-
+    MultiPage.save({'login': False})
+    
     
 app = MultiPage()
 app.st = st
