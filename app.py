@@ -539,7 +539,8 @@ def detection(st, **state):
         colors = cs.generate_label_colors(model.names)
 
         extension_file = st.button('Process',
-                                   key='extension_file')
+                                   key='extension_file',
+                                   use_container_width=True)
 
         def next_photo(path_images, func):
             if func == 'next':
@@ -991,7 +992,7 @@ def logout(st, **state):
     st.success('Your account has been log out from this app')
 
     MultiPage.save({'login': False})
-    
+
     
 app = MultiPage()
 app.st = st
