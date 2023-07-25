@@ -8,8 +8,8 @@ from pathlib import Path
 import logging
 from zipfile import ZipFile
 
-# PATH = '.'
-PATH = Path(Path(__file__).resolve()).parent
+PATH = '.'
+# PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
 warnings.filterwarnings("ignore")
 
