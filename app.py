@@ -17,8 +17,6 @@ from streamlit_webrtc import WebRtcMode, webrtc_streamer, RTCConfiguration
 from datetime import datetime
 import pytz
 import pytesseract
-from twilio.rest import Client
-import av
 import cv2
 
 # Package for Machine Learning
@@ -36,8 +34,6 @@ PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
 
 wandb.init(mode='disabled')
-
-app = MultiPage()
 
 
 def sign_up(st, **state):
@@ -969,8 +965,9 @@ def logout(st, **state):
 
     st.success('Your account has been log out from this app')
     MultiPage.save({'login': False})
-    
 
+    
+app = MultiPage()
 app.st = st
 
 app.navbar_name = 'Application Menu'
