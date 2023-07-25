@@ -52,7 +52,8 @@ def sign_up(st, **state):
         email = st.text_input('Email')
         password = st.text_input('Password', type='password')
 
-        save = st.form_submit_button('Save')
+        save = st.form_submit_button('Save',
+                                     use_container_width=True)
 
     if save and check_email(email) == 'valid email':
         placeholder.empty()
@@ -96,7 +97,8 @@ def login(st, **state):
         st.markdown('#### Login Yeomine Application')
         email = st.text_input('Email')
         password = st.text_input('Password', type='password')
-        submit = st.form_submit_button('Login')
+        submit = st.form_submit_button('Login',
+                                       use_container_width=True)
 
         st.write("Are you ready registered account in this app? If you don't yet, please sign up your account!")
 
@@ -217,7 +219,8 @@ def training(st, **state):
             path_yaml = st.selectbox('Please select your data YAML.',
                                      list_yaml,
                                      key='data-yaml-1')
-            next_train = st.form_submit_button("Process")
+            next_train = st.form_submit_button("Process",
+                                               use_container_width=True)
 
         if next_train:
             if torch.cuda.is_available():
@@ -590,7 +593,8 @@ def detection(st, **state):
                 uploaded_files = st.file_uploader("Upload your image",
                                                   type=['jpg', 'jpeg', 'png'],
                                                   accept_multiple_files=True)
-                st.form_submit_button("Upload")
+                st.form_submit_button("Upload",
+                                      use_container_width=True)
                 image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
 
             if 'counter' not in st.session_state:
@@ -873,7 +877,8 @@ def report(st, **state):
     with placeholder.form('Message'):
         email = st.text_input('Email', value=state['email'])
         text = st.text_area('Messages')
-        submit = st.form_submit_button('Send')
+        submit = st.form_submit_button('Send',
+                                       use_container_width=True)
 
     if submit:
         placeholder.empty()
@@ -948,7 +953,8 @@ def account(st, **state):
         # current_password_ = state['password'] if 'password' in state else ''
         new_password = st.text_input('New Password', type='password', disabled=state['edit'])
 
-        save = st.form_submit_button('Save')
+        save = st.form_submit_button('Save',
+                                     use_container_width=True)
 
     if save and current_password == password:
         st.success('Hi ' + name + ', your profile has been update successfully')
