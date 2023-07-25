@@ -969,27 +969,16 @@ def logout(st, **state):
 
     st.success('Your account has been log out from this app')
     MultiPage.save({'login': False})
-
-
-def landing_page(st):
-    image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
-    st1, st2, st3 = st.columns(3)
-
-    with st2:
-        st.image(image)
-
-    st.markdown('Welcome to the Yeomine Website')
-
+    
 
 app.st = st
 
 app.navbar_name = 'Application Menu'
 app.navbar_style = 'VerticalButton'
 
-app.hide_menu = True
+app.hide_menu = False
 app.hide_navigation = True
 
-app.add_app('Landing Page      ', landing_page, initial_page=True)
 app.add_app('🔐 Sign Up        ', sign_up)
 app.add_app('🔓 Login          ', login)
 app.add_app('⚙️ Training       ', training)
