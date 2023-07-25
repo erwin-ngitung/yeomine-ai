@@ -844,8 +844,6 @@ def report(st, **state):
                 'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
     st.markdown('<h3 style=\'text-align:center;\'>Messages Report</h3>', unsafe_allow_html=True)
 
-    restriction = state['login']
-
     if 'login' not in state:
         state['login'] = False
         restriction = state['login']
