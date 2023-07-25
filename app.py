@@ -24,15 +24,14 @@ from ultralytics import YOLO
 import wandb
 import warnings
 
+# PATH = '.'
+PATH = Path(Path(__file__).resolve()).parent
+logger = logging.getLogger(__name__)
+
 warnings.filterwarnings('ignore')
 torch.cuda.empty_cache()
 torch.backends.cudnn.benchmark = False
-
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
-# PATH = Path(Path(__file__).resolve()).parent
-PATH = '.'
-logger = logging.getLogger(__name__)
-
 wandb.init(mode='disabled')
 
 
