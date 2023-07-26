@@ -477,6 +477,7 @@ def detection(st, **state):
                         img = cv2.resize(img, (x_size, y_size), interpolation=cv2.INTER_AREA)
                         img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT,
                                                                  x_size, y_size)
+                        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                         st.image(img, caption=caption)
 
                         df1 = pd.DataFrame(parameter)
@@ -562,6 +563,7 @@ def detection(st, **state):
             make_folder_only(directory)
 
             image_name = f'{directory}/images/{label_name(st.session_state.counter, 10000)}.png'
+            img_file = cv2.cvtColor(img_file, cv2.COLOR_BGR2RGB)
             cv2.imwrite(image_name, img_file)
 
             annotate_name = f'{directory}/annotations/{label_name(st.session_state.counter, 10000)}.txt'
@@ -619,13 +621,17 @@ def detection(st, **state):
 
                 with st10:
                     st10.write("Original Image")
-                    st10.image(cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA),
+                    photo_rgb = cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA)
+                    photo_rgb = cv2.cvtColor(photo_rgb, cv2.COLOR_BGR2RGB)
+                    st10.image(photo_rgb,
                                caption=caption)
                 with st11:
                     st11.write("Detection Image")
                     photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
                                                                       time_JKT, x_size, y_size)
-                    st11.image(cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA),
+                    photo_rgb = cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA)
+                    photo_rgb = cv2.cvtColor(photo_rgb, cv2.COLOR_BGR2RGB)
+                    st11.image(photo_rgb,
                                caption=caption)
 
                 st12, st13, st14, st15, st16 = st.columns(5)
