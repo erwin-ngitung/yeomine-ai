@@ -542,9 +542,9 @@ def detection(st, **state):
 
         colors = cs.generate_label_colors(model.names)
 
-        extension_file = st.button('Process',
-                                   key='extension_file',
-                                   use_container_width=True)
+        # extension_file = st.button('Process',
+        #                            key='extension_file',
+        #                            use_container_width=True)
 
         def next_photo(path_images, func):
             if func == 'next':
@@ -582,127 +582,127 @@ def detection(st, **state):
 
             next_photo(path_images_1, func)
 
-        if extension_file:
-            if torch.cuda.is_available():
-                st.success(
-                    f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
-                device = 0
-            else:
-                st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
-                device = 'cpu'
+        # if extension_file:
+        if torch.cuda.is_available():
+            st.success(
+                f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
+            device = 0
+        else:
+            st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
+            device = 'cpu'
 
-            with st.form("form-upload-image", clear_on_submit=True):
-                uploaded_files = st.file_uploader("Upload your image",
-                                                  type=['jpg', 'jpeg', 'png'],
-                                                  accept_multiple_files=True)
-                st.form_submit_button("Upload",
-                                      use_container_width=True)
+        with st.form("form-upload-image", clear_on_submit=True):
+            uploaded_files = st.file_uploader("Upload your image",
+                                              type=['jpg', 'jpeg', 'png'],
+                                              accept_multiple_files=True)
+            st.form_submit_button("Upload",
+                                  use_container_width=True)
 
-            image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
+        image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
 
-            if 'counter' not in st.session_state:
-                st.session_state.counter = 0
+        if 'counter' not in st.session_state:
+            st.session_state.counter = 0
 
-            tz_JKT = pytz.timezone('Asia/Jakarta')
-            time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+        tz_JKT = pytz.timezone('Asia/Jakarta')
+        time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+
+        try:
+            x_size, y_size = 650, 650
 
             try:
-                x_size, y_size = 650, 650
+                photo = image_files[st.session_state.counter]
+            except:
+                st.session_state.counter = 0
+                photo = image_files[st.session_state.counter]
 
-                try:
-                    photo = image_files[st.session_state.counter]
-                except:
-                    st.session_state.counter = 0
-                    photo = image_files[st.session_state.counter]
+            caption = f'The frame image-{st.session_state.counter} generated at {time_JKT}'
+            photo_convert = np.array(photo.convert('RGB'))
 
-                caption = f'The frame image-{st.session_state.counter} generated at {time_JKT}'
-                photo_convert = np.array(photo.convert('RGB'))
+            st10, st11 = st.columns(2)
 
-                st10, st11 = st.columns(2)
+            with st10:
+                st10.write("Original Image")
+                photo_rgb = cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA)
+                photo_rgb = cv2.cvtColor(photo_rgb, cv2.COLOR_BGR2RGB)
+                st10.image(photo_rgb,
+                           caption=caption)
+            with st11:
+                st11.write("Detection Image")
+                photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
+                                                                  time_JKT, x_size, y_size)
+                photo_rgb = cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA)
+                photo_rgb = cv2.cvtColor(photo_rgb, cv2.COLOR_BGR2RGB)
+                st11.image(photo_rgb,
+                           caption=caption)
 
-                with st10:
-                    st10.write("Original Image")
-                    photo_rgb = cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA)
-                    photo_rgb = cv2.cvtColor(photo_rgb, cv2.COLOR_BGR2RGB)
-                    st10.image(photo_rgb,
-                               caption=caption)
-                with st11:
-                    st11.write("Detection Image")
-                    photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
-                                                                      time_JKT, x_size, y_size)
-                    photo_rgb = cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA)
-                    photo_rgb = cv2.cvtColor(photo_rgb, cv2.COLOR_BGR2RGB)
-                    st11.image(photo_rgb,
-                               caption=caption)
+            st12, st13, st14, st15, st16 = st.columns(5)
 
-                st12, st13, st14, st15, st16 = st.columns(5)
+            with st13:
+                st13.button('◀️ Back',
+                            on_click=next_photo,
+                            use_container_width=True,
+                            args=([image_files, 'back']),
+                            key='back-photo-detection-1')
+            with st14:
+                save = st14.button('Save 💾',
+                                   on_click=save_photo,
+                                   use_container_width=True,
+                                   args=([image_files, 'save', photo_detect, annotate]),
+                                   key='save-photo-detection-1')
 
-                with st13:
-                    st13.button('◀️ Back',
-                                on_click=next_photo,
-                                use_container_width=True,
-                                args=([image_files, 'back']),
-                                key='back-photo-detection-1')
-                with st14:
-                    save = st14.button('Save 💾',
-                                       on_click=save_photo,
-                                       use_container_width=True,
-                                       args=([image_files, 'save', photo_detect, annotate]),
-                                       key='save-photo-detection-1')
+            with st15:
+                st15.button('Next ▶️',
+                            on_click=next_photo,
+                            use_container_width=True,
+                            args=([image_files, 'next']),
+                            key='next-photo-detection-1')
 
-                with st15:
-                    st15.button('Next ▶️',
-                                on_click=next_photo,
-                                use_container_width=True,
-                                args=([image_files, 'next']),
-                                key='next-photo-detection-1')
+            if save or os.path.exists(f'{PATH}/detections/custom-data/{path_object[kind_object]}'):
+                btn = st.radio('Do you want to download image in single or all files?',
+                               ['Single files', 'All files'],
+                               index=0,
+                               key='download-button-1')
 
-                if save or os.path.exists(f'{PATH}/detections/custom-data/{path_object[kind_object]}'):
-                    btn = st.radio('Do you want to download image in single or all files?',
-                                   ['Single files', 'All files'],
-                                   index=0,
-                                   key='download-button-1')
+                if btn == 'Single files':
+                    st17, st18 = st.columns(2)
 
-                    if btn == 'Single files':
-                        st17, st18 = st.columns(2)
+                    with st17:
+                        path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
+                        image_name = f'{path_images}/{label_name(st.session_state.counter, 10000)}.png'
 
-                        with st17:
-                            path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
-                            image_name = f'{path_images}/{label_name(st.session_state.counter, 10000)}.png'
+                        with open(image_name, 'rb') as file:
+                            st17.download_button(label='🔗 Image (.png)',
+                                                 data=file,
+                                                 use_container_width=True,
+                                                 file_name=f'{label_name(st.session_state.counter, 10000)}.png',
+                                                 mime="image/png",
+                                                 key='download-image-2')
 
-                            with open(image_name, 'rb') as file:
-                                st17.download_button(label='🔗 Image (.png)',
-                                                     data=file,
-                                                     use_container_width=True,
-                                                     file_name=f'{label_name(st.session_state.counter, 10000)}.png',
-                                                     mime="image/png",
-                                                     key='download-image-2')
+                    with st18:
+                        path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
+                        annotate_name = f'{path_annotate}/{label_name(st.session_state.counter, 10000)}.txt'
 
-                        with st18:
-                            path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
-                            annotate_name = f'{path_annotate}/{label_name(st.session_state.counter, 10000)}.txt'
+                        with open(annotate_name, 'rb') as file:
+                            st18.download_button(label='🔗 Annotation (.txt)',
+                                                 data=file,
+                                                 use_container_width=True,
+                                                 file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
+                                                 mime="text/plain",
+                                                 key='download-annotate-2')
 
-                            with open(annotate_name, 'rb') as file:
-                                st18.download_button(label='🔗 Annotation (.txt)',
-                                                     data=file,
-                                                     use_container_width=True,
-                                                     file_name=f'{label_name(st.session_state.counter, 10000)}.txt',
-                                                     mime="text/plain",
-                                                     key='download-annotate-2')
+                elif btn == 'All files':
+                    path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
+                    name = path_object[kind_object]
+                    make_zip(path_folder, name)
 
-                    elif btn == 'All files':
-                        path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
-                        name = path_object[kind_object]
-                        make_zip(path_folder, name)
-
-                        with open(f'{path_folder}/{name}.zip', "rb") as fp:
-                            st.download_button(label="🔗 Download All Files (.zip)",
-                                               data=fp,
-                                               use_container_width=True,
-                                               file_name=f'detection_{name}.zip',
-                                               mime="application/zip",
-                                               key='download-zip-2'
-                                               )
+                    with open(f'{path_folder}/{name}.zip', "rb") as fp:
+                        st.download_button(label="🔗 Download All Files (.zip)",
+                                           data=fp,
+                                           use_container_width=True,
+                                           file_name=f'detection_{name}.zip',
+                                           mime="application/zip",
+                                           key='download-zip-2'
+                                           )
             except:
                 pass
 
