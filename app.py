@@ -100,7 +100,7 @@ def login(st, **state):
         submit = st.form_submit_button('Login',
                                        use_container_width=True)
 
-        st.write("Are you ready registered account in this app? If you don't yet, please sign up your account!")
+        st.write("Have you ready registered account in this app? If you haven't did yet, please sign up your account!")
 
     name, username, status = check_account(email, password)
 
