@@ -703,8 +703,8 @@ def detection(st, **state):
                                            mime="application/zip",
                                            key='download-zip-2'
                                            )
-            except:
-                pass
+        except:
+            pass
 
 
 def validation(st, **state):
