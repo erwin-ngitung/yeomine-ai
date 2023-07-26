@@ -503,7 +503,8 @@ def detection(st, **state):
                     else:
                         st.error('Image is not found', icon='❎')
 
-            st.success('Your all images have successfully saved', icon='✅')
+            if save_annotate:
+                st.success('Your all images have successfully saved', icon='✅')
 
     with tab2:
         kind_object = st.selectbox('Please select the kind of object detection do you want.',
@@ -541,10 +542,6 @@ def detection(st, **state):
                 model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
 
         colors = cs.generate_label_colors(model.names)
-
-        # extension_file = st.button('Process',
-        #                            key='extension_file',
-        #                            use_container_width=True)
 
         def next_photo(path_images, func):
             if func == 'next':
@@ -595,7 +592,7 @@ def detection(st, **state):
             uploaded_files = st.file_uploader("Upload your image",
                                               type=['jpg', 'jpeg', 'png'],
                                               accept_multiple_files=True)
-            st.form_submit_button("Upload",
+            st.form_submit_button("Process",
                                   use_container_width=True)
 
         image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
