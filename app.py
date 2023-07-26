@@ -597,7 +597,8 @@ def detection(st, **state):
                                                   accept_multiple_files=True)
                 st.form_submit_button("Upload",
                                       use_container_width=True)
-                image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
+
+            image_files = [Image.open(io.BytesIO(file.read())) for file in uploaded_files]
 
             if 'counter' not in st.session_state:
                 st.session_state.counter = 0
