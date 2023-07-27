@@ -2,6 +2,7 @@ from streamlit import session_state as state
 import streamlit as st
 from PIL import Image
 import shutil
+import os
 
 if 'PATH' not in state.keys():
     state['PATH'] = '.'
@@ -27,6 +28,7 @@ for key in state.keys():
     if key not in important:
         del [key]
 
-shutil.rmtree(f'{PATH}/detections/')
+if os.path.exists(f'{PATH}/detections/'):
+    shutil.rmtree(f'{PATH}/detections/')
 
 state['login'] = False
