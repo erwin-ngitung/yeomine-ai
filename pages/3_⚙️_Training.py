@@ -162,6 +162,7 @@ else:
                 visual = 'confusion_matrix_normalized'
 
             st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.png',
+                     use_column_width='always',
                      caption=f'The image of {visual}')
         except (Exception,):
             st.error('Please measure that you have trained model in the sub-menu training model.')
@@ -180,6 +181,7 @@ else:
                                   key='visual-training-2')
 
             st.image(f'{PATH}/results/{path_object[kind_object]}/{visual}.jpg',
+                     use_column_width='always',
                      caption=f'The image of {visual}')
         except (Exception,):
             st.error('Please measure that you have trained model in the sub-menu training model.')

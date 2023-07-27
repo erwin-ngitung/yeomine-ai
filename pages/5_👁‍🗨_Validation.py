@@ -1,0 +1,166 @@
+import time
+import os
+import io
+import numpy as np
+import pandas as pd
+from PIL import Image
+from utils import make_zip, make_folder, make_folder_only, label_name, computer_vision as cs
+
+# Package for Streamlit
+from streamlit import session_state as state
+import streamlit as st
+from datetime import datetime
+import pytz
+import cv2
+
+# Package for Machine Learning
+import torch
+from ultralytics import YOLO
+
+PATH = state['PATH']
+
+image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
+st1, st2, st3 = st.columns(3)
+
+with st2:
+    st.image(image)
+
+st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\' y2=\'2.5\' stroke=\'black\' '
+            'stroke-width=\'4\' fill=\'black\' /></svg>', unsafe_allow_html=True)
+st.markdown('<h3 style=\'text-align:center;\'>Validation Result</h3>', unsafe_allow_html=True)
+
+try:
+    restriction = state['login']
+except (Exception,):
+    state['login'] = False
+    restriction = state['login']
+
+if not restriction:
+    st.warning('Please login with your registered email!')
+else:
+    path_object = {'General Detection': 'general-detect',
+                   'Coal Detection': 'front-coal',
+                   'Seam Detection': 'seam-gb',
+                   'Core Detection': 'core-logging',
+                   'Smart-HSE': 'hse-monitor'}
+
+    kind_object = st.selectbox('Please select the kind of object detection do you want.',
+                               ['General Detection',
+                                'Coal Detection',
+                                'Seam Detection',
+                                'Core Detection',
+                                'Smart HSE'],
+                               key='kind-object-validation-1')
+
+    try:
+        def next_photo(path_files, func):
+            path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
+            path_images.sort()
+
+            if func == 'next':
+                st.session_state.counter += 1
+                if st.session_state.counter >= len(path_images):
+                    st.session_state.counter = 0
+            elif func == 'back':
+                st.session_state.counter -= 1
+                if st.session_state.counter >= len(path_images):
+                    st.session_state.counter = 0
+                elif st.session_state.counter < 0:
+                    st.session_state.counter = len(path_images) - 1
+
+        def delete_photo(path_files, func):
+            path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
+            path_images.sort()
+            photo = path_images[st.session_state.counter]
+            text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
+                   photo.split("/")[-1].split(".")[0] + '.txt'
+
+            os.remove(photo)
+            os.remove(text)
+
+            next_photo(path_files, func)
+
+        path_files = f'{PATH}/detections/{path_object[kind_object]}/images'
+
+        if 'counter' not in st.session_state:
+            st.session_state.counter = 0
+
+        path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
+        path_images.sort()
+
+        try:
+            photo = path_images[st.session_state.counter]
+        except (Exception,):
+            st.session_state.counter = 0
+            photo = path_images[st.session_state.counter]
+
+        st.image(photo, caption=f'image-{photo.split("/")[-1]}')
+
+        st1, st2, st3, st4, st5 = st.columns(5)
+
+        with st2:
+            st2.button('◀️ Back',
+                       on_click=next_photo,
+                       use_container_width=True,
+                       args=([path_files, 'back']),
+                       key='back-photo-validation-1')
+        with st3:
+            st3.button('Delete ♻️',
+                       on_click=delete_photo,
+                       use_container_width=True,
+                       args=([path_files, 'delete']),
+                       key='delete-photo-validation-1')
+        with st4:
+            st4.button('Next ▶️',
+                       on_click=next_photo,
+                       use_container_width=True,
+                       args=([path_files, 'next']),
+                       key='next-photo-validation-1')
+
+        btn = st.radio('Do you want to download image in single or all files?',
+                       ['Single files', 'All files', 'Not yet'],
+                       index=2,
+                       key='download-button-2')
+
+        if btn == 'Single files':
+            st.success(f'Now, you can download the image-{label_name(st.session_state.counter, 10000)} with annotation '
+                       f'in the button bellow.', icon='✅')
+            st6, st7 = st.columns(2)
+
+            with st6:
+                with open(photo, 'rb') as file:
+                    st6.download_button(label='🔗 Image (.png)',
+                                        data=file,
+                                        use_container_width=True,
+                                        file_name=f'{photo.split("/")[-1]}',
+                                        mime="image/png",
+                                        key='download-image-1')
+
+            with st7:
+                annotate_path = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
+                                photo.split("/")[-1].split(".")[0] + '.txt'
+
+                with open(annotate_path, 'rb') as file:
+                    st7.download_button(label='🔗 Annotation (.txt)',
+                                        data=file,
+                                        use_container_width=True,
+                                        file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
+                                        mime="text/plain",
+                                        key='download-annotate-1')
+
+        elif btn == 'All files':
+            st.success(f'Now, you can download the all images with annotation '
+                       f'in the button bellow.', icon='✅')
+            path_folder = f'{PATH}/detections/{path_object[kind_object]}'
+            name = path_object[kind_object]
+            make_zip(path_folder, name)
+
+            with open(f'{path_folder}/{name}.zip', "rb") as fp:
+                st.download_button(label="🔗 Download All Files (.zip)",
+                                   data=fp,
+                                   use_container_width=True,
+                                   file_name=f'detection_{name}.zip',
+                                   mime="application/zip",
+                                   key='download-zip-1')
+    except (Exception,):
+        st.error('Please go to the menu Detection first!', icon='❎')
