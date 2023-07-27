@@ -19,7 +19,7 @@ from ultralytics import YOLO
 
 st.set_page_config(
     page_title="Detection | Yeomine App",
-    page_icon="📹",
+    page_icon="📡",
 )
 
 if 'PATH' not in state.keys():
