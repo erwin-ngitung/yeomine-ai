@@ -51,20 +51,20 @@ else:
             path_images.sort()
 
             if func == 'next':
-                st.session_state.counter += 1
-                if st.session_state.counter >= len(path_images):
-                    st.session_state.counter = 0
+                state.counter += 1
+                if state.counter >= len(path_images):
+                    state.counter = 0
             elif func == 'back':
-                st.session_state.counter -= 1
-                if st.session_state.counter >= len(path_images):
-                    st.session_state.counter = 0
-                elif st.session_state.counter < 0:
-                    st.session_state.counter = len(path_images) - 1
+                state.counter -= 1
+                if state.counter >= len(path_images):
+                    state.counter = 0
+                elif state.counter < 0:
+                    state.counter = len(path_images) - 1
 
         def delete_photo(path_files, func):
             path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
             path_images.sort()
-            photo = path_images[st.session_state.counter]
+            photo = path_images[state.counter]
             text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
                    photo.split("/")[-1].split(".")[0] + '.txt'
 
@@ -75,17 +75,17 @@ else:
 
         path_files = f'{PATH}/detections/{path_object[kind_object]}/images'
 
-        if 'counter' not in st.session_state:
-            st.session_state.counter = 0
+        if 'counter' not in state:
+            state.counter = 0
 
         path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
         path_images.sort()
 
         try:
-            photo = path_images[st.session_state.counter]
+            photo = path_images[state.counter]
         except (Exception,):
-            st.session_state.counter = 0
-            photo = path_images[st.session_state.counter]
+            state.counter = 0
+            photo = path_images[state.counter]
 
         # img_photo = cv2.imread(photo)
         # img_photo = cv2.cvtColor(img_photo, cv2.COLOR_BGR2RGB)
@@ -93,7 +93,7 @@ else:
         st.image(photo,
                  channels='RGB',
                  use_column_width='always',
-                 caption=f'image-{photo.split("/")[-1]}')
+                 caption=f'image-{label_name(state.counter, 10000)}')
 
         st1, st2, st3, st4, st5 = st.columns(5)
 
@@ -122,7 +122,7 @@ else:
                        key='download-button-2')
 
         if btn == 'Single files':
-            st.success(f'Now, you can download the image-{label_name(st.session_state.counter, 10000)} with annotation '
+            st.success(f'Now, you can download the image-{label_name(state.counter, 10000)} with annotation '
                        f'in the button bellow.', icon='✅')
             st6, st7 = st.columns(2)
 
