@@ -1,6 +1,7 @@
 from streamlit import session_state as state
 import streamlit as st
 from PIL import Image
+import shutil
 
 if 'PATH' not in state.keys():
     state['PATH'] = '.'
@@ -25,5 +26,7 @@ important = ['name', 'username', 'email', 'password']
 for key in state.keys():
     if key not in important:
         del [key]
+
+shutil.rmtree(f'{PATH}/detections/')
 
 state['login'] = False
