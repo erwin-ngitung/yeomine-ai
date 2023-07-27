@@ -9,8 +9,8 @@ PATH = '.'
 # logger = logging.getLogger(__name__)
 
 st.set_page_config(
-    page_title="Introduction",
-    page_icon=f"{PATH}/data/images/logo_yeomine.ico",
+    page_title="Yeomine App",
+    page_icon="🏠",
 )
 
 image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
