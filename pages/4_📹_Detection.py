@@ -308,6 +308,7 @@ else:
                 photo_rgb = cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA)
                 photo_rgb = cv2.cvtColor(photo_rgb, cv2.COLOR_BGR2RGB)
                 st10.image(photo_rgb,
+                           channels='RGB',
                            caption=caption)
             with st11:
                 st11.write("Detection Image")
@@ -316,6 +317,7 @@ else:
                 photo_rgb = cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA)
                 photo_rgb = cv2.cvtColor(photo_rgb, cv2.COLOR_BGR2RGB)
                 st11.image(photo_rgb,
+                           channels='RGB',
                            caption=caption)
 
             st12, st13, st14, st15, st16 = st.columns(5)
