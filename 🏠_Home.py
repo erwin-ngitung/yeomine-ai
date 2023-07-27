@@ -1,5 +1,6 @@
 from streamlit import session_state as state
 import streamlit as st
+from PIL import Image
 from pathlib import Path
 import logging
 
