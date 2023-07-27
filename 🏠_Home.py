@@ -1,14 +1,11 @@
 from streamlit import session_state as state
 import streamlit as st
 from pathlib import Path
-import pytesseract
 import logging
-
-pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 
 PATH = '.'
 # PATH = Path(Path(__file__).resolve()).parent
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 
 st.set_page_config(
     page_title="Introduction",
