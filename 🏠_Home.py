@@ -19,7 +19,7 @@ st1, st2, st3 = st.columns(3)
 with st2:
     st.image(image)
 
-st.write("# Welcome to Yeomine Application version Web! 👋")
+st.write("# Welcome to Yeomine Application! 👋")
 
 st.markdown(
     """
