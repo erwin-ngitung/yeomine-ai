@@ -12,23 +12,23 @@ st.set_page_config(
     page_icon="👋",
 )
 
-st.write("# Welcome to Yeomine! 👋")
+image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
+st1, st2, st3 = st.columns(3)
+
+with st2:
+    st.image(image)
+
+st.write("# Welcome to Yeomine Application version Web! 👋")
 
 st.markdown(
     """
-    Streamlit is an open-source app framework built specifically for
-    Machine Learning and Data Science projects.
-    **👈 Select a demo from the sidebar** to see some examples
-    of what Streamlit can do!
-    ### Want to learn more?
-    - Check out [streamlit.io](https://streamlit.io)
-    - Jump into our [documentation](https://docs.streamlit.io)
-    - Ask a question in our [community
-        forums](https://discuss.streamlit.io)
-    ### See more complex demos
-    - Use a neural net to [analyze the Udacity Self-driving Car Image
-        Dataset](https://github.com/streamlit/demo-self-driving)
-    - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
+    Yeomine is a product that is built by a web and desktop application using python language as backend and streamlit
+     as framework. This is integrated with computer vision technology using YoloV8 Model that is developed 
+     with thousands of actual and valid open coal mining data.
+    ### Want to learn more and purchase it?
+    - Check out [Yeomine Landing Page] (https://erwin-ngitung.github.io/yeomine-ai/)
+    - Jump into our [documentation] (https://erwin-ngitung.github.io/yeomine-ai/#gallery)
+    - Ask a question in our [company] (yeomine-digital-services@gmail.com)
 """
 )
 
