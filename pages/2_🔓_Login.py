@@ -34,7 +34,6 @@ if submit and status == 'register':
     state['email'] = email
     state['password'] = password
     state['edit'] = True
-    st.write(state)
 
     if 'login' in state.keys():
         del state['login']

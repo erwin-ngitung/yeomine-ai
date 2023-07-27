@@ -6,8 +6,8 @@ import logging
 
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 
-# PATH = '.'
-PATH = Path(Path(__file__).resolve()).parent
+PATH = '.'
+# PATH = Path(Path(__file__).resolve()).parent
 logger = logging.getLogger(__name__)
 
 st.set_page_config(
