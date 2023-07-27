@@ -9,7 +9,7 @@ PATH = '.'
 # logger = logging.getLogger(__name__)
 
 st.set_page_config(
-    page_title="Yeomine App",
+    page_title="Home | Yeomine App",
     page_icon="🏠",
 )
 

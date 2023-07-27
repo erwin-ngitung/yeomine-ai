@@ -3,6 +3,11 @@ import streamlit as st
 from utils import check_account
 from PIL import Image
 
+st.set_page_config(
+    page_title="Login | Yeomine App",
+    page_icon="🔓",
+)
+
 if 'PATH' not in state.keys():
     state['PATH'] = '.'
 

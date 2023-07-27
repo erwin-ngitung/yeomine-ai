@@ -7,6 +7,11 @@ from PIL import Image
 from ultralytics import YOLO
 from utils import make_zip_only, label_name
 
+st.set_page_config(
+    page_title="Training | Yeomine App",
+    page_icon="⚙️",
+)
+
 if 'PATH' not in state.keys():
     state['PATH'] = '.'
 

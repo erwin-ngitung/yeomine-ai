@@ -4,6 +4,11 @@ from PIL import Image
 import numpy as np
 from utils import check_email, replace_json
 
+st.set_page_config(
+    page_title="Account | Yeomine App",
+    page_icon="👨‍⚖",
+)
+
 if 'PATH' not in state.keys():
     state['PATH'] = '.'
 

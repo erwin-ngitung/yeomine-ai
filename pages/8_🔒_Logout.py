@@ -4,6 +4,11 @@ from PIL import Image
 import shutil
 import os
 
+st.set_page_config(
+    page_title="Logout | Yeomine App",
+    page_icon="🔒",
+)
+
 if 'PATH' not in state.keys():
     state['PATH'] = '.'
 

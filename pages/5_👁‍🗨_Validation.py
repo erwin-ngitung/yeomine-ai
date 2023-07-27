@@ -7,6 +7,11 @@ from utils import make_zip, label_name
 from streamlit import session_state as state
 import streamlit as st
 
+st.set_page_config(
+    page_title="Validation | Yeomine App",
+    page_icon="👁‍🗨",
+)
+
 if 'PATH' not in state.keys():
     state['PATH'] = '.'
 

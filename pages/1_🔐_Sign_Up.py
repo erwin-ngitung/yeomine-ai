@@ -3,7 +3,16 @@ import streamlit as st
 from utils import check_email, update_json
 from PIL import Image
 
+st.set_page_config(
+    page_title="Sign Up | Yeomine App",
+    page_icon="🔐",
+)
+
+if 'PATH' not in state.keys():
+    state['PATH'] = '.'
+
 PATH = state['PATH']
+
 placeholder = st.empty()
 
 with placeholder.form('Sign Up'):
