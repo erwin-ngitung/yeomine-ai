@@ -8,7 +8,6 @@ if 'PATH' not in state.keys():
 
 PATH = state['PATH']
 
-
 # Title
 image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
 st1, st2, st3 = st.columns(3)
@@ -22,7 +21,7 @@ st.markdown('<h3 style=\'text-align:center;\'>Messages Report</h3>', unsafe_allo
 
 try:
     restriction = state['login']
-except:
+except (Exception,):
     state['login'] = False
     restriction = state['login']
 
