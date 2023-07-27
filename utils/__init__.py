@@ -4,12 +4,11 @@ import json
 import shutil
 import warnings
 import numpy as np
-from pathlib import Path
+from streamlit import session_state as state
 import logging
 from zipfile import ZipFile
 
-PATH = '.'
-# PATH = Path(Path(__file__).resolve()).parent
+PATH = state['PATH']
 logger = logging.getLogger(__name__)
 warnings.filterwarnings("ignore")
 
