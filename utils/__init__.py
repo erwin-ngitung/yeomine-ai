@@ -2,13 +2,14 @@ import re
 import os
 import json
 import shutil
-import warnings
 import numpy as np
 from streamlit import session_state as state
 from zipfile import ZipFile
 
+if 'PATH' not in state.keys():
+    state['PATH'] = '.'
+
 PATH = state['PATH']
-warnings.filterwarnings("ignore")
 
 
 def label_name(num, maks):

@@ -17,6 +17,9 @@ import cv2
 import torch
 from ultralytics import YOLO
 
+if 'PATH' not in state.keys():
+    state['PATH'] = '.'
+
 PATH = state['PATH']
 
 # Title
@@ -156,6 +159,7 @@ else:
                                                                  x_size, y_size)
                         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                         st.image(img,
+                                 channels='RGB',
                                  use_column_width='always',
                                  caption=caption)
 

@@ -7,6 +7,9 @@ from PIL import Image
 from ultralytics import YOLO
 from utils import make_zip_only, label_name
 
+if 'PATH' not in state.keys():
+    state['PATH'] = '.'
+
 PATH = state['PATH']
 
 # Title

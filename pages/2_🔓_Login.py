@@ -3,6 +3,9 @@ import streamlit as st
 from utils import check_account
 from PIL import Image
 
+if 'PATH' not in state.keys():
+    state['PATH'] = '.'
+
 PATH = state['PATH']
 
 st.snow()
