@@ -59,17 +59,17 @@ def sign_up(st, **state):
         placeholder.empty()
         st.success('Hello ' + name + ', your profile has been save successfully')
 
-        MultiPage.save({'name': name,
-                        'username': username,
-                        'email': email,
-                        'password': password,
-                        'login': False})
+        # MultiPage.save({'name': name,
+        #                 'username': username,
+        #                 'email': email,
+        #                 'password': password,
+        #                 'login': False})
 
-        # state['name'] = name
-        # state['username'] = username
-        # state['email'] = email
-        # state['password'] = password
-        # state['login'] = False
+        state['name'] = name
+        state['username'] = username
+        state['email'] = email
+        state['password'] = password
+        state['login'] = False
 
         update_json(name, username, email, password)
 
@@ -108,19 +108,19 @@ def login(st, **state):
         placeholder.empty()
         st.success('Login successful')
 
-        MultiPage.save({'name': name,
-                        'username': username,
-                        'email': email,
-                        'password': password,
-                        'login': True,
-                        'edit': True})
+        # MultiPage.save({'name': name,
+        #                 'username': username,
+        #                 'email': email,
+        #                 'password': password,
+        #                 'login': True,
+        #                 'edit': True})
 
-        # state['name'] = name
-        # state['username'] = username
-        # state['email'] = email
-        # state['password'] = password
-        # state['login'] = True
-        # state['edit'] = True
+        state['name'] = name
+        state['username'] = username
+        state['email'] = email
+        state['password'] = password
+        state['login'] = True
+        state['edit'] = True
 
     elif submit and status == 'wrong password':
         st.error('Login failed because your password is wrong!')
@@ -954,7 +954,6 @@ def account(st, **state):
         else:
             current_password = password
 
-        # current_password_ = state['password'] if 'password' in state else ''
         new_password = st.text_input('New Password', type='password', disabled=state['edit'])
 
         save = st.form_submit_button('Save',
@@ -963,17 +962,17 @@ def account(st, **state):
     if save and current_password == password:
         st.success('Hi ' + name + ', your profile has been update successfully')
 
-        MultiPage.save({'name': name,
-                        'username': username,
-                        'email': email,
-                        'password': password,
-                        'edit': True})
+        # MultiPage.save({'name': name,
+        #                 'username': username,
+        #                 'email': email,
+        #                 'password': password,
+        #                 'edit': True})
 
-        # state['name'] = name
-        # state['username'] = username
-        # state['email'] = email
-        # state['password'] = password
-        # state['edit'] = True
+        state['name'] = name
+        state['username'] = username
+        state['email'] = email
+        state['password'] = password
+        state['edit'] = True
 
         replace_json(name, username, old_email, email, new_password)
 
@@ -1001,7 +1000,9 @@ def logout(st, **state):
 
     st.success('Your account has been log out from this app')
 
-    MultiPage.save({'login': False})
+    # MultiPage.save({'login': False})
+    
+    state['login'] = False
 
     
 app = MultiPage()
