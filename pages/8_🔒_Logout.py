@@ -19,8 +19,11 @@ st.markdown('<svg width=\'705\' height=\'5\'><line x1=\'0\' y1=\'2.5\' x2=\'705\
 
 st.success('Your account has been log out from this app')
 
+important = ['name', 'username', 'email', 'password']
+
 # Delete all the items in Session state
 for key in state.keys():
-    del [key]
-    
+    if key not in important:
+        del [key]
+
 state['login'] = False
