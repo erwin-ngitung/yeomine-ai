@@ -10,7 +10,7 @@ PATH = '.'
 
 st.set_page_config(
     page_title="Introduction",
-    page_icon="👋",
+    page_icon=f"{PATH}/data/images/logo_yeomine.ico",
 )
 
 image = Image.open(f'{PATH}/data/images/logo_yeomine.png')
@@ -19,7 +19,7 @@ st1, st2, st3 = st.columns(3)
 with st2:
     st.image(image)
 
-st.write("# Welcome to Yeomine Application! 👋")
+st.write("# Welcome to Yeomine! 👋")
 
 st.markdown(
     """
