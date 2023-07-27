@@ -305,19 +305,24 @@ else:
 
             with st10:
                 st10.write("Original Image")
-                photo_rgb = cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA)
-                photo_rgb = cv2.cvtColor(photo_rgb, cv2.COLOR_BGR2RGB)
-                st10.image(photo_rgb,
+
+                # photo_rgb = cv2.resize(photo_convert, (x_size, y_size), interpolation=cv2.INTER_AREA)
+                # photo_rgb = cv2.cvtColor(photo_convert, cv2.COLOR_BGR2RGB)
+
+                st10.image(photo_convert,
                            channels='RGB',
+                           use_column_width='always',
                            caption=caption)
             with st11:
                 st11.write("Detection Image")
                 photo_detect, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
                                                                   time_JKT, x_size, y_size)
-                photo_rgb = cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA)
-                photo_rgb = cv2.cvtColor(photo_rgb, cv2.COLOR_BGR2RGB)
-                st11.image(photo_rgb,
+                # photo_rgb = cv2.resize(photo_detect, (x_size, y_size), interpolation=cv2.INTER_AREA)
+                # photo_rgb = cv2.cvtColor(photo_detect, cv2.COLOR_BGR2RGB)
+
+                st11.image(photo_detect,
                            channels='RGB',
+                           use_column_width='always',
                            caption=caption)
 
             st12, st13, st14, st15, st16 = st.columns(5)
