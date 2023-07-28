@@ -79,5 +79,5 @@ pip install -r requirements.txt
 ```
 - Finally, you can run this app using streamlit framewok.
 ```
-streamlit run Home.py
+streamlit run 🏠_Home.py
 ```
