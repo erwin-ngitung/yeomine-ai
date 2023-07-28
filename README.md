@@ -69,15 +69,11 @@ source bin\activate [in Linux and IOS]
 ``` 
 cd ..
 ```
-- Then, go to the folder yeomine/app
-```
-cd app
-```
 - Install the requirement packages for this app.
 ```
 pip install -r requirements.txt
 ```
-- Finally, you can run this app using streamlit framewok.
+- Finally, you can run this app using streamlit framework.
 ```
 streamlit run 🏠_Home.py
 ```
