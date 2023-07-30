@@ -270,52 +270,53 @@ else:
             path_detections = f'{PATH}/detections/pictures/{path_object[kind_object]}'
             make_folder(path_detections)
 
-            # try:
-            count = 0
-            x_size, y_size = 650, 650
-            placeholder2 = st.empty()
+            try:
+                count = 0
+                x_size, y_size = 650, 650
+                placeholder2 = st.empty()
 
-            for file in uploaded_files:
-                with placeholder2.container():
-                    tz_JKT = pytz.timezone('Asia/Jakarta')
-                    time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-                    caption = f'The frame image-{label_name(count, 10000)} generated at {time_JKT}'
+                for file in uploaded_files:
+                    with placeholder2.container():
+                        tz_JKT = pytz.timezone('Asia/Jakarta')
+                        time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                        caption = f'The frame image-{label_name(count, 10000)} generated at {time_JKT}'
 
-                    photo = Image.open(io.BytesIO(file.read()))
-                    photo_convert = np.array(photo.convert('RGB'))
-                    img, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
-                                                             time_JKT, x_size, y_size)
+                        photo = Image.open(io.BytesIO(file.read()))
+                        photo_convert = np.array(photo.convert('RGB'))
+                        img, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
+                                                                 time_JKT, x_size, y_size)
 
-                    img = cv2.resize(img, (x_size, y_size), interpolation=cv2.INTER_AREA)
-                    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                        img = cv2.resize(img, (x_size, y_size), interpolation=cv2.INTER_AREA)
+                        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-                    st.image(img,
-                             channels='RGB',
-                             use_column_width='always',
-                             caption=caption)
+                        st.image(img,
+                                 channels='RGB',
+                                 use_column_width='always',
+                                 caption=caption)
 
-                    df1 = pd.DataFrame(parameter)
-                    df2 = pd.DataFrame(annotate)
+                        df1 = pd.DataFrame(parameter)
+                        df2 = pd.DataFrame(annotate)
 
-                    if show_label:
-                        st.table(df1)
+                        if show_label:
+                            st.table(df1)
 
-                    if save_annotate:
-                        name_image = f'{PATH}/detections/pictures/{path_object[kind_object]}/images/' \
-                                     f'{label_name(count, 10000)}.png'
-                        cv2.imwrite(name_image, img)
+                        if save_annotate:
+                            name_image = f'{PATH}/detections/pictures/{path_object[kind_object]}/images/' \
+                                         f'{label_name(count, 10000)}.png'
+                            cv2.imwrite(name_image, img)
 
-                        name_annotate = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations/' \
-                                        f'{label_name(count, 10000)}.txt'
+                            name_annotate = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations/' \
+                                            f'{label_name(count, 10000)}.txt'
 
-                        with open(name_annotate, 'a') as f:
-                            df_string = df2.to_string(header=False, index=False)
-                            f.write(df_string)
+                            with open(name_annotate, 'a') as f:
+                                df_string = df2.to_string(header=False, index=False)
+                                f.write(df_string)
 
-                    count += 1
+                        count += 1
+                        time.sleep(0.5)
 
-            if save_annotate:
-                st.success('Your all images and annotations have successfully saved', icon='✅')
+                if save_annotate:
+                    st.success('Your all images and annotations have successfully saved', icon='✅')
 
-            # except (Exception,):
-            #     pass
+            except (Exception,):
+                st.error('Cannot read the image!', icon='❎')
