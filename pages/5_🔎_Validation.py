@@ -87,6 +87,7 @@ else:
         except (Exception,):
             state.counter = 0
             photo = path_images[state.counter]
+            name_photo = photo.split("/")[-1].split(".")[0]
 
         # img_photo = cv2.imread(photo)
         # img_photo = cv2.cvtColor(img_photo, cv2.COLOR_BGR2RGB)
@@ -159,7 +160,7 @@ else:
                 st.download_button(label="🔗 Download All Files (.zip)",
                                    data=fp,
                                    use_container_width=True,
-                                   file_name=f'detection_{name}.zip',
+                                   file_name=f'{kind_file}-detection-{name}.zip',
                                    mime="application/zip",
                                    key='download-zip-1')
     except (Exception,):

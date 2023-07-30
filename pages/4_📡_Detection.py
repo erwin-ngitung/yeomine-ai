@@ -133,11 +133,11 @@ else:
                                     value=False,
                                     key='save-annotate-detection-1')
 
-        next_detect = st.button('Process',
+        process = st.button('Process',
                                 key='next_detect',
                                 use_container_width=True)
 
-        if next_detect:
+        if process:
             if torch.cuda.is_available():
                 st.success(
                     f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
@@ -250,67 +250,69 @@ else:
                                     value=False,
                                     key='save-annotate-detection-2')
 
-        # if extension_file:
-        if torch.cuda.is_available():
-            st.success(
-                f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
-            device = 0
-        else:
-            st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
-            device = 'cpu'
-
         with st.form("form-upload-image", clear_on_submit=True):
             uploaded_files = st.file_uploader("Upload your image",
                                               type=['jpg', 'jpeg', 'png'],
                                               accept_multiple_files=True)
-            st.form_submit_button("Process",
-                                  use_container_width=True)
-        try:
-            count = 0
-            x_size, y_size = 650, 650
+            process = st.form_submit_button("Process",
+                                            use_container_width=True)
 
-            for file in uploaded_files:
-                tz_JKT = pytz.timezone('Asia/Jakarta')
-                time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-                caption = f'The frame image-{label_name(count, 10000)} generated at {time_JKT}'
+        if process:
+            # if extension_file:
+            if torch.cuda.is_available():
+                st.success(
+                    f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
+                device = 0
+            else:
+                st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
+                device = 'cpu'
 
-                photo = Image.open(io.BytesIO(file.read()))
-                photo_convert = np.array(photo.convert('RGB'))
-                img, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
-                                                         time_JKT, x_size, y_size)
+            try:
+                count = 0
+                x_size, y_size = 650, 650
 
-                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                st.image(img,
-                         channels='RGB',
-                         use_column_width='always',
-                         caption=caption)
+                for file in uploaded_files:
+                    tz_JKT = pytz.timezone('Asia/Jakarta')
+                    time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                    caption = f'The frame image-{label_name(count, 10000)} generated at {time_JKT}'
 
-                df1 = pd.DataFrame(parameter)
-                df2 = pd.DataFrame(annotate)
+                    photo = Image.open(io.BytesIO(file.read()))
+                    photo_convert = np.array(photo.convert('RGB'))
+                    img, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
+                                                             time_JKT, x_size, y_size)
 
-                if show_label:
-                    st.table(df1)
+                    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                    st.image(img,
+                             channels='RGB',
+                             use_column_width='always',
+                             caption=caption)
+
+                    df1 = pd.DataFrame(parameter)
+                    df2 = pd.DataFrame(annotate)
+
+                    if show_label:
+                        st.table(df1)
+
+                    if save_annotate:
+                        name_image = f'{PATH}/detections/pictures/{path_object[kind_object]}/images/' \
+                                     f'{label_name(count, 10000)}.png'
+                        cv2.imwrite(name_image, img)
+
+                        name_annotate = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations/' \
+                                        f'{label_name(count, 10000)}.txt'
+                        try:
+                            with open(name_annotate, 'a') as f:
+                                df_string = df2.to_string(header=False, index=False)
+                                f.write(df_string)
+                        except (Exception,):
+                            df = pd.DataFrame([0, 0, 0, 0],
+                                              columns=['id', 'x', 'y', 'w', 'h'])
+                            with open(name_annotate, 'a') as f:
+                                df_string = df2.to_string(header=False, index=False)
+                                f.write(df_string)
 
                 if save_annotate:
-                    name_image = f'{PATH}/detections/pictures/{path_object[kind_object]}/images/' \
-                                 f'{label_name(count, 10000)}.png'
-                    cv2.imwrite(name_image, img)
+                    st.success('Your all images and annotations have successfully saved', icon='✅')
 
-                    name_annotate = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations/' \
-                                    f'{label_name(count, 10000)}.txt'
-                    try:
-                        with open(name_annotate, 'a') as f:
-                            df_string = df2.to_string(header=False, index=False)
-                            f.write(df_string)
-                    except (Exception,):
-                        df = pd.DataFrame([0, 0, 0, 0],
-                                          columns=['id', 'x', 'y', 'w', 'h'])
-                        with open(name_annotate, 'a') as f:
-                            df_string = df2.to_string(header=False, index=False)
-                            f.write(df_string)
-
-            if save_annotate:
-                st.success('Your all images and annotations have successfully saved', icon='✅')
-
-        except (Exception,):
-            pass
+            except (Exception,):
+                pass
