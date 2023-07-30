@@ -64,10 +64,14 @@ else:
                                     'Smart HSE'],
                                    key='kind-object-detection-1')
 
-        if object in state.keys():
-            del state['object-videos']
+        if 'object' in state.keys():
+            del state['object']
 
-        state['object-videos'] = kind_object
+        state['object'] = kind_object
+
+        if 'kind-file' in state.keys():
+            del state['kind-file']
+
         state['kind-file'] = 'videos'
 
         conf = st.slider('Number of Confidence (%)',
@@ -209,10 +213,14 @@ else:
                                     'Smart HSE'],
                                    key='kind-object-detection-2')
 
-        if object in state.keys():
-            del state['object-pictures']
+        if 'object' in state.keys():
+            del state['object']
 
-        state['object-pictures'] = kind_object
+        state['object'] = kind_object
+
+        if 'kind-file' in state.keys():
+            del state['kind-file']
+
         state['kind-file'] = 'pictures'
 
         conf = st.slider('Number of Confidence (%)',

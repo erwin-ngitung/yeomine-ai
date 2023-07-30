@@ -44,7 +44,7 @@ else:
 
     try:
         kind_file = state['kind-file']
-        kind_object = state[f'object-{kind_file}']
+        kind_object = state['object']
 
         def next_photo(path_files, func):
             path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
