@@ -133,8 +133,8 @@ else:
                                     key='save-annotate-detection-1')
 
         process = st.button('Process',
-                                key='next_detect',
-                                use_container_width=True)
+                            key='next_detect',
+                            use_container_width=True)
 
         if process:
             if torch.cuda.is_available():

@@ -100,7 +100,7 @@ else:
             # img_photo = cv2.cvtColor(img_photo, cv2.COLOR_BGR2RGB)
 
             st.image(photo,
-                     channels='RGB',
+                     channels='BGR',
                      use_column_width='always',
                      caption=f'image-{name_photo}')
 
@@ -171,7 +171,7 @@ else:
                                        mime="application/zip",
                                        key='download-zip-1')
         except (Exception,):
-            st.error('Please go to the menu Detection first!', icon='❎')
+            st.error('Please go to the menu Detection (sub-menu video) first!', icon='❎')
 
     with tab2:
         try:
@@ -198,7 +198,7 @@ else:
             # img_photo = cv2.cvtColor(img_photo, cv2.COLOR_BGR2RGB)
 
             st.image(photo,
-                     channels='RGB',
+                     channels='BGR',
                      use_column_width='always',
                      caption=f'image-{name_photo}')
 
@@ -269,4 +269,4 @@ else:
                                        mime="application/zip",
                                        key='download-zip-1')
         except (Exception,):
-            st.error('Please go to the menu Detection first!', icon='❎')
+            st.error('Please go to the menu Detection (sub-menu image) first!', icon='❎')
