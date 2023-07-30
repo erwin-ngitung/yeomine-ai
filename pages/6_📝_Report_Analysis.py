@@ -39,21 +39,10 @@ else:
                    'Core Detection': 'core-logging',
                    'Smart-HSE': 'hse-monitor'}
 
-    tab1, tab2 = st.tabs(['🎦 Video', '📷 Image'])
+    try:
+        kind_file = state['kind-file']
+        kind_object = state[f'object-{kind_file}']
+        path_folder = f'{PATH}/detections/videos/{path_object[kind_object]}/annotations'
 
-    with tab1:
-        try:
-            kind_object = state['object-videos']
-            path_folder = f'{PATH}/detections/videos/{path_object[kind_object]}/annotations'
-
-        except (Exception,):
-            st.error('Please go to the menu Detection (sub menu Video) first!', icon='❎')
-
-    with tab2:
-        try:
-            kind_object = state['object-pictures']
-            path_folder = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations'
-
-        except (Exception,):
-            st.error('Please go to the menu Detection (sub-menu Picture) first!', icon='❎')
-
+    except (Exception,):
+        st.error('Please go to the menu Detection (sub menu Video) first!', icon='❎')
