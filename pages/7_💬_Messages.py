@@ -4,7 +4,7 @@ import streamlit as st
 from utils import check_email
 
 st.set_page_config(
-    page_title="Report | Yeomine App",
+    page_title="Messages | Yeomine App",
     page_icon="💬",
 )
 
