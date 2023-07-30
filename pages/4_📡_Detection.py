@@ -314,6 +314,8 @@ else:
                                     df_string = df2.to_string(header=False, index=False)
                                     f.write(df_string)
 
+                        count += 1
+
                 if save_annotate:
                     st.success('Your all images and annotations have successfully saved', icon='✅')
 
