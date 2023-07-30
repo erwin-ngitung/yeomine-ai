@@ -78,7 +78,7 @@ else:
     with tab1:
         try:
             kind_file = 'videos'
-            kind_object = state['object']
+            kind_object = state['object-videos']
 
             path_files = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}/images'
 
@@ -176,7 +176,7 @@ else:
     with tab2:
         try:
             kind_file = 'pictures'
-            kind_object = state['object']
+            kind_object = state['object-pictures']
 
             path_files = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}/images'
 
