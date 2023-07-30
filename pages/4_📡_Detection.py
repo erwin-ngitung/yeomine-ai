@@ -286,7 +286,9 @@ else:
                     img, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
                                                              time_JKT, x_size, y_size)
 
+                    img = cv2.resize(img, (x_size, y_size), interpolation=cv2.INTER_AREA)
                     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
                     st.image(img,
                              channels='RGB',
                              use_column_width='always',
