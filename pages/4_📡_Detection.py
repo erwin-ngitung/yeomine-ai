@@ -267,7 +267,7 @@ else:
                 st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
                 device = 'cpu'
 
-            path_detections = f'{PATH}/detections/videos/{path_object[kind_object]}'
+            path_detections = f'{PATH}/detections/pictures/{path_object[kind_object]}'
             make_folder(path_detections)
 
             # try:
