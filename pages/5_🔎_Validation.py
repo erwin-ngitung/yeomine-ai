@@ -43,7 +43,8 @@ else:
                    'Smart-HSE': 'hse-monitor'}
 
     try:
-        kind_object = state['object']
+        kind_file = state['kind-file']
+        kind_object = state[f'object-{kind_file}']
 
         def next_photo(path_files, func):
             path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
@@ -64,7 +65,7 @@ else:
             path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
             path_images.sort()
             photo = path_images[state.counter]
-            text = f'{PATH}/detections/videos/{path_object[kind_object]}/annotations/' + \
+            text = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}/annotations/' + \
                    photo.split("/")[-1].split(".")[0] + '.txt'
 
             os.remove(photo)
@@ -72,7 +73,7 @@ else:
 
             next_photo(path_files, func)
 
-        path_files = f'{PATH}/detections/videos/{path_object[kind_object]}/images'
+        path_files = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}/images'
 
         if 'counter' not in state:
             state.counter = 0
@@ -82,6 +83,7 @@ else:
 
         try:
             photo = path_images[state.counter]
+            name_photo = photo.split("/")[-1].split(".")[0]
         except (Exception,):
             state.counter = 0
             photo = path_images[state.counter]
@@ -92,7 +94,7 @@ else:
         st.image(photo,
                  channels='RGB',
                  use_column_width='always',
-                 caption=f'image-{label_name(state.counter, 10000)}')
+                 caption=f'image-{name_photo}')
 
         st1, st2, st3, st4, st5 = st.columns(5)
 
@@ -121,7 +123,7 @@ else:
                        key='download-button-2')
 
         if btn == 'Single files':
-            st.success(f'Now, you can download the image-{label_name(state.counter, 10000)} with annotation '
+            st.success(f'Now, you can download the image-{name_photo} with annotation '
                        f'in the button bellow.', icon='✅')
             st6, st7 = st.columns(2)
 
@@ -135,7 +137,7 @@ else:
                                         key='download-image-1')
 
             with st7:
-                annotate_path = f'{PATH}/detections/videos/{path_object[kind_object]}/annotations/' + \
+                annotate_path = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}/annotations/' + \
                                 photo.split("/")[-1].split(".")[0] + '.txt'
 
                 with open(annotate_path, 'rb') as file:
@@ -149,7 +151,7 @@ else:
         elif btn == 'All files':
             st.success(f'Now, you can download the all images with annotation '
                        f'in the button bellow.', icon='✅')
-            path_folder = f'{PATH}/detections/videos/{path_object[kind_object]}'
+            path_folder = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}'
             name = path_object[kind_object]
             make_zip(path_folder, name)
 

@@ -30,27 +30,30 @@ except (Exception,):
     state['login'] = False
     restriction = state['login']
 
-path_object = {'General Detection': 'general-detect',
-               'Coal Detection': 'front-coal',
-               'Seam Detection': 'seam-gb',
-               'Core Detection': 'core-logging',
-               'Smart-HSE': 'hse-monitor'}
+if not restriction:
+    st.warning('Please login with your registered email!')
+else:
+    path_object = {'General Detection': 'general-detect',
+                   'Coal Detection': 'front-coal',
+                   'Seam Detection': 'seam-gb',
+                   'Core Detection': 'core-logging',
+                   'Smart-HSE': 'hse-monitor'}
 
-tab1, tab2 = st.tabs(['🎦 Video', '📷 Image'])
+    tab1, tab2 = st.tabs(['🎦 Video', '📷 Image'])
 
-with tab1:
-    try:
-        kind_object = state['object-videos']
-        path_folder = f'{PATH}/detections/videos/{path_object[kind_object]}'
+    with tab1:
+        try:
+            kind_object = state['object-videos']
+            path_folder = f'{PATH}/detections/videos/{path_object[kind_object]}/annotations'
 
-    except (Exception,):
-        st.error('Please go to the menu Detection (sub menu Video) first!', icon='❎')
+        except (Exception,):
+            st.error('Please go to the menu Detection (sub menu Video) first!', icon='❎')
 
-with tab2:
-    try:
-        kind_object = state['object-pictures']
-        path_folder = f'{PATH}/detections/pictures/{path_object[kind_object]}'
+    with tab2:
+        try:
+            kind_object = state['object-pictures']
+            path_folder = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations'
 
-    except (Exception,):
-        st.error('Please go to the menu Detection (sub-menu Picture) first!', icon='❎')
+        except (Exception,):
+            st.error('Please go to the menu Detection (sub-menu Picture) first!', icon='❎')
 
