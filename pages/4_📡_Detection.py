@@ -69,11 +69,6 @@ else:
 
         state['object'] = kind_object
 
-        if 'kind-file' in state.keys():
-            del state['kind-file']
-
-        state['kind-file'] = 'videos'
-
         conf = st.slider('Number of Confidence (%)',
                          min_value=0,
                          max_value=100,
@@ -218,11 +213,6 @@ else:
             del state['object']
 
         state['object'] = kind_object
-
-        if 'kind-file' in state.keys():
-            del state['kind-file']
-
-        state['kind-file'] = 'pictures'
 
         conf = st.slider('Number of Confidence (%)',
                          min_value=0,
