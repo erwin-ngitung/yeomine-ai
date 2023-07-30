@@ -303,16 +303,10 @@ else:
 
                         name_annotate = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations/' \
                                         f'{label_name(count, 10000)}.txt'
-                        try:
-                            with open(name_annotate, 'a') as f:
-                                df_string = df2.to_string(header=False, index=False)
-                                f.write(df_string)
-                        except (Exception,):
-                            df = pd.DataFrame([0, 0, 0, 0],
-                                              columns=['id', 'x', 'y', 'w', 'h'])
-                            with open(name_annotate, 'a') as f:
-                                df_string = df2.to_string(header=False, index=False)
-                                f.write(df_string)
+                        
+                        with open(name_annotate, 'a') as f:
+                            df_string = df2.to_string(header=False, index=False)
+                            f.write(df_string)
 
                     count += 1
 
