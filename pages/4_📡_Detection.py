@@ -129,7 +129,7 @@ else:
         show_label = st.checkbox('Show label predictions',
                                  value=True,
                                  key='show-label-detection-1')
-        save_annotate = st.checkbox('Save annotate and images',
+        save_annotate = st.checkbox('Save images and annotations',
                                     value=False,
                                     key='save-annotate-detection-1')
 
@@ -198,7 +198,7 @@ else:
                         st.error('Image is not found', icon='❎')
 
             if save_annotate:
-                st.success('Your all images have successfully saved', icon='✅')
+                st.success('Your all images and annotations have successfully saved', icon='✅')
 
     with tab2:
         kind_object = st.selectbox('Please select the kind of object detection do you want.',
@@ -246,7 +246,7 @@ else:
         show_label = st.checkbox('Show label predictions',
                                  value=True,
                                  key='show-label-detection-2')
-        save_annotate = st.checkbox('Save annotate and images',
+        save_annotate = st.checkbox('Save images and annotations',
                                     value=False,
                                     key='save-annotate-detection-2')
 
@@ -277,7 +277,7 @@ else:
                 photo = Image.open(io.BytesIO(file.read()))
                 photo_convert = np.array(photo.convert('RGB'))
                 img, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
-                                                                  time_JKT, x_size, y_size)
+                                                         time_JKT, x_size, y_size)
 
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                 st.image(img,
@@ -308,6 +308,9 @@ else:
                         with open(name_annotate, 'a') as f:
                             df_string = df2.to_string(header=False, index=False)
                             f.write(df_string)
+
+            if save_annotate:
+                st.success('Your all images and annotations have successfully saved', icon='✅')
 
         except (Exception,):
             pass
