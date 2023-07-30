@@ -198,7 +198,6 @@ else:
 
             if save_annotate:
                 st.success('Your all images and annotations have successfully saved', icon='✅')
-                st.write(state)
 
     with tab2:
         kind_object = st.selectbox('Please select the kind of object detection do you want.',
