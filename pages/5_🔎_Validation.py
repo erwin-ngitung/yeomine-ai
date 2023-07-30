@@ -42,15 +42,9 @@ else:
                    'Core Detection': 'core-logging',
                    'Smart-HSE': 'hse-monitor'}
 
-    kind_object = st.selectbox('Please select the kind of object detection do you want.',
-                               ['General Detection',
-                                'Coal Detection',
-                                'Seam Detection',
-                                'Core Detection',
-                                'Smart HSE'],
-                               key='kind-object-validation-1')
-
     try:
+        kind_object = state['object']
+
         def next_photo(path_files, func):
             path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
             path_images.sort()
@@ -70,7 +64,7 @@ else:
             path_images = [str(path_files + '/' + img_file) for img_file in os.listdir(path_files)]
             path_images.sort()
             photo = path_images[state.counter]
-            text = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
+            text = f'{PATH}/detections/videos/{path_object[kind_object]}/annotations/' + \
                    photo.split("/")[-1].split(".")[0] + '.txt'
 
             os.remove(photo)
@@ -78,7 +72,7 @@ else:
 
             next_photo(path_files, func)
 
-        path_files = f'{PATH}/detections/{path_object[kind_object]}/images'
+        path_files = f'{PATH}/detections/videos/{path_object[kind_object]}/images'
 
         if 'counter' not in state:
             state.counter = 0
@@ -141,7 +135,7 @@ else:
                                         key='download-image-1')
 
             with st7:
-                annotate_path = f'{PATH}/detections/{path_object[kind_object]}/annotations/' + \
+                annotate_path = f'{PATH}/detections/videos/{path_object[kind_object]}/annotations/' + \
                                 photo.split("/")[-1].split(".")[0] + '.txt'
 
                 with open(annotate_path, 'rb') as file:
@@ -155,7 +149,7 @@ else:
         elif btn == 'All files':
             st.success(f'Now, you can download the all images with annotation '
                        f'in the button bellow.', icon='✅')
-            path_folder = f'{PATH}/detections/{path_object[kind_object]}'
+            path_folder = f'{PATH}/detections/videos/{path_object[kind_object]}'
             name = path_object[kind_object]
             make_zip(path_folder, name)
 

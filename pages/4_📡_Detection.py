@@ -64,6 +64,11 @@ else:
                                     'Smart HSE'],
                                    key='kind-object-detection-1')
 
+        if object in state.keys():
+            del state['object-videos']
+
+        state['object-videos'] = kind_object
+
         conf = st.slider('Number of Confidence (%)',
                          min_value=0,
                          max_value=100,
@@ -140,7 +145,7 @@ else:
                 st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
                 device = 'cpu'
 
-            path_detections = f'{PATH}/detections/{path_object[kind_object]}'
+            path_detections = f'{PATH}/detections/videos/{path_object[kind_object]}'
             make_folder(path_detections)
 
             count = 0
@@ -175,11 +180,11 @@ else:
                             st.table(df1)
 
                         if save_annotate:
-                            name_image = f'{PATH}/detections/{path_object[kind_object]}/images/' \
+                            name_image = f'{PATH}/detections/videos/{path_object[kind_object]}/images/' \
                                          f'{label_name(count, 10000)}.png'
                             cv2.imwrite(name_image, img)
 
-                            name_annotate = f'{PATH}/detections/{path_object[kind_object]}/annotations/' \
+                            name_annotate = f'{PATH}/detections/videos/{path_object[kind_object]}/annotations/' \
                                             f'{label_name(count, 10000)}.txt'
                             with open(name_annotate, 'a') as f:
                                 df_string = df2.to_string(header=False, index=False)
@@ -202,6 +207,11 @@ else:
                                     'Core Detection',
                                     'Smart HSE'],
                                    key='kind-object-detection-2')
+
+        if object in state.keys():
+            del state['object-pictures']
+
+        state['object-pictures'] = kind_object
 
         conf = st.slider('Number of Confidence (%)',
                          min_value=0,
@@ -246,7 +256,7 @@ else:
 
 
         def save_photo(path_images_1, func, img_file, annotate_file):
-            directory = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
+            directory = f'{PATH}/detections/pictures/{path_object[kind_object]}'
             make_folder_only(directory)
 
             image_name = f'{directory}/images/{label_name(st.session_state.counter, 10000)}.png'
@@ -352,7 +362,7 @@ else:
                             args=([image_files, 'next']),
                             key='next-photo-detection-1')
 
-            if save or os.path.exists(f'{PATH}/detections/custom-data/{path_object[kind_object]}'):
+            if save or os.path.exists(f'{PATH}/detections/pictures/{path_object[kind_object]}'):
                 btn = st.radio('Do you want to download image in single or all files?',
                                ['Single files', 'All files'],
                                index=0,
@@ -362,7 +372,7 @@ else:
                     st17, st18 = st.columns(2)
 
                     with st17:
-                        path_images = f'{PATH}/detections/custom-data/{path_object[kind_object]}/images'
+                        path_images = f'{PATH}/detections/pictures/{path_object[kind_object]}/images'
                         image_name = f'{path_images}/{label_name(st.session_state.counter, 10000)}.png'
 
                         with open(image_name, 'rb') as file:
@@ -374,7 +384,7 @@ else:
                                                  key='download-image-2')
 
                     with st18:
-                        path_annotate = f'{PATH}/detections/custom-data/{path_object[kind_object]}/annotations'
+                        path_annotate = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations'
                         annotate_name = f'{path_annotate}/{label_name(st.session_state.counter, 10000)}.txt'
 
                         with open(annotate_name, 'rb') as file:
@@ -386,7 +396,7 @@ else:
                                                  key='download-annotate-2')
 
                 elif btn == 'All files':
-                    path_folder = f'{PATH}/detections/custom-data/{path_object[kind_object]}'
+                    path_folder = f'{PATH}/detections/pictures/{path_object[kind_object]}'
                     name = path_object[kind_object]
                     make_zip(path_folder, name)
 
