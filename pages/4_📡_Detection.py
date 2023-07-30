@@ -267,11 +267,13 @@ else:
                 st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
                 device = 'cpu'
 
-            placeholder2 = st.empty()
+            path_detections = f'{PATH}/detections/videos/{path_object[kind_object]}'
+            make_folder(path_detections)
 
             # try:
             count = 0
             x_size, y_size = 650, 650
+            placeholder2 = st.empty()
 
             for file in uploaded_files:
                 with placeholder2.container():
@@ -303,7 +305,7 @@ else:
 
                         name_annotate = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations/' \
                                         f'{label_name(count, 10000)}.txt'
-                        
+
                         with open(name_annotate, 'a') as f:
                             df_string = df2.to_string(header=False, index=False)
                             f.write(df_string)
