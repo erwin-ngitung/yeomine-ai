@@ -150,12 +150,12 @@ else:
             make_folder(path_detections)
 
             count = 0
-            placeholder = st.empty()
+            placeholder1 = st.empty()
             colors = cs.generate_label_colors(model.names)
 
             # Detection Model
             while cap.isOpened() and count < stop_program:
-                with placeholder.container():
+                with placeholder1.container():
                     ret, img = cap.read()
 
                     if ret:
@@ -267,49 +267,52 @@ else:
                 st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
                 device = 'cpu'
 
+            placeholder2 = st.empty()
+
             try:
                 count = 0
                 x_size, y_size = 650, 650
 
                 for file in uploaded_files:
-                    tz_JKT = pytz.timezone('Asia/Jakarta')
-                    time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-                    caption = f'The frame image-{label_name(count, 10000)} generated at {time_JKT}'
+                    with placeholder2.container():
+                        tz_JKT = pytz.timezone('Asia/Jakarta')
+                        time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                        caption = f'The frame image-{label_name(count, 10000)} generated at {time_JKT}'
 
-                    photo = Image.open(io.BytesIO(file.read()))
-                    photo_convert = np.array(photo.convert('RGB'))
-                    img, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
-                                                             time_JKT, x_size, y_size)
+                        photo = Image.open(io.BytesIO(file.read()))
+                        photo_convert = np.array(photo.convert('RGB'))
+                        img, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
+                                                                 time_JKT, x_size, y_size)
 
-                    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-                    st.image(img,
-                             channels='RGB',
-                             use_column_width='always',
-                             caption=caption)
+                        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                        st.image(img,
+                                 channels='RGB',
+                                 use_column_width='always',
+                                 caption=caption)
 
-                    df1 = pd.DataFrame(parameter)
-                    df2 = pd.DataFrame(annotate)
+                        df1 = pd.DataFrame(parameter)
+                        df2 = pd.DataFrame(annotate)
 
-                    if show_label:
-                        st.table(df1)
+                        if show_label:
+                            st.table(df1)
 
-                    if save_annotate:
-                        name_image = f'{PATH}/detections/pictures/{path_object[kind_object]}/images/' \
-                                     f'{label_name(count, 10000)}.png'
-                        cv2.imwrite(name_image, img)
+                        if save_annotate:
+                            name_image = f'{PATH}/detections/pictures/{path_object[kind_object]}/images/' \
+                                         f'{label_name(count, 10000)}.png'
+                            cv2.imwrite(name_image, img)
 
-                        name_annotate = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations/' \
-                                        f'{label_name(count, 10000)}.txt'
-                        try:
-                            with open(name_annotate, 'a') as f:
-                                df_string = df2.to_string(header=False, index=False)
-                                f.write(df_string)
-                        except (Exception,):
-                            df = pd.DataFrame([0, 0, 0, 0],
-                                              columns=['id', 'x', 'y', 'w', 'h'])
-                            with open(name_annotate, 'a') as f:
-                                df_string = df2.to_string(header=False, index=False)
-                                f.write(df_string)
+                            name_annotate = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations/' \
+                                            f'{label_name(count, 10000)}.txt'
+                            try:
+                                with open(name_annotate, 'a') as f:
+                                    df_string = df2.to_string(header=False, index=False)
+                                    f.write(df_string)
+                            except (Exception,):
+                                df = pd.DataFrame([0, 0, 0, 0],
+                                                  columns=['id', 'x', 'y', 'w', 'h'])
+                                with open(name_annotate, 'a') as f:
+                                    df_string = df2.to_string(header=False, index=False)
+                                    f.write(df_string)
 
                 if save_annotate:
                     st.success('Your all images and annotations have successfully saved', icon='✅')
