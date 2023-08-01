@@ -185,7 +185,7 @@ else:
                                 try:
                                     st_r1.table(df1.set_index('label').T)
                                 except (Exception,):
-                                    st.warning('There is no detections')
+                                    pass
 
                         if save_annotate:
                             name_image = f'{PATH}/detections/videos/{path_object[kind_object]}/images/' \
@@ -311,7 +311,7 @@ else:
                                 try:
                                     st_r2.table(df1.set_index('label').T)
                                 except (Exception,):
-                                    st.warning('There is no detections')
+                                    pass
 
                         if save_annotate:
                             name_image = f'{PATH}/detections/pictures/{path_object[kind_object]}/images/' \
