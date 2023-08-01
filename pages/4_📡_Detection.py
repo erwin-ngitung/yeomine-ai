@@ -115,7 +115,7 @@ else:
                     cap = cv2.VideoCapture(temp_file.name)
                 except (Exception,):
                     source = f'{PATH}/datasets/general-detect/predict/sample-video-01.mp4'
-                    cap = cv2.VideoCapture()
+                    cap = cv2.VideoCapture(source)
 
             else:
                 list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
