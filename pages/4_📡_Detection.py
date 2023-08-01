@@ -168,13 +168,14 @@ else:
                         img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT,
                                                                  x_size, y_size)
                         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+                        df1 = pd.DataFrame(parameter)
+                        df2 = pd.DataFrame(annotate)
+
                         st.image(img,
                                  channels='RGB',
                                  use_column_width='always',
                                  caption=caption)
-
-                        df1 = pd.DataFrame(parameter)
-                        df2 = pd.DataFrame(annotate)
 
                         if show_label:
                             st.table(df1)
@@ -182,7 +183,8 @@ else:
                         if save_annotate:
                             name_image = f'{PATH}/detections/videos/{path_object[kind_object]}/images/' \
                                          f'{label_name(count, 10000)}.png'
-                            cv2.imwrite(name_image, img)
+                            Image.fromarray(img).save(name_image)
+                            # cv2.imwrite(name_image, img)
 
                             name_annotate = f'{PATH}/detections/videos/{path_object[kind_object]}/annotations/' \
                                             f'{label_name(count, 10000)}.txt'
@@ -301,7 +303,8 @@ else:
                         if save_annotate:
                             name_image = f'{PATH}/detections/pictures/{path_object[kind_object]}/images/' \
                                          f'{label_name(count, 10000)}.png'
-                            cv2.imwrite(name_image, img)
+                            Image.fromarray(img).save(name_image)
+                            # cv2.imwrite(name_image, img)
 
                             name_annotate = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations/' \
                                             f'{label_name(count, 10000)}.txt'
