@@ -124,7 +124,7 @@ else:
                 source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
                 cap = cv2.VideoCapture(source)
 
-                seconds, minutes, hours = cs.get_time(cap)
+        seconds, minutes, hours = cs.get_time(cap)
 
         stop_program = st.slider('Stop Time Video',
                                  min_value=datetime.time(0, 0, 1),
