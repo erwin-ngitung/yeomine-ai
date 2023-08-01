@@ -184,7 +184,6 @@ else:
                             name_image = f'{PATH}/detections/videos/{path_object[kind_object]}/images/' \
                                          f'{label_name(count, 10000)}.png'
                             Image.fromarray(img).save(name_image)
-                            # cv2.imwrite(name_image, img)
 
                             name_annotate = f'{PATH}/detections/videos/{path_object[kind_object]}/annotations/' \
                                             f'{label_name(count, 10000)}.txt'
@@ -304,7 +303,6 @@ else:
                             name_image = f'{PATH}/detections/pictures/{path_object[kind_object]}/images/' \
                                          f'{label_name(count, 10000)}.png'
                             Image.fromarray(img).save(name_image)
-                            # cv2.imwrite(name_image, img)
 
                             name_annotate = f'{PATH}/detections/pictures/{path_object[kind_object]}/annotations/' \
                                             f'{label_name(count, 10000)}.txt'
