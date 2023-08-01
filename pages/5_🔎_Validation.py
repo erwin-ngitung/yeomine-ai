@@ -128,7 +128,7 @@ else:
             btn = st.radio('Do you want to download image in single or all files?',
                            ['Single files', 'All files', 'Not yet'],
                            index=2,
-                           key='download-button-2')
+                           key='download-button-1')
 
             if btn == 'Single files':
                 st.success(f'Now, you can download the image-{name_photo} with annotation '
@@ -209,19 +209,19 @@ else:
                            on_click=next_photo,
                            use_container_width=True,
                            args=([path_files, 'back']),
-                           key='back-photo-validation-1')
+                           key='back-photo-validation-2')
             with st10:
                 st10.button('Delete ♻️',
-                           on_click=delete_photo,
-                           use_container_width=True,
-                           args=([path_files, 'delete']),
-                           key='delete-photo-validation-1')
+                            on_click=delete_photo,
+                            use_container_width=True,
+                            args=([path_files, 'delete']),
+                            key='delete-photo-validation-2')
             with st11:
                 st11.button('Next ▶️',
-                           on_click=next_photo,
-                           use_container_width=True,
-                           args=([path_files, 'next']),
-                           key='next-photo-validation-1')
+                            on_click=next_photo,
+                            use_container_width=True,
+                            args=([path_files, 'next']),
+                            key='next-photo-validation-2')
 
             btn = st.radio('Do you want to download image in single or all files?',
                            ['Single files', 'All files', 'Not yet'],
@@ -240,7 +240,7 @@ else:
                                              use_container_width=True,
                                              file_name=f'{photo.split("/")[-1]}',
                                              mime="image/png",
-                                             key='download-image-1')
+                                             key='download-image-2')
 
                 with st13:
                     annotate_path = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}/annotations/' + \
@@ -252,7 +252,7 @@ else:
                                              use_container_width=True,
                                              file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
                                              mime="text/plain",
-                                             key='download-annotate-1')
+                                             key='download-annotate-2')
 
             elif btn == 'All files':
                 st.success(f'Now, you can download the all images with annotation '
@@ -267,6 +267,6 @@ else:
                                        use_container_width=True,
                                        file_name=f'{kind_file}-detection-{name}.zip',
                                        mime="application/zip",
-                                       key='download-zip-1')
+                                       key='download-zip-2')
         except (Exception,):
             st.error('Please go to the menu Detection (sub-menu image) first!', icon='❎')
