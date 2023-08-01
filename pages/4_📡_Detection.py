@@ -109,8 +109,13 @@ else:
                                                   type=['mp4', 'mkv', 'mpeg'],
                                                   accept_multiple_files=False)
                 temp_file = tempfile.NamedTemporaryFile(delete=False)
-                temp_file.write(uploaded_video.read())
-                cap = cv2.VideoCapture(temp_file.name)
+
+                try:
+                    temp_file.write(uploaded_video.read())
+                    cap = cv2.VideoCapture(temp_file.name)
+                except (Exception,):
+                    source = f'{PATH}/datasets/general-detect/predict/sample-video-01.mp4'
+                    cap = cv2.VideoCapture(source)
 
                 process = st.form_submit_button("Process My Video",
                                                 use_container_width=True)
