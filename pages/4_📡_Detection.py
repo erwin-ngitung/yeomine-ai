@@ -104,21 +104,17 @@ else:
                              key='camera-detection-1')
 
         if type_file == 'Yes':
-            with st.form("form-upload-video", clear_on_submit=True):
-                uploaded_video = st.file_uploader("Upload your video file",
-                                                  type=['mp4', 'mkv', 'mpeg'],
-                                                  accept_multiple_files=False)
-                temp_file = tempfile.NamedTemporaryFile(delete=False)
+            uploaded_video = st.file_uploader("Upload your video file",
+                                              type=['mp4', 'mkv', 'mpeg'],
+                                              accept_multiple_files=False)
+            temp_file = tempfile.NamedTemporaryFile(delete=False)
 
-                try:
-                    temp_file.write(uploaded_video.read())
-                    cap = cv2.VideoCapture(temp_file.name)
-                except (Exception,):
-                    source = f'{PATH}/datasets/general-detect/predict/sample-video-01.mp4'
-                    cap = cv2.VideoCapture(source)
-
-                process = st.form_submit_button("Process My Video",
-                                                use_container_width=True)
+            try:
+                temp_file.write(uploaded_video.read())
+                cap = cv2.VideoCapture(temp_file.name)
+            except (Exception,):
+                source = f'{PATH}/datasets/general-detect/predict/sample-video-01.mp4'
+                cap = cv2.VideoCapture(source)
 
         else:
             list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
@@ -130,93 +126,92 @@ else:
 
             process = True
 
+        seconds, minutes, hours = cs.get_time(cap)
+
+        stop_program = st.slider('Stop Time Video',
+                                 min_value=datetime.time(0, 0, 1),
+                                 max_value=datetime.time(hours, minutes, seconds),
+                                 value=datetime.time(0, 0, 0),
+                                 format="HH:mm:ss",
+                                 step=datetime.timedelta(seconds=1),
+                                 key='stop-program-detection-1')
+
+        sum_seconds = stop_program.hour * 3600 + stop_program.minute * 60 + stop_program.second
+
+        show_label = st.checkbox('Show label predictions',
+                                 value=True,
+                                 key='show-label-detection-1')
+        save_annotate = st.checkbox('Save images and annotations',
+                                    value=False,
+                                    key='save-annotate-detection-1')
+
+        process = st.button('Process',
+                            key='next_detect',
+                            use_container_width=True)
+
         if process:
-            seconds, minutes, hours = cs.get_time(cap)
+            if torch.cuda.is_available():
+                st.success(
+                    f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
+                device = 0
+            else:
+                st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
+                device = 'cpu'
 
-            stop_program = st.slider('Stop Time Video',
-                                     min_value=datetime.time(0, 0, 1),
-                                     max_value=datetime.time(hours, minutes, seconds),
-                                     value=datetime.time(0, 0, 0),
-                                     format="HH:mm:ss",
-                                     step=datetime.timedelta(seconds=1),
-                                     key='stop-program-detection-1')
+            path_detections = f'{PATH}/detections/videos/{path_object[kind_object]}'
+            make_folder(path_detections)
 
-            sum_seconds = stop_program.hour * 3600 + stop_program.minute * 60 + stop_program.second
+            count = 0
+            placeholder1 = st.empty()
+            colors = cs.generate_label_colors(model.names)
 
-            show_label = st.checkbox('Show label predictions',
-                                     value=True,
-                                     key='show-label-detection-1')
-            save_annotate = st.checkbox('Save images and annotations',
-                                        value=False,
-                                        key='save-annotate-detection-1')
+            # Detection Model
+            while cap.isOpened() and (count < sum_seconds):
+                with placeholder1.container():
+                    ret, img = cap.read()
 
-            process = st.button('Process',
-                                key='next_detect',
-                                use_container_width=True)
+                    if ret:
+                        tz_JKT = pytz.timezone('Asia/Jakarta')
+                        time_JKT = dt.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                        caption = f'The frame image-{label_name(count, 10000)} generated at {time_JKT}'
 
-            if process:
-                if torch.cuda.is_available():
-                    st.success(
-                        f"Setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name})")
-                    device = 0
-                else:
-                    st.success(f"Setup complete. Using torch {torch.__version__} (CPU)")
-                    device = 'cpu'
+                        x_size = 640
+                        y_size = 640
+                        img = cv2.resize(img, (x_size, y_size), interpolation=cv2.INTER_AREA)
+                        img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT,
+                                                                 x_size, y_size)
+                        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-                path_detections = f'{PATH}/detections/videos/{path_object[kind_object]}'
-                make_folder(path_detections)
+                        df1 = pd.DataFrame(parameter)
+                        df2 = pd.DataFrame(annotate)
 
-                count = 0
-                placeholder1 = st.empty()
-                colors = cs.generate_label_colors(model.names)
+                        st.image(img,
+                                 channels='RGB',
+                                 use_column_width='always',
+                                 caption=caption)
 
-                # Detection Model
-                while cap.isOpened() and (count < sum_seconds):
-                    with placeholder1.container():
-                        ret, img = cap.read()
+                        if show_label:
+                            st.table(df1)
 
-                        if ret:
-                            tz_JKT = pytz.timezone('Asia/Jakarta')
-                            time_JKT = dt.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
-                            caption = f'The frame image-{label_name(count, 10000)} generated at {time_JKT}'
+                        if save_annotate:
+                            name_image = f'{PATH}/detections/videos/{path_object[kind_object]}/images/' \
+                                         f'{label_name(count, 10000)}.png'
+                            Image.fromarray(img).save(name_image)
 
-                            x_size = 640
-                            y_size = 640
-                            img = cv2.resize(img, (x_size, y_size), interpolation=cv2.INTER_AREA)
-                            img, parameter, annotate = cs.draw_image(model, device, img, conf / 100, colors, time_JKT,
-                                                                     x_size, y_size)
-                            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+                            name_annotate = f'{PATH}/detections/videos/{path_object[kind_object]}/annotations/' \
+                                            f'{label_name(count, 10000)}.txt'
+                            with open(name_annotate, 'a') as f:
+                                df_string = df2.to_string(header=False, index=False)
+                                f.write(df_string)
 
-                            df1 = pd.DataFrame(parameter)
-                            df2 = pd.DataFrame(annotate)
+                        count += 1
+                        time.sleep(0.5)
 
-                            st.image(img,
-                                     channels='RGB',
-                                     use_column_width='always',
-                                     caption=caption)
+                    else:
+                        st.error('Image is not found', icon='❎')
 
-                            if show_label:
-                                st.table(df1)
-
-                            if save_annotate:
-                                name_image = f'{PATH}/detections/videos/{path_object[kind_object]}/images/' \
-                                             f'{label_name(count, 10000)}.png'
-                                Image.fromarray(img).save(name_image)
-
-                                name_annotate = f'{PATH}/detections/videos/{path_object[kind_object]}/annotations/' \
-                                                f'{label_name(count, 10000)}.txt'
-                                with open(name_annotate, 'a') as f:
-                                    df_string = df2.to_string(header=False, index=False)
-                                    f.write(df_string)
-
-                            count += 1
-                            time.sleep(0.5)
-
-                        else:
-                            st.error('Image is not found', icon='❎')
-
-                if save_annotate:
-                    st.success('Your all images and annotations have successfully saved', icon='✅')
+            if save_annotate:
+                st.success('Your all images and annotations have successfully saved', icon='✅')
 
     with tab2:
         kind_object = st.selectbox('Please select the kind of object detection do you want.',
