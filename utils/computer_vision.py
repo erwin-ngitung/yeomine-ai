@@ -78,12 +78,12 @@ def draw_image(model, device, img, confi, colors, time, x_size, y_size):
             img = cv2.putText(img,
                               f'LABEL: {label}',
                               (x1, y1 - 10),
-                              cv2.FONT_HERSHEY_SIMPLEX, 0.6,
+                              cv2.FONT_HERSHEY_DUPLEX, 0.6,
                               color, 2)
             img = cv2.putText(img,
                               f'ID: {idx}',
                               (x1, y1 - 30),
-                              cv2.FONT_HERSHEY_SIMPLEX, 0.6,
+                              cv2.FONT_HERSHEY_DUPLEX, 0.6,
                               color, 2)
 
             parameter['label'].append(label)
