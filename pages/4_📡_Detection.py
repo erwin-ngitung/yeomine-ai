@@ -283,7 +283,7 @@ else:
 
                         photo = Image.open(io.BytesIO(file.read()))
                         # photo_convert = np.array(photo.convert('RGB'))
-                        img, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
+                        img, parameter, annotate = cs.draw_image(model, device, photo, conf / 100, colors,
                                                                  time_JKT, x_size, y_size)
 
                         img = cv2.resize(img, (x_size, y_size), interpolation=cv2.INTER_AREA)
