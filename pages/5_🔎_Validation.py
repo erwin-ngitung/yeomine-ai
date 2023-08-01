@@ -194,8 +194,8 @@ else:
                 photo = path_images[state.counter]
                 name_photo = photo.split("/")[-1].split(".")[0]
 
-            # img_photo = cv2.imread(photo)
-            # img_photo = cv2.cvtColor(img_photo, cv2.COLOR_BGR2RGB)
+            img_photo = cv2.imread(photo)
+            img_photo = cv2.cvtColor(img_photo, cv2.COLOR_BGR2RGB)
 
             st.image(photo,
                      channels='RGB',
