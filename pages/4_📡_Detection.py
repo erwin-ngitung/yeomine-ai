@@ -114,7 +114,7 @@ else:
                     temp_file.write(file.read())
                     cap = cv2.VideoCapture(temp_file.name)
                 except (Exception,):
-                    pass
+                    cap = None
 
             else:
                 list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
