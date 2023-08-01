@@ -86,14 +86,6 @@ else:
                               index=1,
                               key='custom-detection-1')
         with st5:
-            type_file = st.radio('Do you want to upload your video?',
-                                 ['Yes', 'No'],
-                                 index=1,
-                                 key='camera-detection-1')
-
-        st6, st7 = st.columns(2)
-
-        with st6:
             if custom == 'Yes':
                 option_model = f'{PATH}/results/{path_object[kind_object]}/weights/best.pt'
                 model = YOLO(option_model)
@@ -106,12 +98,23 @@ else:
                                             key='option-model-detection-1')
                 model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
 
+        st6, st7 = st.columns(2)
+
+        with st6:
+            type_file = st.radio('Do you want to upload your video?',
+                                 ['Yes', 'No'],
+                                 index=1,
+                                 key='camera-detection-1')
+
         with st7:
             if type_file == 'Yes':
                 file = st.file_uploader("Upload your video file")
                 temp_file = tempfile.NamedTemporaryFile(delete=False)
-                temp_file.write(file.read())
-                cap = cv2.VideoCapture(temp_file.name)
+                try:
+                    temp_file.write(file.read())
+                    cap = cv2.VideoCapture(temp_file.name)
+                except (Exception,):
+                    pass
 
             else:
                 list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
