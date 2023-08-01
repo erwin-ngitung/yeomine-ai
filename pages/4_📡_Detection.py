@@ -123,18 +123,15 @@ else:
 
                 seconds, minutes, hours = cs.get_time(cap)
 
-        if type_file == 'No':
-            stop_program = st.slider('Stop Time Video',
-                                     min_value=datetime.time(0, 0, 1),
-                                     max_value=datetime.time(hours, minutes, seconds),
-                                     value=datetime.time(0, 0, 0),
-                                     format="HH:mm:ss",
-                                     step=datetime.timedelta(seconds=1),
-                                     key='stop-program-detection-1')
+        stop_program = st.slider('Stop Time Video',
+                                 min_value=datetime.time(0, 0, 1),
+                                 max_value=datetime.time(hours, minutes, seconds),
+                                 value=datetime.time(0, 0, 0),
+                                 format="HH:mm:ss",
+                                 step=datetime.timedelta(seconds=1),
+                                 key='stop-program-detection-1')
 
-            sum_seconds = stop_program.hour * 3600 + stop_program.minute * 60 + stop_program.second
-        else:
-            sum_seconds = np.inf
+        sum_seconds = stop_program.hour * 3600 + stop_program.minute * 60 + stop_program.second
 
         show_label = st.checkbox('Show label predictions',
                                  value=True,
