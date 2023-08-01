@@ -13,6 +13,7 @@ from datetime import datetime as dt
 import datetime
 import pytz
 import cv2
+import tempfile
 
 # Package for Machine Learning
 import torch
@@ -85,10 +86,10 @@ else:
                               index=1,
                               key='custom-detection-1')
         with st5:
-            type_camera = st.radio('Do you want to use webcam/camera for detection?',
-                                   ['Yes', 'No'],
-                                   index=1,
-                                   key='camera-detection-1')
+            type_file = st.radio('Do you want to upload your video?',
+                                 ['Yes', 'No'],
+                                 index=1,
+                                 key='camera-detection-1')
 
         st6, st7 = st.columns(2)
 
@@ -106,12 +107,11 @@ else:
                 model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
 
         with st7:
-            if type_camera == 'Yes':
-                source = st.text_input('Please input your Webcam link.', 'Auto')
-                if source == 'Auto':
-                    cap = cv2.VideoCapture(0)
-                else:
-                    cap = cv2.VideoCapture(source)
+            if type_file == 'Yes':
+                file = st.file_uploader("Upload your video file")
+                temp_file = tempfile.NamedTemporaryFile(delete=False)
+                temp_file.write(file.read())
+                cap = cv2.VideoCapture(temp_file.name)
 
             else:
                 list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
@@ -123,7 +123,7 @@ else:
 
                 seconds, minutes, hours = cs.get_time(cap)
 
-        if type_camera == 'No':
+        if type_file == 'No':
             stop_program = st.slider('Stop Time Video',
                                      min_value=datetime.time(0, 0, 1),
                                      max_value=datetime.time(hours, minutes, seconds),
