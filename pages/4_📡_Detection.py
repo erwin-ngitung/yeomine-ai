@@ -173,7 +173,7 @@ else:
                         df2 = pd.DataFrame(annotate)
 
                         st_l1, st_r1 = st.columns(2)
-                        
+
                         with st_l1:
                             st_l1.image(img,
                                         channels='RGB',
@@ -182,7 +182,10 @@ else:
 
                         if show_label:
                             with st_r1:
-                                st_r1.table(df1.set_index('label').T)
+                                try:
+                                    st_r1.table(df1.set_index('label').T)
+                                except (Exception,):
+                                    st.warning('There is no detections')
 
                         if save_annotate:
                             name_image = f'{PATH}/detections/videos/{path_object[kind_object]}/images/' \
@@ -305,7 +308,10 @@ else:
 
                         if show_label:
                             with st_r2:
-                                st_r2.table(df1.set_index('label').T)
+                                try:
+                                    st_r2.table(df1.set_index('label').T)
+                                except (Exception,):
+                                    st.warning('There is no detections')
 
                         if save_annotate:
                             name_image = f'{PATH}/detections/pictures/{path_object[kind_object]}/images/' \
