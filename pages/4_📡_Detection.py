@@ -282,7 +282,7 @@ else:
                         caption = f'The frame image-{label_name(count, 10000)} generated at {time_JKT}'
 
                         photo = Image.open(io.BytesIO(file.read()))
-                        photo_convert = np.array(photo.convert('BGR'))
+                        photo_convert = np.array(photo.convert('RGB'))
                         img, parameter, annotate = cs.draw_image(model, device, photo_convert, conf / 100, colors,
                                                                  time_JKT, x_size, y_size)
 
