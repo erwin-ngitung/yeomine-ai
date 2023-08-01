@@ -152,6 +152,8 @@ else:
             placeholder1 = st.empty()
             colors = cs.generate_label_colors(model.names)
 
+            st_l1, st_r1 = st.columns(2)
+
             # Detection Model
             while cap.isOpened() and count < stop_program:
                 with placeholder1.container():
@@ -172,13 +174,15 @@ else:
                         df1 = pd.DataFrame(parameter)
                         df2 = pd.DataFrame(annotate)
 
-                        st.image(img,
-                                 channels='RGB',
-                                 use_column_width='always',
-                                 caption=caption)
+                        with st_l1:
+                            st_l1.image(img,
+                                        channels='RGB',
+                                        use_column_width='always',
+                                        caption=caption)
 
                         if show_label:
-                            st.table(df1)
+                            with st_r1:
+                                st_r1.table(df1.set_index('label').T)
 
                         if save_annotate:
                             name_image = f'{PATH}/detections/videos/{path_object[kind_object]}/images/' \
@@ -274,6 +278,8 @@ else:
                 x_size, y_size = 650, 650
                 placeholder2 = st.empty()
 
+                st_l2, st_r2 = st.columns(2)
+
                 for file in uploaded_files:
                     with placeholder2.container():
                         tz_JKT = pytz.timezone('Asia/Jakarta')
@@ -288,16 +294,18 @@ else:
                         img = cv2.resize(img, (x_size, y_size), interpolation=cv2.INTER_AREA)
                         # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-                        st.image(img,
-                                 channels='RGB',
-                                 use_column_width='always',
-                                 caption=caption)
+                        with st_l2:
+                            st_l2.image(img,
+                                        channels='RGB',
+                                        use_column_width='always',
+                                        caption=caption)
 
                         df1 = pd.DataFrame(parameter)
                         df2 = pd.DataFrame(annotate)
 
                         if show_label:
-                            st.table(df1)
+                            with st_r2:
+                                st_r2.table(df1.set_index('label').T)
 
                         if save_annotate:
                             name_image = f'{PATH}/detections/pictures/{path_object[kind_object]}/images/' \
