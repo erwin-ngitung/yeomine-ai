@@ -320,4 +320,4 @@ else:
                     st.success('Your all images and annotations have successfully saved', icon='✅')
 
             except (Exception,):
-                st.error('Cannot read the image!', icon='❎')
+                st.error('Cannot process the image!', icon='❎')
