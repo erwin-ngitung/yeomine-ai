@@ -33,6 +33,17 @@ def generate_label_colors(name):
     return np.random.uniform(0, 255, size=(len(name), 3))
 
 
+def get_time(cap):
+    frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    total_seconds = frame_count // fps
+    seconds = int(total_seconds % 60)
+    minutes = int(int(total_seconds / 60) % 60)
+    hours = int(int(total_seconds / 3600) % 3600)
+
+    return seconds, minutes, hours
+
+
 def draw_image(model, device, img, confi, colors, time, x_size, y_size):
     results = model.predict(img, device=device, conf=0.1, iou=0.5)
     names = model.names

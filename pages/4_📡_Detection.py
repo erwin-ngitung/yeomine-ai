@@ -4,12 +4,13 @@ import io
 import numpy as np
 import pandas as pd
 from PIL import Image
-from utils import make_zip, make_folder, make_folder_only, label_name, computer_vision as cs
+from utils import make_folder, label_name, computer_vision as cs
 
 # Package for Streamlit
 from streamlit import session_state as state
 import streamlit as st
-from datetime import datetime
+from datetime import datetime as dt
+import datetime
 import pytz
 import cv2
 
@@ -75,12 +76,6 @@ else:
                          step=1,
                          value=50,
                          key='confidence-detection-1')
-        stop_program = st.slider('Number of Image',
-                                 min_value=0,
-                                 max_value=500,
-                                 step=1,
-                                 value=20,
-                                 key='stop-program-detection-1')
 
         st4, st5 = st.columns(2)
 
@@ -117,6 +112,7 @@ else:
                     cap = cv2.VideoCapture(0)
                 else:
                     cap = cv2.VideoCapture(source)
+
             else:
                 list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
                 sample_video = st.selectbox('Please select sample video do you want.',
@@ -124,6 +120,21 @@ else:
                                             key='sample-video-detection-1')
                 source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
                 cap = cv2.VideoCapture(source)
+
+                seconds, minutes, hours = cs.get_time(cap)
+
+        if type_camera == 'No':
+            stop_program = st.slider('Stop Time Video',
+                                     min_value=datetime.time(0, 0, 1),
+                                     max_value=datetime.time(hours, minutes, seconds),
+                                     value=datetime.time(0, 0, 0),
+                                     format="HH:mm:ss",
+                                     step=datetime.timedelta(seconds=1),
+                                     key='stop-program-detection-1')
+
+            sum_seconds = stop_program.hour * 3600 + stop_program.minute * 60 + stop_program.second
+        else:
+            sum_seconds = np.inf
 
         show_label = st.checkbox('Show label predictions',
                                  value=True,
@@ -153,13 +164,13 @@ else:
             colors = cs.generate_label_colors(model.names)
 
             # Detection Model
-            while cap.isOpened() and count < stop_program:
+            while cap.isOpened() and (count < sum_seconds):
                 with placeholder1.container():
                     ret, img = cap.read()
 
                     if ret:
                         tz_JKT = pytz.timezone('Asia/Jakarta')
-                        time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                        time_JKT = dt.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
                         caption = f'The frame image-{label_name(count, 10000)} generated at {time_JKT}'
 
                         x_size = 640
@@ -277,7 +288,7 @@ else:
                 for file in uploaded_files:
                     with placeholder2.container():
                         tz_JKT = pytz.timezone('Asia/Jakarta')
-                        time_JKT = datetime.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
+                        time_JKT = dt.now(tz_JKT).strftime('%d-%m-%Y %H:%M:%S')
                         caption = f'The frame image-{label_name(count, 10000)} generated at {time_JKT}'
 
                         photo = Image.open(io.BytesIO(file.read()))
