@@ -202,22 +202,22 @@ else:
                      use_column_width='always',
                      caption=f'image-{name_photo}')
 
-            st1, st2, st3, st4, st5 = st.columns(5)
+            st8, st9, st10, st11, st12 = st.columns(5)
 
-            with st2:
-                st2.button('◀️ Back',
+            with st9:
+                st9.button('◀️ Back',
                            on_click=next_photo,
                            use_container_width=True,
                            args=([path_files, 'back']),
                            key='back-photo-validation-1')
-            with st3:
-                st3.button('Delete ♻️',
+            with st10:
+                st10.button('Delete ♻️',
                            on_click=delete_photo,
                            use_container_width=True,
                            args=([path_files, 'delete']),
                            key='delete-photo-validation-1')
-            with st4:
-                st4.button('Next ▶️',
+            with st11:
+                st11.button('Next ▶️',
                            on_click=next_photo,
                            use_container_width=True,
                            args=([path_files, 'next']),
@@ -231,28 +231,28 @@ else:
             if btn == 'Single files':
                 st.success(f'Now, you can download the image-{name_photo} with annotation '
                            f'in the button bellow.', icon='✅')
-                st6, st7 = st.columns(2)
+                st12, st13 = st.columns(2)
 
-                with st6:
+                with st12:
                     with open(photo, 'rb') as file:
-                        st6.download_button(label='🔗 Image (.png)',
-                                            data=file,
-                                            use_container_width=True,
-                                            file_name=f'{photo.split("/")[-1]}',
-                                            mime="image/png",
-                                            key='download-image-1')
+                        st12.download_button(label='🔗 Image (.png)',
+                                             data=file,
+                                             use_container_width=True,
+                                             file_name=f'{photo.split("/")[-1]}',
+                                             mime="image/png",
+                                             key='download-image-1')
 
-                with st7:
+                with st13:
                     annotate_path = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}/annotations/' + \
                                     photo.split("/")[-1].split(".")[0] + '.txt'
 
                     with open(annotate_path, 'rb') as file:
-                        st7.download_button(label='🔗 Annotation (.txt)',
-                                            data=file,
-                                            use_container_width=True,
-                                            file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
-                                            mime="text/plain",
-                                            key='download-annotate-1')
+                        st13.download_button(label='🔗 Annotation (.txt)',
+                                             data=file,
+                                             use_container_width=True,
+                                             file_name=f'{photo.split("/")[-1].split(".")[0]}.txt',
+                                             mime="text/plain",
+                                             key='download-annotate-1')
 
             elif btn == 'All files':
                 st.success(f'Now, you can download the all images with annotation '
