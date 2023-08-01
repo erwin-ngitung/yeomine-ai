@@ -100,7 +100,7 @@ else:
             # img_photo = cv2.cvtColor(img_photo, cv2.COLOR_BGR2RGB)
 
             st.image(photo,
-                     channels='BGR',
+                     channels='RGB',
                      use_column_width='always',
                      caption=f'image-{name_photo}')
 
@@ -198,7 +198,7 @@ else:
             # img_photo = cv2.cvtColor(img_photo, cv2.COLOR_BGR2RGB)
 
             st.image(photo,
-                     channels='BGR',
+                     channels='RGB',
                      use_column_width='always',
                      caption=f'image-{name_photo}')
 
