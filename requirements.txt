@@ -26,6 +26,7 @@ geopy
 pytz
 py-cpuinfo
 pytesseract
+python-pptx
 
 # Streamlit -------------------------------------
 aiohttp
