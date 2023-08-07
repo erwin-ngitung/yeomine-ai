@@ -73,7 +73,7 @@ result_queue: "queue.Queue[List[Detection]]" = queue.Queue()
 def video_frame_callback(frame: av.VideoFrame) -> av.VideoFrame:
     img = frame.to_ndarray(format="bgr24")
 
-    model = YOLO("weights/general-detect/yolov8n.pt")
+    model = YOLO("../weights/general-detect/yolov8n.pt")
 
     # Run inference
     img = cv2.resize(img, (650, 650), interpolation=cv2.INTER_AREA)

@@ -93,10 +93,16 @@ else:
             else:
                 list_weights = [weight_file for weight_file in
                                 os.listdir(f'{PATH}/weights/{path_object[kind_object]}')]
-                option_model = st.selectbox('Please select model do you want.',
-                                            list_weights,
-                                            key='option-model-detection-1')
-                model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
+                list_model = st.selectbox('Please select model do you want.',
+                                           list_weights,
+                                           key='option-model-detection-1')
+                option_model = f'{PATH}/weights/{path_object[kind_object]}/{list_model}'
+                model = YOLO(option_model)
+
+        if 'model-videos' in state.keys():
+            del state['model-videos']
+
+        state['model-videos'] = option_model
 
         type_file = st.radio('Do you want to upload your video?',
                              ['Yes', 'No'],
@@ -248,10 +254,16 @@ else:
                 st.success('The model have successfully loaded!', icon='✅')
             else:
                 list_weights = [weight_file for weight_file in os.listdir(f'weights/{path_object[kind_object]}')]
-                option_model = st.selectbox('Please select model do you want.',
-                                            list_weights,
-                                            key='select-model-detection-2')
-                model = YOLO(f'{PATH}/weights/{path_object[kind_object]}/{option_model}')
+                list_model = st.selectbox('Please select model do you want.',
+                                           list_weights,
+                                           key='select-model-detection-2')
+                option_model = f'{PATH}/weights/{path_object[kind_object]}/{list_model}'
+                model = YOLO(option_model)
+
+        if 'model-pictures' in state.keys():
+            del state['model-pictures']
+
+        state['model-pictures'] = option_model
 
         colors = cs.generate_label_colors(model.names)
 

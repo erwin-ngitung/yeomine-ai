@@ -44,7 +44,7 @@ else:
     with tab1:
         try:
             kind_file = 'videos'
-            kind_object = state['object']
+            kind_object = state['object-videos']
             path_folder = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}/annotations'
 
         except (Exception,):
@@ -53,7 +53,7 @@ else:
     with tab2:
         try:
             kind_file = 'pictures'
-            kind_object = state['object']
+            kind_object = state['object-pictures']
             path_folder = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}/annotations'
 
         except (Exception,):
