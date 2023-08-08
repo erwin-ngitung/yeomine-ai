@@ -107,14 +107,15 @@ else:
         # Download Button
         path_model_accuracy = f'{PATH}/reports/{path_object[kind_object]}'
         path_model_validation = f'{PATH}/results/{path_object[kind_object]}'
-        ppt_template = f'{PATH}/data/template/format_model-analysis_yeomine.pptx'
+        ppt_template1 = f'{PATH}/data/template/format_model-analysis_yeomine.pptx'
+        ppt_template2 = f'{PATH}/data/template/format_report-analysis_yeomine.pptx'
 
-        prs1 = cp.model_analysis(path_model_validation, ppt_template)
+        prs1 = cp.model_analysis(path_model_validation, ppt_template1)
 
         model_output1 = BytesIO()
         prs1.save(model_output1)
 
-        prs2 = cp.report_analysis(path_model_accuracy, ppt_template)
+        prs2 = cp.report_analysis(path_model_accuracy, ppt_template2)
 
         model_output2 = BytesIO()
         prs2.save(model_output2)
