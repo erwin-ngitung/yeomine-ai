@@ -23,18 +23,18 @@ def model_analysis(img_path, ppt_template):
     line_0.font.bold = True
 
     idx_slide = [2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14]
-    name_slide = {'confusion_matrix_normalized': 'Confusion Matrix',
-                  'F1_curve': 'F1 Curve',
-                  'P_curve': 'P Curve',
-                  'PR_curve': 'PR Curve',
-                  'R_curve': 'R Curve',
-                  'results': 'Summary',
-                  'labels': 'Label Validation',
-                  'train_batch0': 'Train Batch 0 Validation',
-                  'train_batch1': 'Train Batch 1 Validation',
-                  'train_batch2': 'Train Batch 2 Validation',
-                  'val_batch0_labels': 'Test Batch 0 Validation',
-                  'val_batch0_pred': 'Prediction Batch 0 Validation'}
+    name_slide = {'confusion_matrix_normalized.png': 'Confusion Matrix',
+                  'F1_curve.png': 'F1 Curve',
+                  'P_curve.png': 'P Curve',
+                  'PR_curve.png': 'PR Curve',
+                  'R_curve.png': 'R Curve',
+                  'results.png': 'Summary',
+                  'labels.jpg': 'Label Validation',
+                  'train_batch0.jpg': 'Train Batch 0 Validation',
+                  'train_batch1.jpg': 'Train Batch 1 Validation',
+                  'train_batch2.jpg': 'Train Batch 2 Validation',
+                  'val_batch0_labels.jpg': 'Test Batch 0 Validation',
+                  'val_batch0_pred.jpg': 'Prediction Batch 0 Validation'}
 
     for i, idx in enumerate(idx_slide):
         slides = prs.slides[idx]
@@ -74,8 +74,8 @@ def report_analysis(img_path, ppt_template):
     line_0.font.bold = True
 
     idx_slide = [1, 2]
-    name_slide = {'coordinate-object': 'Graph Coordinate Object',
-                  'graph-count-object': 'Graph Count Object'}
+    name_slide = {'coordinate-object.png': 'Graph Coordinate Object',
+                  'graph-count-object.png': 'Graph Count Object'}
 
     for i, idx in enumerate(idx_slide):
         slides = prs.slides[idx]
