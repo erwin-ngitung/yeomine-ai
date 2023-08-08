@@ -24,6 +24,7 @@ xlsxwriter
 imutils
 geopy
 pytz
+plotly
 py-cpuinfo
 pytesseract
 python-pptx

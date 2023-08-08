@@ -105,3 +105,55 @@ def draw_image(model, device, img, confi, colors, time, x_size, y_size):
 def recv(frame):
     img = frame.to_ndarray(format="bgr24")
     return av.VideoFrame.from_ndarray(img, format="bgr24")
+
+
+def count_label(dataset):
+    ids_object = [0]
+    count = 1
+
+    for i in range(len(dataset)):
+        for j in range(1, len(dataset)):
+
+            x1, x2, y1, y2 = dataset['X'].iloc[i], dataset['X'].iloc[j], dataset['Y'].iloc[i], dataset['Y'].iloc[j]
+            w1, w2, h1, h2 = \
+                dataset['Weight'].iloc[i], \
+                dataset['Weight'].iloc[j], \
+                dataset['Height'].iloc[i], \
+                dataset['Height'].iloc[j]
+
+            label1 = dataset['Label'].iloc[i]
+            label2 = dataset['Label'].iloc[j]
+
+            if label2 == label1:
+                if abs(x2 - x1) > 0.01 and abs(y1 - y2) > 0.01:
+                    if abs(w2 - w1) > 0.015 and abs(h2 - h1) > 0.015:
+                        if i == 0:
+                            ids_object.append(count)
+                            count += 1
+                        else:
+                            ids_object[j] = ids_object[i]
+                    else:
+                        if i == 0:
+                            ids_object.append(ids_object[i])
+                        else:
+                            ids_object[j] = ids_object[i]
+                else:
+                    if abs(w2 - w1) > 0.015 and abs(h2 - h1) > 0.015:
+                        if i == 0:
+                            ids_object.append(count)
+                            count += 1
+                        else:
+                            ids_object[j] = ids_object[i]
+                    else:
+                        if i == 0:
+                            ids_object.append(ids_object[i])
+                        else:
+                            ids_object[j] = ids_object[i]
+            else:
+                if i == 0:
+                    ids_object.append(count)
+                    count += 1
+                # else:
+                #     ids_object[j] = ids_object[i]
+
+    return ids_object

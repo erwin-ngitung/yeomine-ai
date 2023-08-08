@@ -1,7 +1,11 @@
+import os
+import pandas as pd
 from PIL import Image
 from streamlit import session_state as state
 import streamlit as st
-from utils import check_email
+from utils import check_email, computer_vision as cs
+import plotly.express as px
+from ultralytics import YOLO
 
 st.set_page_config(
     page_title="Report Analysis | Yeomine App",
@@ -42,18 +46,40 @@ else:
     tab1, tab2 = st.tabs(['🎦 Video', '📷 Image'])
 
     with tab1:
-        try:
-            kind_file = 'videos'
-            kind_object = state['object-videos']
-            path_folder = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}/annotations'
+        # try:
+        kind_file = 'videos'
+        kind_object = state['object-videos']
+        kind_model = state['model-videos']
+        path_folder = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}/annotations'
 
-        except (Exception,):
-            st.error('Please go to the menu Detection (sub-menu video) first!', icon='❎')
+        model = YOLO(kind_model)
+
+        dataset = pd.DataFrame(columns=['Label', 'X', 'Y', 'Weight', 'Height'])
+        for file in os.listdir(path_folder):
+            data = pd.read_fwf(f'{path_folder}/{file}',
+                               names=['Label', 'X', 'Y', 'Weight', 'Height'])
+
+            dataset = pd.concat([dataset, data])
+
+        dataset.dropna(inplace=True)
+        dataset['Label'] = dataset['Label'].astype(int).replace(model.names)
+        dataset['X'] = dataset['X'].astype(float)
+        dataset['Y'] = dataset['X'].astype(float)
+        dataset['Weight'] = dataset['Weight'].astype(float)
+        dataset['Height'] = dataset['Height'].astype(float)
+        dataset = dataset.reset_index(drop=True)
+        dataset['ID'] = cs.count_label(dataset)
+
+        st.table(dataset)
+
+        # except (Exception,):
+        #     st.error('Please go to the menu Detection (sub-menu video) first!', icon='❎')
 
     with tab2:
         try:
             kind_file = 'pictures'
             kind_object = state['object-pictures']
+            kind_model = state['model-pictures']
             path_folder = f'{PATH}/detections/{kind_file}/{path_object[kind_object]}/annotations'
 
         except (Exception,):
