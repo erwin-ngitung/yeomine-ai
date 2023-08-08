@@ -4,8 +4,6 @@
 # Base ----------------------------------------
 matplotlib>=3.2.2
 numpy>=1.18.5
-# opencv-python==4.6.0.66
-# opencv-contrib-python==4.6.0.66
 opencv-python-headless==4.7.0.72
 Pillow>=7.1.2
 PyYAML>=5.3.1
@@ -13,21 +11,23 @@ twilio~=8.4.0
 pydub==0.25.1
 requests>=2.23.0
 scipy>=1.4.1
-torch>=1.7.0,!=1.12.0
-torchvision>=0.8.1,!=0.13.0
 tqdm>=4.64.0
-detecto>=1.2.2
-ultralytics
-dill
-openpyxl
-xlsxwriter
-imutils
-geopy
-pytz
-plotly
 py-cpuinfo
 pytesseract
 python-pptx
+xlsxwriter
+openpyxl
+imutils
+plotly
+geopy
+pytz
+dill
+
+# Machine-learning
+torch>=1.7.0,!=1.12.0
+torchvision>=0.8.1,!=0.13.0
+detecto>=1.2.2
+ultralytics
 
 # Streamlit -------------------------------------
 aiohttp
