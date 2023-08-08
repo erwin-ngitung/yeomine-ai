@@ -8,6 +8,7 @@ from pptx import Presentation
 import plotly.express as px
 from ultralytics import YOLO
 from io import BytesIO
+import shutil
 
 st.set_page_config(
     page_title="Report Analysis | Yeomine App",
@@ -57,6 +58,13 @@ else:
         model = YOLO(kind_model)
 
         dataset = cs.converter_dataset(path_folder, model)
+        directory = f'{PATH}/reports/{path_object[kind_object]}'
+
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        else:
+            shutil.rmtree(directory)
+            os.makedirs(directory)
 
         st.markdown('<h4 style=\'text-align:center;\'>Coordinate Object</h4>', unsafe_allow_html=True)
 
