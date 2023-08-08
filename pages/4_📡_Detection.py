@@ -336,7 +336,6 @@ else:
                                 f.write(df_string)
 
                         count += 1
-                        time.sleep(0.5)
 
                 if save_annotate:
                     st.success('Your all images and annotations have successfully saved', icon='✅')

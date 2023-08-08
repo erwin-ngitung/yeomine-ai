@@ -2,6 +2,8 @@ import cv2
 import torch
 import numpy as np
 import av
+import pandas as pd
+import os
 
 torch.cuda.empty_cache()
 torch.backends.cudnn.benchmark = False
@@ -108,52 +110,66 @@ def recv(frame):
 
 
 def count_label(dataset):
-    ids_object = [0]
-    count = 1
+    idx = 0
+    count = 0
+    ids_object = []
+    datasets = dataset.sort_values(by=['Label', 'X', 'Y', 'Weight', 'Height']).reset_index(drop=True)
 
-    for i in range(len(dataset)):
-        for j in range(1, len(dataset)):
+    for label in datasets['Label'].unique():
+        count += 1
+        ids_object.append(count)
+        dataset = datasets[datasets['Label'] == label]
 
-            x1, x2, y1, y2 = dataset['X'].iloc[i], dataset['X'].iloc[j], dataset['Y'].iloc[i], dataset['Y'].iloc[j]
-            w1, w2, h1, h2 = \
-                dataset['Weight'].iloc[i], \
-                dataset['Weight'].iloc[j], \
-                dataset['Height'].iloc[i], \
-                dataset['Height'].iloc[j]
+        for i in range(len(dataset)):
+            for j in range(1, len(dataset)):
 
-            label1 = dataset['Label'].iloc[i]
-            label2 = dataset['Label'].iloc[j]
+                x1, x2, y1, y2 = dataset['X'].iloc[i], dataset['X'].iloc[j], dataset['Y'].iloc[i], dataset['Y'].iloc[j]
+                w1, w2, h1, h2 = \
+                    dataset['Weight'].iloc[i], \
+                    dataset['Weight'].iloc[j], \
+                    dataset['Height'].iloc[i], \
+                    dataset['Height'].iloc[j]
 
-            if label2 == label1:
-                if abs(x2 - x1) > 0.01 and abs(y1 - y2) > 0.01:
-                    if abs(w2 - w1) > 0.015 and abs(h2 - h1) > 0.015:
-                        if i == 0:
-                            ids_object.append(count)
-                            count += 1
-                        else:
-                            ids_object[j] = ids_object[i]
-                    else:
-                        if i == 0:
-                            ids_object.append(ids_object[i])
-                        else:
-                            ids_object[j] = ids_object[i]
+                if (abs(x2 - x1) > 0.07 and abs(y1 - y2) > 0.07) or (abs(w2 - w1) > 0.07 and abs(h2 - h1) > 0.07):
+                    if i == 0:
+                        ids_object.append(count)
+                        count += 1
                 else:
-                    if abs(w2 - w1) > 0.015 and abs(h2 - h1) > 0.015:
-                        if i == 0:
-                            ids_object.append(count)
-                            count += 1
-                        else:
-                            ids_object[j] = ids_object[i]
+                    if i == 0:
+                        ids_object.append(ids_object[idx + i])
                     else:
-                        if i == 0:
-                            ids_object.append(ids_object[i])
-                        else:
-                            ids_object[j] = ids_object[i]
-            else:
-                if i == 0:
-                    ids_object.append(count)
-                    count += 1
-                # else:
-                #     ids_object[j] = ids_object[i]
+                        ids_object[idx + j] = ids_object[idx + i]
 
-    return ids_object
+        idx += len(dataset)
+
+    datasets['ID'] = ids_object
+
+    replace_value = {}
+
+    for i, index in enumerate(datasets['ID'].unique()):
+        replace_value[index] = i
+
+    datasets['ID'].replace(replace_value, inplace=True)
+
+    return datasets
+
+
+def converter_dataset(path_folder, model):
+
+    dataset = pd.DataFrame(columns=['Label', 'X', 'Y', 'Weight', 'Height'])
+    for file in os.listdir(path_folder):
+        data = pd.read_fwf(f'{path_folder}/{file}',
+                           names=['Label', 'X', 'Y', 'Weight', 'Height'])
+
+        dataset = pd.concat([dataset, data])
+
+    dataset.dropna(inplace=True)
+    dataset['Label'] = dataset['Label'].astype(int).replace(model.names)
+    dataset['X'] = dataset['X'].astype(float)
+    dataset['Y'] = dataset['X'].astype(float)
+    dataset['Weight'] = dataset['Weight'].astype(float)
+    dataset['Height'] = dataset['Height'].astype(float)
+    dataset = dataset.reset_index(drop=True)
+    dataset = count_label(dataset)
+
+    return dataset

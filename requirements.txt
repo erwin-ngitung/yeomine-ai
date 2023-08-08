@@ -19,6 +19,7 @@ xlsxwriter
 openpyxl
 imutils
 plotly
+kaleido
 geopy
 pytz
 dill
