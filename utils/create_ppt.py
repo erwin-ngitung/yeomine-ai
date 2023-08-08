@@ -45,7 +45,7 @@ def model_analysis(img_path, ppt_template):
         line.font.size = Pt(50)
         line.font.bold = True
 
-        path_img = f'{img_path}/{list(name_slide.keys())[i]}.png'
+        path_img = f'{img_path}/{list(name_slide.keys())[i]}'
 
         picture = slides.shapes
         picture.add_picture(path_img,
