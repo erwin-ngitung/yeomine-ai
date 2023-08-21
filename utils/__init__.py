@@ -2,16 +2,14 @@ import re
 import os
 import json
 import shutil
-import warnings
 import numpy as np
-from pathlib import Path
-import logging
+from streamlit import session_state as state
 from zipfile import ZipFile
 
-PATH = '.'
-# PATH = Path(Path(__file__).resolve()).parent
-logger = logging.getLogger(__name__)
-warnings.filterwarnings("ignore")
+if 'PATH' not in state.keys():
+    state['PATH'] = '.'
+
+PATH = state['PATH']
 
 
 def label_name(num, maks):

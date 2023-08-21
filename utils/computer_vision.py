@@ -2,6 +2,8 @@ import cv2
 import torch
 import numpy as np
 import av
+import pandas as pd
+import os
 
 torch.cuda.empty_cache()
 torch.backends.cudnn.benchmark = False
@@ -31,6 +33,17 @@ def filter_data(predictions, conf):
 
 def generate_label_colors(name):
     return np.random.uniform(0, 255, size=(len(name), 3))
+
+
+def get_time(cap):
+    frame_count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    total_seconds = frame_count // fps
+    seconds = int(total_seconds % 60)
+    minutes = int(int(total_seconds / 60) % 60)
+    hours = int(int(total_seconds / 3600) % 3600)
+
+    return seconds, minutes, hours
 
 
 def draw_image(model, device, img, confi, colors, time, x_size, y_size):
@@ -67,12 +80,12 @@ def draw_image(model, device, img, confi, colors, time, x_size, y_size):
             img = cv2.putText(img,
                               f'LABEL: {label}',
                               (x1, y1 - 10),
-                              cv2.FONT_HERSHEY_SIMPLEX, 0.6,
+                              cv2.FONT_HERSHEY_DUPLEX, 0.6,
                               color, 2)
             img = cv2.putText(img,
                               f'ID: {idx}',
                               (x1, y1 - 30),
-                              cv2.FONT_HERSHEY_SIMPLEX, 0.6,
+                              cv2.FONT_HERSHEY_DUPLEX, 0.6,
                               color, 2)
 
             parameter['label'].append(label)
@@ -94,3 +107,69 @@ def draw_image(model, device, img, confi, colors, time, x_size, y_size):
 def recv(frame):
     img = frame.to_ndarray(format="bgr24")
     return av.VideoFrame.from_ndarray(img, format="bgr24")
+
+
+def count_label(dataset):
+    idx = 0
+    count = 0
+    ids_object = []
+    datasets = dataset.sort_values(by=['Label', 'X', 'Y', 'Weight', 'Height']).reset_index(drop=True)
+
+    for label in datasets['Label'].unique():
+        count += 1
+        ids_object.append(count)
+        dataset = datasets[datasets['Label'] == label]
+
+        for i in range(len(dataset)):
+            for j in range(1, len(dataset)):
+
+                x1, x2, y1, y2 = dataset['X'].iloc[i], dataset['X'].iloc[j], dataset['Y'].iloc[i], dataset['Y'].iloc[j]
+                w1, w2, h1, h2 = \
+                    dataset['Weight'].iloc[i], \
+                    dataset['Weight'].iloc[j], \
+                    dataset['Height'].iloc[i], \
+                    dataset['Height'].iloc[j]
+
+                if (abs(x2 - x1) > 0.07 and abs(y1 - y2) > 0.07) or (abs(w2 - w1) > 0.07 and abs(h2 - h1) > 0.07):
+                    if i == 0:
+                        ids_object.append(count)
+                        count += 1
+                else:
+                    if i == 0:
+                        ids_object.append(ids_object[idx + i])
+                    else:
+                        ids_object[idx + j] = ids_object[idx + i]
+
+        idx += len(dataset)
+
+    datasets['ID'] = ids_object
+
+    replace_value = {}
+
+    for i, index in enumerate(datasets['ID'].unique()):
+        replace_value[index] = i
+
+    datasets['ID'].replace(replace_value, inplace=True)
+
+    return datasets
+
+
+def converter_dataset(path_folder, model):
+
+    dataset = pd.DataFrame(columns=['Label', 'X', 'Y', 'Weight', 'Height'])
+    for file in os.listdir(path_folder):
+        data = pd.read_fwf(f'{path_folder}/{file}',
+                           names=['Label', 'X', 'Y', 'Weight', 'Height'])
+
+        dataset = pd.concat([dataset, data])
+
+    dataset.dropna(inplace=True)
+    dataset['Label'] = dataset['Label'].astype(int).replace(model.names)
+    dataset['X'] = dataset['X'].astype(float)
+    dataset['Y'] = dataset['X'].astype(float)
+    dataset['Weight'] = dataset['Weight'].astype(float)
+    dataset['Height'] = dataset['Height'].astype(float)
+    dataset = dataset.reset_index(drop=True)
+    dataset = count_label(dataset)
+
+    return dataset
