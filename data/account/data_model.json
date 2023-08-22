@@ -1,0 +1,5 @@
+{"General Detection": "general-detect",
+  "Coal Detection": "front-coal",
+  "Seam Detection": "seam-gb",
+  "Core Detection": "core-logging",
+  "Smart-HSE": "hse-monitor"}
