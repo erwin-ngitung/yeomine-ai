@@ -22,7 +22,7 @@ st1, st2, st3 = st.columns(3)
 with st2:
     st.image(image)
 
-st.write("# Welcome to Yeomine! 👋")
+st.markdown('<h3 style=\'text-align:center;\'>Welcome to Yeomine! 👋</h3>', unsafe_allow_html=True)
 
 st.image('data/images/brochure_1.png')
 
