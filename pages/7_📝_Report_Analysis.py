@@ -213,13 +213,13 @@ else:
             st3, st4 = st.columns(2)
 
             with st3:
-                st1.download_button(label='🔗 Download Report Model',
+                st3.download_button(label='🔗 Download Report Model',
                                     data=model_output1.getvalue(),
                                     file_name='report-model.pptx',
                                     use_container_width=True,
                                     key='download-model-analysis-2')
             with st4:
-                st2.download_button(label='🔗 Download Report Analysis',
+                st4.download_button(label='🔗 Download Report Analysis',
                                     data=model_output2.getvalue(),
                                     file_name='report-analysis.pptx',
                                     use_container_width=True,
