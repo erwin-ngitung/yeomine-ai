@@ -71,5 +71,18 @@ else:
     with st1:
         data_unit = st.selectbox('Unit',
                                  unit)
+        data_cap_dt = st.selectbox('cap_dt',
+                                   cap_dt)
+        data_road = st.selectbox('road',
+                                 road)
+
+
+    with st2:
+        data_shift = st.selectbox('shift',
+                                  shift)
+        data_material = st.selectbox('material',
+                                     material)
+        data_disposal = st.selectbox('material',
+                                     material)
 
     # st.table(dataset)
