@@ -113,6 +113,8 @@ else:
             uploaded_video = st.file_uploader("Upload your video file",
                                               type=['mp4', 'mkv', 'mpeg'],
                                               accept_multiple_files=False)
+            streaming_video = st.text_input("Please input the link streaming if you want to use it.")
+
             temp_file = tempfile.NamedTemporaryFile(delete=False)
 
             try:
