@@ -88,7 +88,7 @@ def report_analysis(img_path, ppt_template, dataset_true, removal_ob):
         line.font.size = Pt(50)
         line.font.bold = True
 
-        if i == 1:
+        if i == 0:
             tx_box = slides.shapes.add_textbox(left=Inches(2.5),
                                                top=Inches(2),
                                                width=Inches(15),
@@ -97,18 +97,20 @@ def report_analysis(img_path, ppt_template, dataset_true, removal_ob):
             data_label = dataset_true['Label'].values
             data_count = dataset_true['Count'].values
 
+            tx_box.font.size = Pt(30)
             tf = tx_box.text_frame
 
             for ind in range(len(dataset_true)):
                 p = tf.add_paragraph()
                 p.text = f'{ind}. Ditemukan {data_label[ind]} sebanyak {data_count[ind]} site.'
 
-        elif i == 2:
+        elif i == 1:
             tx_box = slides.shapes.add_textbox(left=Inches(2.5),
                                                top=Inches(2),
                                                width=Inches(15),
                                                height=Inches(9))
 
+            tx_box.font.size = Pt(30)
             tf = tx_box.text_frame
 
             removal_ob_key = list(removal_ob.keys())
@@ -118,7 +120,7 @@ def report_analysis(img_path, ppt_template, dataset_true, removal_ob):
                 p = tf.add_paragraph()
                 p.text = f'{removal_ob_key[ind]}: {removal_ob_val[ind]}'
 
-        elif i == 3 or i == 4:
+        elif i == 2 or i == 3:
             path_img = f'{img_path}/{list(name_slide.keys())[i]}'
 
             picture = slides.shapes
