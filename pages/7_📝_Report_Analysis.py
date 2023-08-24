@@ -4,7 +4,6 @@ from PIL import Image
 from streamlit import session_state as state
 import streamlit as st
 from utils import check_email, computer_vision as cs, create_ppt as cp
-from pptx import Presentation
 import plotly.express as px
 from ultralytics import YOLO
 from io import BytesIO
