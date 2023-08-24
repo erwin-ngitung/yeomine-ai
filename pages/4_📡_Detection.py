@@ -104,10 +104,10 @@ else:
 
         state['model-videos'] = option_model
 
-        type_file = st.radio('Do you want to upload your video or use link streaming?',
-                             ['Yes', 'No'],
-                             index=1,
-                             key='camera-detection-1')
+        type_file = st4.radio('Do you want to upload your video or use link streaming?',
+                              ['Yes', 'No'],
+                              index=1,
+                              key='camera-detection-1')
 
         if type_file == 'Yes':
             streaming_video = st5.text_input("Please input the link streaming if you want to use it.")
