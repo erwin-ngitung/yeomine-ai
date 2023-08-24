@@ -126,10 +126,25 @@ else:
                 source = f'{PATH}/datasets/general-detect/predict/sample-video-01.mp4'
                 cap = cv2.VideoCapture(source)
 
+            seconds, minutes, hours = cs.get_time(cap)
+
+            stop_program = st.slider('Stop Time Video',
+                                     min_value=datetime.time(0, 0, 1),
+                                     max_value=datetime.time(hours, minutes, seconds),
+                                     value=datetime.time(0, 0, 0),
+                                     format="HH:mm:ss",
+                                     step=datetime.timedelta(seconds=1),
+                                     key='stop-program-detection-1')
+
+            sum_seconds = stop_program.hour * 3600 + stop_program.minute * 60 + stop_program.second
+
+
         else:
             if streaming_file == 'Yes':
                 streaming_video = st.text_input("Please input the link streaming if you want to use it.")
                 cap = cv2.VideoCapture(streaming_video)
+
+                stop_program = np.inf
             else:
                 list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
                 sample_video = st.selectbox('Please select sample video do you want.',
@@ -138,17 +153,17 @@ else:
                 source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
                 cap = cv2.VideoCapture(source)
 
-        seconds, minutes, hours = cs.get_time(cap)
+                seconds, minutes, hours = cs.get_time(cap)
 
-        stop_program = st.slider('Stop Time Video',
-                                 min_value=datetime.time(0, 0, 1),
-                                 max_value=datetime.time(hours, minutes, seconds),
-                                 value=datetime.time(0, 0, 0),
-                                 format="HH:mm:ss",
-                                 step=datetime.timedelta(seconds=1),
-                                 key='stop-program-detection-1')
+                stop_program = st.slider('Stop Time Video',
+                                         min_value=datetime.time(0, 0, 1),
+                                         max_value=datetime.time(hours, minutes, seconds),
+                                         value=datetime.time(0, 0, 0),
+                                         format="HH:mm:ss",
+                                         step=datetime.timedelta(seconds=1),
+                                         key='stop-program-detection-1')
 
-        sum_seconds = stop_program.hour * 3600 + stop_program.minute * 60 + stop_program.second
+                sum_seconds = stop_program.hour * 3600 + stop_program.minute * 60 + stop_program.second
 
         show_label = st.checkbox('Show label predictions',
                                  value=True,
