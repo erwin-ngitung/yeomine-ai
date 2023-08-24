@@ -57,7 +57,7 @@ def model_analysis(img_path, ppt_template):
     return prs
 
 
-def report_analysis(img_path, ppt_template):
+def report_analysis(img_path, ppt_template, dataset_true, removal_ob):
     time_now = pytz.timezone('Asia/Jakarta')
     true_time = dt.now(time_now).strftime('%d-%m-%Y')
 
@@ -73,9 +73,11 @@ def report_analysis(img_path, ppt_template):
     line_0.font.size = Pt(35)
     line_0.font.bold = True
 
-    idx_slide = [1, 2]
-    name_slide = {'coordinate-object.png': 'Graph Coordinate Object',
-                  'graph-count-object.png': 'Graph Count Object'}
+    idx_slide = [1, 2, 3, 4]
+    name_slide = {'summary-prediction': 'Summary Prediction',
+                  'removal-ob-production': 'Removal OB Production',
+                  'graph-count-object.png': 'Graph Count Object',
+                  'coordinate-object.png': 'Graph Coordinate Object'}
 
     for i, idx in enumerate(idx_slide):
         slides = prs.slides[idx]
@@ -86,13 +88,44 @@ def report_analysis(img_path, ppt_template):
         line.font.size = Pt(50)
         line.font.bold = True
 
-        path_img = f'{img_path}/{list(name_slide.keys())[i]}'
+        if i == 1:
+            tx_box = slides.shapes.add_textbox(left=Inches(2.5),
+                                               top=Inches(2),
+                                               width=Inches(15),
+                                               height=Inches(9))
 
-        picture = slides.shapes
-        picture.add_picture(path_img,
-                            left=Inches(2.5),
-                            top=Inches(2),
-                            width=Inches(15),
-                            height=Inches(9))
+            data_label = dataset_true['Label'].values
+            data_count = dataset_true['Count'].values
+
+            tf = tx_box.text_frame
+
+            for ind in range(len(dataset_true)):
+                p = tf.add_paragraph()
+                p.text = f'{ind}. Ditemukan {data_label[ind]} sebanyak {data_count[ind]} site.'
+
+        elif i == 2:
+            tx_box = slides.shapes.add_textbox(left=Inches(2.5),
+                                               top=Inches(2),
+                                               width=Inches(15),
+                                               height=Inches(9))
+
+            tf = tx_box.text_frame
+
+            removal_ob_key = list(removal_ob.keys())
+            removal_ob_val = list(removal_ob.vals())
+
+            for ind in range(len(removal_ob_key)):
+                p = tf.add_paragraph()
+                p.text = f'{removal_ob_key[ind]}: {removal_ob_val[ind]}'
+
+        elif i == 3 or i == 4:
+            path_img = f'{img_path}/{list(name_slide.keys())[i]}'
+
+            picture = slides.shapes
+            picture.add_picture(path_img,
+                                left=Inches(2.5),
+                                top=Inches(2),
+                                width=Inches(15),
+                                height=Inches(9))
 
     return prs
