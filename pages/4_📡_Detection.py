@@ -127,18 +127,16 @@ else:
                 cap = cv2.VideoCapture(source)
 
         else:
-            list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
-            sample_video = st.selectbox('Please select sample video do you want.',
-                                        list_files,
-                                        key='sample-video-detection-1')
-            source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
-            cap = cv2.VideoCapture(source)
-
-            process = True
-
-        if streaming_file == 'Yes':
-            streaming_video = st.text_input("Please input the link streaming if you want to use it.")
-            cap = cv2.VideoCapture(streaming_video)
+            if streaming_file == 'Yes':
+                streaming_video = st.text_input("Please input the link streaming if you want to use it.")
+                cap = cv2.VideoCapture(streaming_video)
+            else:
+                list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
+                sample_video = st.selectbox('Please select sample video do you want.',
+                                            list_files,
+                                            key='sample-video-detection-1')
+                source = f'{PATH}/datasets/{path_object[kind_object]}/predict/{sample_video}'
+                cap = cv2.VideoCapture(source)
 
         seconds, minutes, hours = cs.get_time(cap)
 
