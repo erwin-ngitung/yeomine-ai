@@ -102,7 +102,7 @@ def report_analysis(img_path, ppt_template, dataset_true, removal_ob):
             for ind in range(len(dataset_true)):
                 p = tf.add_paragraph()
                 p.font.size = Pt(30)
-                p.text = f'{ind + 1}. Ditemukan {data_label[ind]} sebanyak {data_count[ind]} site.'
+                p.text = f'{ind + 1}. Ditemukan {data_label[ind]} sebanyak {data_count[ind]} tempat.'
 
         elif i == 1:
             tx_box = slides.shapes.add_textbox(left=Inches(2.5),
