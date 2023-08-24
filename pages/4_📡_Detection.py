@@ -138,13 +138,12 @@ else:
 
             sum_seconds = stop_program.hour * 3600 + stop_program.minute * 60 + stop_program.second
 
-
         else:
             if streaming_file == 'Yes':
                 streaming_video = st.text_input("Please input the link streaming if you want to use it.")
                 cap = cv2.VideoCapture(streaming_video)
 
-                stop_program = np.inf
+                sum_seconds = np.inf
             else:
                 list_files = [file for file in os.listdir(f'{PATH}/datasets/{path_object[kind_object]}/predict')]
                 sample_video = st.selectbox('Please select sample video do you want.',
