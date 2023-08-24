@@ -115,7 +115,6 @@ else:
         prs1.save(model_output1)
 
         removal_ob = state['removal_ob']
-        st.write(removal_ob)
         prs2 = cp.report_analysis(path_model_accuracy, ppt_template2,  dataset_true, removal_ob)
 
         model_output2 = BytesIO()

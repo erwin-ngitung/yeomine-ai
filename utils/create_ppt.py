@@ -112,7 +112,7 @@ def report_analysis(img_path, ppt_template, dataset_true, removal_ob):
             tf = tx_box.text_frame
 
             removal_ob_key = list(removal_ob.keys())
-            removal_ob_val = list(removal_ob.vals())
+            removal_ob_val = list(removal_ob.values())
 
             for ind in range(len(removal_ob_key)):
                 p = tf.add_paragraph()
