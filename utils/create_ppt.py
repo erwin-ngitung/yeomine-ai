@@ -97,11 +97,11 @@ def report_analysis(img_path, ppt_template, dataset_true, removal_ob):
             data_label = dataset_true['Label'].values
             data_count = dataset_true['Count'].values
 
-            tx_box.font.size = Pt(30)
             tf = tx_box.text_frame
 
             for ind in range(len(dataset_true)):
                 p = tf.add_paragraph()
+                p.font.size = Pt(30)
                 p.text = f'{ind}. Ditemukan {data_label[ind]} sebanyak {data_count[ind]} site.'
 
         elif i == 1:
@@ -110,7 +110,6 @@ def report_analysis(img_path, ppt_template, dataset_true, removal_ob):
                                                width=Inches(15),
                                                height=Inches(9))
 
-            tx_box.font.size = Pt(30)
             tf = tx_box.text_frame
 
             removal_ob_key = list(removal_ob.keys())
@@ -118,6 +117,7 @@ def report_analysis(img_path, ppt_template, dataset_true, removal_ob):
 
             for ind in range(len(removal_ob_key)):
                 p = tf.add_paragraph()
+                p.font.size = Pt(30)
                 p.text = f'{removal_ob_key[ind]}: {removal_ob_val[ind]}'
 
         elif i == 2 or i == 3:
