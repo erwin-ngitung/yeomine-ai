@@ -13,7 +13,6 @@ if 'PATH' not in state.keys():
 
 PATH = state['PATH']
 
-st.snow()
 placeholder = st.empty()
 
 with placeholder.form(key='Form Login'):

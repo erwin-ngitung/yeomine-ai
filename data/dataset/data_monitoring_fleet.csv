@@ -1,0 +1,77 @@
+unit,distance,days,shift,cap_dt,material,front,road,disposal,weather,tot_rain,working_hour,slippery,production
+ex1210,1200,kamis,day,normal,non ripping,hard material,sempit,ideal,sunny,0,9.2,0,5838
+ex701,1300,kamis,day,normal,blasting,sempit,sempit,ideal,sunny,0,9.32,0,3834
+ex710,1300,kamis,day,normal,non ripping,sempit,sempit,ideal,sunny,0,8.92,0,4019
+ex505,1000,kamis,day,normal,blasting,hard material,sempit,ideal,sunny,0,9.78,0,1918
+ex1210,900,kamis,night,normal,blasting,crowded,undulating,ideal,rain,1.57,9.13,0.17,5586
+ex701,1200,kamis,night,normal,freedig,sempit,undulating,ideal,rain,0.83,9.45,0.72,3455
+ex710,1200,kamis,night,normal,blasting,berair,ideal road,ideal,rain,0.92,8.87,0.75,4368
+ex505,1600,kamis,night,normal,non ripping,hard material,ideal road,ideal,rain,0.92,8.35,0.75,1988
+ex1210,1000,sabtu,night,normal,blasting,geometri ideal,slick,ideal,rain,6.33,3.63,1.12,2058
+ex701,800,sabtu,night,normal,blasting,geometri ideal,slick,ideal,rain,6.27,3.97,0.92,1212
+ex710,1200,sabtu,night,normal,freedig,geometri ideal,slick,ideal,rain,6.33,3.33,1.25,1367
+ex505,1000,sabtu,night,normal,blasting,geometri ideal,slick,ideal,rain,6.33,3.4,1.25,882
+ex1210,1000,minggu,day,normal,blasting,geometri ideal,ideal road,ideal,sunny,0,9.47,0,6700
+ex701,800,minggu,day,normal,blasting,big fragment,ideal road,ideal,sunny,0,9.53,0,3548
+ex710,1200,minggu,day,normal,freedig,geometri ideal,undulating,ideal,sunny,0,5.87,0,2608
+ex505,1200,minggu,day,under truck,blasting,geometri ideal,undulating,ideal,sunny,0,7.8,0,1708
+ex1210,1000,minggu,night,normal,blasting,hard material,ideal road,ideal,rain,1.5,8.92,0.83,5040
+ex701,800,minggu,night,under truck,blasting,crowded,ideal road,ideal,rain,1.3,9.12,0.5,2795
+ex710,1200,minggu,night,normal,freedig,sempit,ideal road,ideal,rain,1.32,8.73,0.95,3580
+ex505,1600,minggu,night,normal,blasting,geometri ideal,slick,ideal,rain,1.3,9.03,0.77,1806
+ex1210,1100,senin,day,normal,blasting,geometri ideal,ideal road,crowded,sunny,0,8.8,0,6216
+ex701,800,senin,day,under truck,blasting,geometri ideal,ideal road,ideal,sunny,0,8.92,0,2521
+ex710,1400,senin,day,normal,freedig,sempit,ideal road,ideal,sunny,0,10.25,0,3563
+ex505,1400,senin,day,normal,blasting,berair,ideal road,ideal,sunny,0,9.63,0,2100
+ex1210,1200,senin,night,normal,non ripping,crowded,ideal road,ideal,rain,9.5,1.33,1.08,714
+ex701,1200,senin,night,normal,non ripping,crowded,ideal road,ideal,rain,9.17,1.88,0.83,484
+ex710,1300,senin,night,normal,freedig,geometri ideal,ideal road,ideal,rain,9.38,1.68,1.08,612
+ex505,600,senin,night,normal,blasting,geometri ideal,ideal road,ideal,rain,9.38,0.97,1.08,168
+ex1210,1000,selasa,night,normal,blasting,geometri ideal,undulating,ideal,sunny,0,10.9,0,6350
+ex701,900,selasa,night,under truck,non ripping,hard material,ideal road,ideal,sunny,0,10.23,0,4075
+ex710,1400,selasa,night,normal,non ripping,hard material,ideal road,ideal,sunny,0,9.75,0,3991
+ex505,1300,selasa,night,normal,blasting,hard material,undulating,ideal,sunny,0,10.05,0,2268
+ex1210,1100,rabu,day,normal,blasting,geometri ideal,berdebu,ideal,sunny,0,9.17,0,6686
+ex701,900,rabu,day,normal,blasting,double bench,crowded,ideal,sunny,0,3.23,0,1125
+ex710,1400,rabu,day,normal,non ripping,geometri ideal,crowded,ideal,sunny,0,5.22,0,2184
+ex505,1300,rabu,day,normal,blasting,hard material,crowded,ideal,sunny,0,8.95,0,1806
+ex1210,1200,kamis,day,normal,blasting,geometri ideal,ideal road,ideal,rain,1,7.93,0.75,5334
+ex710,1100,kamis,day,normal,freedig,geometri ideal,undulating,ideal,rain,1,5.12,2.5,2000
+ex505,1900,kamis,day,normal,blasting,geometri ideal,crowded,ideal,rain,1,5.03,0.75,1190
+ex1210,1200,jumat,night,normal,freedig,crowded,voggy,amblas,sunny,0,10.25,0,5754
+ex710,1500,jumat,night,normal,freedig,hard material,voggy,amblas,sunny,0,10.47,0,3730
+ex505,1700,jumat,night,normal,blasting,sempit,voggy,amblas,sunny,0,8.22,0,1946
+ex1210,1200,jumat,day,normal,blasting,geometri ideal,slick,ideal,rain,3.33,4.83,1,3326
+ex710,1600,jumat,day,under truck,freedig,geometri ideal,slick,ideal,rain,3.07,5.43,1,2185
+ex505,1900,jumat,day,normal,blasting,geometri ideal,undulating,ideal,rain,3.33,5.28,1,1400
+ex1210,1200,jumat,night,normal,non ripping,hard material,slick,amblas,rain,0.43,8.27,1.4,3696
+ex710,1600,jumat,night,under truck,freedig,crowded,slick,amblas,rain,0.43,8.15,1.55,2725
+ex505,1900,jumat,night,normal,blasting,hard material,slick,amblas,rain,0.43,8.65,1.55,2198
+ex1210,1100,sabtu,day,normal,blasting,geometri ideal,ideal road,ideal,sunny,0,9.32,0,6552
+ex710,1600,sabtu,day,normal,freedig,geometri ideal,undulating,amblas,sunny,0,9.48,0,3835
+ex505,500,sabtu,day,normal,blasting,geometri ideal,ideal road,ideal,sunny,0,9.03,0,2548
+ex1210,1100,sabtu,night,normal,blasting,crowded,undulating,ideal,sunny,0,10.03,0,5586
+ex710,1600,sabtu,night,under truck,non ripping,crowded,ideal road,ideal,sunny,0,10.38,0,4163
+ex505,1400,sabtu,night,normal,blasting,big fragment,ideal road,ideal,sunny,0,9.7,0,2086
+ex1210,1250,minggu,day,normal,freedig,geometri ideal,ideal road,ideal,sunny,0,8.6,0,5712
+ex710,1600,minggu,day,normal,non ripping,crowded,ideal road,ideal,sunny,0,9.2,0,3468
+ex505,1300,minggu,day,normal,blasting,crowded,crowded,ideal,sunny,0,9.55,0,2310
+ex1210,1300,minggu,night,normal,freedig,crowded,crowded,ideal,sunny,0,9.78,0,5838
+ex710,1000,minggu,night,normal,non ripping,hard material,ideal road,ideal,sunny,0,10.52,0,4311
+ex505,1400,minggu,night,normal,blasting,hard material,ideal road,ideal,sunny,0,10.58,0,2590
+ex1210,1200,senin,day,normal,blasting,geometri ideal,ideal road,crowded,sunny,0,9.52,0,6468
+ex710,1100,senin,day,normal,freedig,sempit,ideal road,ideal,sunny,0,9.42,0,4377
+ex505,1200,senin,day,under truck,blasting,big fragment,ideal road,crowded,sunny,0,9.8,0,2184
+ex1210,800,senin,night,normal,freedig,geometri ideal,ideal road,ideal,rain,8.53,3.3,1,2100
+ex710,800,senin,night,under truck,freedig,geometri ideal,ideal road,ideal,rain,8.33,3.72,1,1344
+ex505,1200,senin,night,normal,blasting,crowded,ideal road,ideal,rain,8.42,3.5,1,784
+ex1210,800,selasa,day,normal,non ripping,hard material,ideal road,ideal,rain,0.75,7.07,1.75,4326
+ex710,1100,selasa,day,under truck,freedig,crowded,slick,ideal,rain,0.75,6.92,1.75,2982
+ex505,1400,selasa,day,normal,blasting,big fragment,ideal road,ideal,rain,0.75,4.57,1,1106
+ex1210,800,selasa,night,normal,blasting,geometri ideal,slick,ideal,rain,4.17,6.08,1.5,4536
+ex710,1100,selasa,night,normal,freedig,geometri ideal,slick,ideal,rain,3.77,6.9,1,3108
+ex505,1400,selasa,night,under truck,blasting,geometri ideal,slick,ideal,rain,3.92,5.33,1,1078
+ex1210,800,rabu,day,normal,blasting,geometri ideal,ideal road,ideal,rain,3.17,7.17,0.55,4830
+ex701,1300,rabu,day,under truck,non ripping,geometri ideal,crowded,amblas,rain,3.17,7.28,0.58,2275
+ex710,1200,rabu,day,normal,non ripping,hard material,ideal road,ideal,rain,3.27,6.92,0.47,3654
+ex505,1300,rabu,day,normal,blasting,hard material,ideal road,ideal,rain,3.37,5.03,1.83,1064

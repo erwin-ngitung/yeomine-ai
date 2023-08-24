@@ -205,7 +205,7 @@ else:
             model_output1 = BytesIO()
             prs1.save(model_output1)
 
-            prs2 = cp.report_analysis(path_model_accuracy, ppt_template2)
+            prs2 = cp.report_analysis(path_model_accuracy, ppt_template2, dataset_true, removal_ob=state['removal_ob'])
 
             model_output2 = BytesIO()
             prs2.save(model_output2)
@@ -226,4 +226,4 @@ else:
                                     key='download-report-analysis-2')
 
         except (Exception,):
-            st.error('Please go to the menu Detection (sub-menu picture) first!', icon='❎')
+            st.error('Please go to the menu Detection (sub-menu picture) first and OB Removal!', icon='❎')
