@@ -104,14 +104,16 @@ else:
 
         state['model-videos'] = option_model
 
-        type_file = st4.radio('Do you want to upload your video or use link streaming?',
+        type_file = st4.radio('Do you want to upload your video?',
                               ['Yes', 'No'],
                               index=1,
                               key='camera-detection-1')
+        streaming_file = st5.radio('Do you want to use link streaming?',
+                                   ['Yes', 'No'],
+                                   index=1,
+                                   key='streaming-detection-1')
 
         if type_file == 'Yes':
-            streaming_video = st5.text_input("Please input the link streaming if you want to use it.")
-
             uploaded_video = st.file_uploader("Upload your video file",
                                               type=['mp4', 'mkv', 'mpeg'],
                                               accept_multiple_files=False)
@@ -133,6 +135,10 @@ else:
             cap = cv2.VideoCapture(source)
 
             process = True
+
+        if streaming_file == 'Yes':
+            streaming_video = st.text_input("Please input the link streaming if you want to use it.")
+            cap = cv2.VideoCapture(streaming_video)
 
         seconds, minutes, hours = cs.get_time(cap)
 
